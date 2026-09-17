@@ -391,6 +391,7 @@ int CTFGrenadePipebombProjectile::DrawModel( int flags )
 // TF Pipebomb Grenade Projectile functions (Server specific).
 //
 #define TF_WEAPON_PIPEGRENADE_MODEL		"models/weapons/w_models/w_grenade_grenadelauncher.mdl"
+#define TF_WEAPON_PIPE_REMOTE_MODEL		"models/weapons/w_models/w_grenade_grenadelauncher_remote.mdl"
 #define TF_WEAPON_CANNONBALL_MODEL		"models/weapons/w_models/w_cannonball.mdl"
 #define TF_WEAPON_PIPEBOMB_MODEL		"models/weapons/w_models/w_stickybomb.mdl"
 #define TF_WEAPON_PIPEBOMB2_MODEL		"models/weapons/w_models/w_stickybomb2.mdl"
@@ -420,6 +421,7 @@ const char* CTFGrenadePipebombProjectile::GetPipebombClass( int iPipeBombType )
 		return "tf_projectile_pipe";
 	case TF_GL_MODE_REMOTE_DETONATE:
 	case TF_GL_MODE_REMOTE_DETONATE_PRACTICE:
+	case TF_GL_MODE_REMOTE_DETONATE_ROLLER:
 		return "tf_projectile_pipe_remote";
 	default:
 		return "tf_projectile_pipe";
@@ -448,6 +450,11 @@ CTFGrenadePipebombProjectile* CTFGrenadePipebombProjectile::Create( const Vector
 			iPipeBombDetonateType = TF_GL_MODE_REMOTE_DETONATE_PRACTICE;
 		}
 		break;
+	case TF_PROJECTILE_PIPEBOMB_ROLLER:
+		{
+			iPipeBombDetonateType = TF_GL_MODE_REMOTE_DETONATE_ROLLER;
+		}
+	break;
 	case TF_PROJECTILE_CANNONBALL:
 		{
 			iPipeBombDetonateType = TF_GL_MODE_CANNONBALL;
@@ -499,6 +506,10 @@ void CTFGrenadePipebombProjectile::Spawn()
 		if ( m_iType == TF_GL_MODE_REMOTE_DETONATE_PRACTICE )
 		{
 			SetModel( TF_WEAPON_PIPEBOMB2_MODEL );
+		}
+		else if ( m_iType == TF_GL_MODE_REMOTE_DETONATE_ROLLER )
+		{
+			SetModel( TF_WEAPON_PIPE_REMOTE_MODEL );
 		}
 		else
 		{
@@ -553,7 +564,10 @@ void CTFGrenadePipebombProjectile::Precache()
 	iModel = PrecacheModel( TF_WEAPON_PIPEGRENADE_MODEL );
 	PrecacheGibsForModel( iModel );
 
-	iModel = PrecacheModel( TF_WEAPON_CANNONBALL_MODEL );
+	iModel = PrecacheModel( TF_WEAPON_PIPEGRENADE_MODEL );
+	PrecacheGibsForModel( iModel );
+
+	iModel = PrecacheModel( TF_WEAPON_PIPE_REMOTE_MODEL );
 	PrecacheGibsForModel( iModel );
 
 	// Must add All custom Models here
@@ -927,9 +941,18 @@ void CTFGrenadePipebombProjectile::VPhysicsCollision( int index, gamevcollisione
 	// Pipebombs stick to the world when they touch it
 	if ( pHitEntity && ( pHitEntity->IsWorld() || bIsDynamicProp ) && gpGlobals->curtime > m_flMinSleepTime )
 	{
+		int iNoStick = 0;
+		if ( GetLauncher() )
+		{
+			CALL_ATTRIB_HOOK_INT_ON_OTHER( GetLauncher(), iNoStick, grenade_no_stick );
+		}
+
 		m_bTouched = true;
 
-		g_PostSimulationQueue.QueueCall( VPhysicsGetObject(), &IPhysicsObject::EnableMotion, false );
+		if ( iNoStick == 0 )
+		{
+			g_PostSimulationQueue.QueueCall( VPhysicsGetObject(), &IPhysicsObject::EnableMotion, false );
+		}
 
 		// Save impact data for explosions.
 		m_bUseImpactNormal = true;
@@ -942,6 +965,19 @@ void CTFGrenadePipebombProjectile::VPhysicsCollision( int index, gamevcollisione
 		if ( flFizzle > 0 )
 		{
 			SetDetonateTimerLength( flFizzle );
+		}
+		int iNoBounce = 0;
+		if ( GetLauncher() )
+		{
+			CALL_ATTRIB_HOOK_INT_ON_OTHER( GetLauncher(), iNoBounce, grenade_no_bounce )
+			if (iNoBounce)
+			{
+				Vector velocity;
+				AngularImpulse angularVelocity;
+				VPhysicsGetObject()->GetVelocity( &velocity, &angularVelocity );
+				velocity *= 0.7f;
+				VPhysicsGetObject()->SetVelocity( &velocity, &angularVelocity );
+			}
 		}
 	}
 }

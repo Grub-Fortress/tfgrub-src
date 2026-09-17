@@ -4,7 +4,7 @@
 //
 //=============================================================================
 #include "cbase.h"
-#include "tf_projectile_nail.h"
+#include "tf_projectile_syringe.h"
 #include "tf_gamerules.h"
 
 #ifdef CLIENT_DLL
@@ -30,7 +30,6 @@
 
 LINK_ENTITY_TO_CLASS( tf_projectile_syringe, CTFProjectile_Syringe );
 PRECACHE_REGISTER( tf_projectile_syringe );
-
 
 short g_sModelIndexSyringe;
 void PrecacheSyringe(void *pUser)
@@ -71,8 +70,6 @@ float CTFProjectile_Syringe::GetGravity( void )
 {
 	return SYRINGE_GRAVITY;
 }
-
-
 #ifdef CLIENT_DLL
 
 //-----------------------------------------------------------------------------

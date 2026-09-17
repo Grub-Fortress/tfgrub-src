@@ -1023,6 +1023,11 @@ const char *g_szProjectileNames[] =
 	"projectile_jar_gas",
 	"tf_projectile_balloffire",
 
+	// TFGrub
+
+	"projectile_pipe_remote_roller",
+	"projectile_nail",
+
 };
 COMPILE_TIME_ASSERT( ARRAYSIZE( g_szProjectileNames ) == TF_NUM_PROJECTILES );
 
@@ -1060,6 +1065,11 @@ int g_iProjectileWeapons[] =
 	TF_WEAPON_THROWABLE,
 	TF_WEAPON_JAR_GAS,
 	TF_WEAPON_FLAME_BALL,
+	
+	// TFGrub
+
+	TF_PROJECTILE_PIPEBOMB_ROLLER,
+	TF_PROJECTILE_NAIL,
 
 };
 

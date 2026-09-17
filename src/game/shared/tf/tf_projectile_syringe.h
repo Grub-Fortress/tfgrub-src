@@ -3,8 +3,8 @@
 // TF Nail Projectile
 //
 //=============================================================================
-#ifndef TF_PROJECTILE_NAIL_H
-#define TF_PROJECTILE_NAIL_H
+#ifndef TF_PROJECTILE_SYRINGE_H
+#define TF_PROJECTILE_SYRINGE_H
 #ifdef _WIN32
 #pragma once
 #endif
@@ -30,4 +30,4 @@ public:
 };
 
 
-#endif	//TF_PROJECTILE_NAIL_H
+#endif	//TF_PROJECTILE_SYRINGE_H
