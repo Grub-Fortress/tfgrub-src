@@ -60,6 +60,7 @@ struct static_attrib_t
 	{
 		iDefIndex = 0;
 		m_value.asBlobPointer = NULL;
+		bShouldDelete = false; // Thanks Kepler
 	}
 
 	~static_attrib_t()
@@ -70,10 +71,12 @@ struct static_attrib_t
 	{
 		iDefIndex = rhs.iDefIndex;
 		m_value = rhs.m_value;
+		bShouldDelete = false; // Thanks Kepler
 	}
 
 	attrib_definition_index_t	iDefIndex;
 	attribute_data_union_t m_value;
+	bool bShouldDelete; // Thanks Kepler
 
 	// Parses a single subsection from a multi-line attribute block that looks like:
 	//
@@ -1280,6 +1283,7 @@ public:
 	bool		IsImported( void ) const			{ return m_bImported; }
 	bool		IsAllowedInMatch( void ) const		{ return m_bAllowedInThisMatch; }
 	bool		IsBaseItem( void ) const			{ return m_bBaseItem; }
+	bool		IsModItem( void ) const				{ return m_bModItem; }
 	bool		IsBundle( void ) const				{ return m_BundleInfo != NULL; }
 	bool		HasProperName( void ) const			{ return m_bProperName; }
 	const char	*GetClassToken( void ) const		{ return m_pszClassToken; }
@@ -1600,6 +1604,7 @@ private:
 	bool			m_bHidden;
 	bool			m_bShouldShowInArmory;
 	bool			m_bBaseItem;
+	bool			m_bModItem;
 	bool			m_bImported;
 
 	// A pack bundle is a bundle that contains items that are not for sale individually
@@ -2610,6 +2615,9 @@ public:
 	typedef CUtlMap<int, CEconItemDefinition*, int>	BaseItemDefinitionMap_t;
 	const BaseItemDefinitionMap_t &GetBaseItemDefinitionMap() const { return m_mapBaseItems; }
 
+	typedef CUtlMap<int, CEconItemDefinition*, int>	ModItemDefinitionMap_t;
+	const ModItemDefinitionMap_t& GetSoloItemDefinitionMap() const { return m_mapModItems; }
+
 	typedef CUtlDict<CEconLootListDefinition *>	LootListDefinitionMap_t;
 	const LootListDefinitionMap_t &GetLootLists() const { return m_dictLootLists; }
 
@@ -2924,6 +2932,9 @@ private:
 
 	// List of all base items, is a sublist of mapItems
 	BaseItemDefinitionMap_t								m_mapBaseItems;
+
+	// TF:Solo ModItem
+	ModItemDefinitionMap_t								m_mapModItems;
 
 #if defined(CLIENT_DLL) || defined(GAME_DLL)
 	// What is the default item definition we'll return in the client code if we can't find the correct one?

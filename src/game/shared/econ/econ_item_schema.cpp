@@ -2306,6 +2306,7 @@ m_bIsPackBundle( false ),
 m_pOwningPackBundle( NULL ),
 m_bIsPackItem( false ),
 m_bBaseItem( false ),
+m_bModItem( true ),
 m_pszItemLogClassname( NULL ),
 m_pszItemIconClassname( NULL ),
 m_pszDatabaseAuditTable( NULL ),
@@ -3177,6 +3178,15 @@ bool CEconItemDefinition::BInitFromKV( KeyValues *pKVItem, CUtlVector<CUtlString
 	m_bHidden = m_pKVItem->GetInt( "hidden", 0 ) != 0;
 	m_bShouldShowInArmory = m_pKVItem->GetInt( "show_in_armory", 0 ) != 0;
 	m_bBaseItem = m_pKVItem->GetInt( "baseitem", 0 ) != 0;
+	m_bModItem = m_pKVItem->GetInt( "moditem", 0 ) != 0;
+	if ( !m_bModItem && !CommandLine()->FindParm( "-nostaging_items" ) )
+	{
+		m_bModItem = m_pKVItem->GetInt( "stagingitem", 0 ) != 0;
+	}
+	if ( !m_bModItem && CommandLine()->FindParm( "-experimental_items" ) )
+	{
+		m_bModItem = m_pKVItem->GetInt( "experimentalitem", 0 ) != 0;
+	}
 	m_pszItemLogClassname = m_pKVItem->GetString( "item_logname", NULL );
 	m_pszItemIconClassname = m_pKVItem->GetString( "item_iconname", NULL );
 	m_pszDatabaseAuditTable = m_pKVItem->GetString( "database_audit_table", NULL );
@@ -3335,10 +3345,13 @@ bool CEconItemDefinition::BInitFromKV( KeyValues *pKVItem, CUtlVector<CUtlString
 				static_attrib_t staticAttrib;
 
 				SCHEMA_INIT_SUBSTEP( staticAttrib.BInitFromKV_SingleLine( GetDefinitionName(), pKVKey, pVecErrors, false ) );
-				m_vecStaticAttributes.AddToTail( staticAttrib );
+				if (!staticAttrib.bShouldDelete) // Thanks Kepler
+				{
+					m_vecStaticAttributes.AddToTail(staticAttrib);
 
-				// Does this attribute specify a tag to apply to this item definition?
-				Assert( staticAttrib.GetAttributeDefinition() );
+					// Does this attribute specify a tag to apply to this item definition?
+					Assert(staticAttrib.GetAttributeDefinition());
+				}
 			}
 		}
 	}
@@ -3352,10 +3365,14 @@ bool CEconItemDefinition::BInitFromKV( KeyValues *pKVItem, CUtlVector<CUtlString
 			static_attrib_t staticAttrib;
 
 			SCHEMA_INIT_SUBSTEP( staticAttrib.BInitFromKV_MultiLine( GetDefinitionName(), pKVKey, pVecErrors ) );
-			m_vecStaticAttributes.AddToTail( staticAttrib );
+			// Only add if we shouldn't delete the attribute // Thanks Kepler
+			if (!staticAttrib.bShouldDelete)
+			{
+				m_vecStaticAttributes.AddToTail(staticAttrib);
 
-			// Does this attribute specify a tag to apply to this item definition?
-			Assert( staticAttrib.GetAttributeDefinition() );
+				// Does this attribute specify a tag to apply to this item definition?
+				Assert(staticAttrib.GetAttributeDefinition());
+			}
 		}
 	}
 
@@ -3431,6 +3448,13 @@ bool static_attrib_t::BInitFromKV_MultiLine( const char *pszContext, KeyValues *
 		pAttrType->InitializeNewEconAttributeValue( &m_value );
 
 		const char *pszValue = pKVAttribute->GetString( "value", NULL );
+
+		// Found an attribute to delete // Thanks Kepler
+		if (strcmp(pszValue, "delete") == 0)
+		{
+			bShouldDelete = true;
+		}
+
 		const bool bSuccessfullyLoadedValue = pAttrType->BConvertStringToEconAttributeValue( pAttrDef, pszValue, &m_value, true );
 
 		SCHEMA_INIT_CHECK(
@@ -3463,6 +3487,13 @@ bool static_attrib_t::BInitFromKV_SingleLine( const char *pszContext, KeyValues 
 		pAttrType->InitializeNewEconAttributeValue( &m_value );
 
 		const char *pszValue = pKVAttribute->GetString();
+
+		// Found an attribute to delete // Thanks Kepler
+		if (strcmp(pszValue, "delete") == 0)
+		{
+			bShouldDelete = true;
+		}
+
 		const bool bSuccessfullyLoadedValue = pAttrType->BConvertStringToEconAttributeValue( pAttrDef, pszValue, &m_value, bEnableTerribleBackwardsCompatibilitySchemaParsingCode );
 
 		SCHEMA_INIT_CHECK(
@@ -3805,6 +3836,7 @@ CEconItemSchema::CEconItemSchema( )
 ,	m_mapToolsItems( DefLessFunc(int) )
 ,	m_mapPaintKitTools( DefLessFunc(uint32) )
 ,	m_mapBaseItems( DefLessFunc(int) )
+,	m_mapModItems( DefLessFunc(int) )
 ,	m_unVersion( 0 )
 #if defined(CLIENT_DLL) || defined(GAME_DLL)
 ,	m_pDefaultItemDefinition( NULL )
@@ -4299,6 +4331,7 @@ void CEconItemSchema::Reset( void )
 	m_mapToolsItems.Purge();
 	m_mapPaintKitTools.Purge();
 	m_mapBaseItems.Purge();
+	m_mapModItems.Purge();
 	m_mapRecipes.PurgeAndDeleteElements();
 	m_vecTimedRewards.Purge();
 	m_dictItemSets.PurgeAndDeleteElements();
@@ -4418,7 +4451,8 @@ bool CEconItemSchema::BInitTextBuffer( CUtlBuffer &buffer, CUtlVector<CUtlString
 
 	Reset();
 	m_pKVRawDefinition = new KeyValues( "CEconItemSchema" );
-	if ( m_pKVRawDefinition->LoadFromBuffer( NULL, buffer ) )
+	//if ( m_pKVRawDefinition->LoadFromBuffer( NULL, buffer ) )
+	if ( m_pKVRawDefinition->LoadFromFile(g_pFullFileSystem, "scripts/items/items_manifest.txt", "GAME" ) )
 	{
 		return BInitSchema( m_pKVRawDefinition, pVecErrors )
 			&& BPostSchemaInit( pVecErrors );
@@ -5273,6 +5307,7 @@ bool CEconItemSchema::BInitItems( KeyValues *pKVItems, CUtlVector<CUtlString> *p
 	m_mapToolsItems.Purge();
 	m_mapPaintKitTools.Purge();
 	m_mapBaseItems.Purge();
+	m_mapModItems.Purge();
 	m_vecBundles.Purge();
 	m_mapQuestObjectives.PurgeAndDeleteElements();
 
@@ -5341,6 +5376,11 @@ bool CEconItemSchema::BInitItems( KeyValues *pKVItems, CUtlVector<CUtlString> *p
 				if ( pItemDef->IsBaseItem() )
 				{
 					m_mapBaseItems.Insert( nItemIndex, pItemDef );
+				}
+
+				if ( pItemDef->IsModItem() )
+				{
+					m_mapModItems.Insert( nItemIndex, pItemDef );
 				}
 
 				// Cache off bundles for the link phase below.

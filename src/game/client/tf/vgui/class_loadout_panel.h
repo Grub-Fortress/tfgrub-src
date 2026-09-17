@@ -117,6 +117,7 @@ protected:
 	int						m_iCurrentClassIndex;
 	int						m_iCurrentTeamIndex;
 	int						m_iCurrentSlotIndex;
+	int						m_iCurrentPreviewSkin;
 	bool					m_bLoadoutHasChanged;
 	bool					m_bInTauntLoadoutMode;
 	CTFPlayerModelPanel		*m_pPlayerModelPanel;
@@ -131,6 +132,9 @@ protected:
 	CExImageButton			*m_pCharacterLoadoutButton;
 	CExImageButton			*m_pTauntLoadoutButton;
 
+	CExImageButton			*m_pRedSkinButton;
+	CExImageButton			*m_pBluSkinButton;
+
 	CLoadoutPresetPanel		*m_pLoadoutPresetPanel;
 
 	CExplanationPopup		*m_pPresetsExplanationPopup;
@@ -142,6 +146,7 @@ protected:
 
 private:
 	void UpdatePageButtonColor( CExImageButton *pPageButton, bool bIsActive );
+	void UpdateSkinButtonColors( void );
 
 	enum PageButtonColors_t
 	{

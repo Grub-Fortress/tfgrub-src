@@ -112,10 +112,10 @@ const LoadoutPanelPositioningInstance g_DefaultLoadoutPanelPositioning =
 		0,	// LOADOUT_POSITION_BUILDING,
 		0,	// LOADOUT_POSITION_PDA,
 		0,	// LOADOUT_POSITION_PDA2,
-		5,	// LOADOUT_POSITION_HEAD,
-		6,	// LOADOUT_POSITION_MISC,
+		0,	// LOADOUT_POSITION_HEAD,
+		0,	// LOADOUT_POSITION_MISC,
 		8,	// LOADOUT_POSITION_ACTION,
-		7,	// LOADOUT_POSITION_MISC2,
+		0,	// LOADOUT_POSITION_MISC2,
 		9,	// LOADOUT_POSITION_TAUNT,
 		10,	// LOADOUT_POSITION_TAUNT2,
 		11,	// LOADOUT_POSITION_TAUNT3,
@@ -138,10 +138,10 @@ const LoadoutPanelPositioningInstance g_LoadoutPanelPositioning_Spy =
 		4,	// LOADOUT_POSITION_BUILDING,		// sapper
 		0,	// LOADOUT_POSITION_PDA,			// disguise kit (Hidden)
 		3,	// LOADOUT_POSITION_PDA2,			// Watch
-		5,	// LOADOUT_POSITION_HEAD,
-		6,	// LOADOUT_POSITION_MISC,
+		0,	// LOADOUT_POSITION_HEAD,
+		0,	// LOADOUT_POSITION_MISC,
 		8,	// LOADOUT_POSITION_ACTION,
-		7,	// LOADOUT_POSITION_MISC2,
+		0,	// LOADOUT_POSITION_MISC2,
 		9,	// LOADOUT_POSITION_TAUNT,
 		10,	// LOADOUT_POSITION_TAUNT2,
 		11,	// LOADOUT_POSITION_TAUNT3,
@@ -163,10 +163,10 @@ const LoadoutPanelPositioningInstance g_LoadoutPanelPositioning_Engineer =
 		0,	// LOADOUT_POSITION_BUILDING,
 		4,	// LOADOUT_POSITION_PDA,
 		0,	// LOADOUT_POSITION_PDA2,
-		5,	// LOADOUT_POSITION_HEAD,
-		6,	// LOADOUT_POSITION_MISC,
+		0,	// LOADOUT_POSITION_HEAD,
+		0,	// LOADOUT_POSITION_MISC,
 		8,	// LOADOUT_POSITION_ACTION,
-		7,	// LOADOUT_POSITION_MISC2,
+		0,	// LOADOUT_POSITION_MISC2,
 		9,	// LOADOUT_POSITION_TAUNT,
 		10,	// LOADOUT_POSITION_TAUNT2,
 		11,	// LOADOUT_POSITION_TAUNT3,
@@ -432,7 +432,12 @@ CClassLoadoutPanel::CClassLoadoutPanel( vgui::Panel *parent )
 	m_pCharacterLoadoutButton = NULL;
 	m_pTauntLoadoutButton = NULL;
 
+	m_pRedSkinButton = NULL;
+	m_pBluSkinButton = NULL;
+
 	m_bInTauntLoadoutMode = false;
+
+	m_iCurrentPreviewSkin = 0;  
 
 	g_pClassLoadoutPanel = this;
 
@@ -464,6 +469,10 @@ void CClassLoadoutPanel::ApplySchemeSettings( vgui::IScheme *pScheme )
 	m_pBuildablesButton = dynamic_cast<CExButton*>( FindChildByName("BuildablesButton") );
 	m_pCharacterLoadoutButton = dynamic_cast<CExImageButton*>( FindChildByName("CharacterLoadoutButton") );
 	m_pTauntLoadoutButton = dynamic_cast<CExImageButton*>( FindChildByName("TauntLoadoutButton") );
+
+	m_pRedSkinButton = dynamic_cast<CExImageButton*>( FindChildByName("RedSkinButton") );
+	m_pBluSkinButton = dynamic_cast<CExImageButton*>( FindChildByName("BluSkinButton") );
+
 	m_pPassiveAttribsLabel = dynamic_cast<CExLabel*>( FindChildByName("PassiveAttribsLabel") );
 	m_pLoadoutPresetPanel = dynamic_cast<CLoadoutPresetPanel*>( FindChildByName( "loadout_preset_panel" ) );
 	if (m_pLoadoutPresetPanel)
@@ -555,6 +564,18 @@ void CClassLoadoutPanel::PerformLayout( void )
 	if ( m_pTauntLoadoutButton )
 	{
 		UpdatePageButtonColor( m_pTauntLoadoutButton, m_bInTauntLoadoutMode );
+	}
+
+	UpdateSkinButtonColors();
+	
+	// Show skin buttons only in character loadout mode
+	if ( m_pRedSkinButton )
+	{
+		m_pRedSkinButton->SetVisible( !m_bInTauntLoadoutMode );
+	}
+	if ( m_pBluSkinButton )
+	{
+		m_pBluSkinButton->SetVisible( !m_bInTauntLoadoutMode );
 	}
 
 	FOR_EACH_VEC( m_vecItemOptionButtons, i )
@@ -874,7 +895,13 @@ void CClassLoadoutPanel::UpdateModelPanels( void )
 	{
 		m_pPlayerModelPanel->ClearCarriedItems();
 		m_pPlayerModelPanel->SetToPlayerClass( m_iCurrentClassIndex );
-		m_pPlayerModelPanel->SetTeam( m_iCurrentTeamIndex );
+
+		// Set team based on current preview skin selection instead of m_iCurrentTeamIndex
+		int iPreviewTeam = (m_iCurrentPreviewSkin == 0) ? TF_TEAM_RED : TF_TEAM_BLUE;
+		m_pPlayerModelPanel->SetTeam( iPreviewTeam );
+		
+		// Apply the preview skin after setting team
+		m_pPlayerModelPanel->SetPreviewSkin( m_iCurrentPreviewSkin );
 	}
 
 	// For now, fill them out with the local player's currently wielded items
@@ -895,6 +922,7 @@ void CClassLoadoutPanel::UpdateModelPanels( void )
 	if ( m_pPlayerModelPanel )
 	{
 		m_pPlayerModelPanel->HoldItemInSlot( m_iCurrentSlotIndex );
+		m_pPlayerModelPanel->SetPreviewSkin(m_iCurrentPreviewSkin);
 	}
 
 	SetDialogVariable( "loadoutclass", g_pVGuiLocalize->Find( pData->m_szLocalizableName ) );
@@ -947,6 +975,11 @@ void CClassLoadoutPanel::OnSelectionReturned( KeyValues *data )
 			m_bLoadoutHasChanged = true;
 
 			UpdateModelPanels();
+
+			if ( m_pPlayerModelPanel )
+			{
+				m_pPlayerModelPanel->SetPreviewSkin( m_iCurrentPreviewSkin );
+			}
 
 			// Send the preset panel a msg so it can save the change
 			KeyValues *pLoadoutChangedMsg = new KeyValues( "LoadoutChanged" );
@@ -1183,6 +1216,26 @@ void CClassLoadoutPanel::OnCommand( const char *command )
 	else if ( FStrEq( command, "tauntloadout" ) )
 	{
 		SetLoadoutPage( TAUNT_LOADOUT_PAGE );
+		return;
+	}
+	else if ( FStrEq( command, "skinred" ) )
+	{
+		m_iCurrentPreviewSkin = 0; // RED skin
+		if ( m_pPlayerModelPanel )
+		{
+			m_pPlayerModelPanel->SetPreviewSkin( 0 );
+		}
+		UpdateSkinButtonColors();
+		return;
+	}
+	else if ( FStrEq( command, "skinblu" ) )
+	{
+		m_iCurrentPreviewSkin = 1; // BLU skin
+		if ( m_pPlayerModelPanel )
+		{
+			m_pPlayerModelPanel->SetPreviewSkin( 1 );
+		}
+		UpdateSkinButtonColors();
 		return;
 	}
 	else if ( !V_strnicmp( command, "change", 6 ) )
@@ -1443,5 +1496,30 @@ void CClassLoadoutPanel::UpdatePageButtonColor( CExImageButton *pPageButton, boo
 		pPageButton->SetDefaultColor( m_aDefaultColors[iLoaded][FG][DEFAULT], m_aDefaultColors[iLoaded][BG][DEFAULT] );
 		pPageButton->SetArmedColor( m_aDefaultColors[iLoaded][FG][ARMED], m_aDefaultColors[iLoaded][BG][ARMED] );
 		pPageButton->SetDepressedColor( m_aDefaultColors[iLoaded][FG][DEPRESSED], m_aDefaultColors[iLoaded][BG][DEPRESSED] );
+	}
+}
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void CClassLoadoutPanel::UpdateSkinButtonColors( void )
+{
+	// Update red skin button
+	if ( m_pRedSkinButton )
+	{
+		bool bRedActive = (m_iCurrentPreviewSkin == 0);
+		int iLoaded = bRedActive ? LOADED : NOTLOADED;
+		m_pRedSkinButton->SetDefaultColor( m_aDefaultColors[iLoaded][FG][DEFAULT], m_aDefaultColors[iLoaded][BG][DEFAULT] );
+		m_pRedSkinButton->SetArmedColor( m_aDefaultColors[iLoaded][FG][ARMED], m_aDefaultColors[iLoaded][BG][ARMED] );
+		m_pRedSkinButton->SetDepressedColor( m_aDefaultColors[iLoaded][FG][DEPRESSED], m_aDefaultColors[iLoaded][BG][DEPRESSED] );
+	}
+
+	// Update blu skin button
+	if ( m_pBluSkinButton )
+	{
+		bool bBluActive = (m_iCurrentPreviewSkin == 1);
+		int iLoaded = bBluActive ? LOADED : NOTLOADED;
+		m_pBluSkinButton->SetDefaultColor( m_aDefaultColors[iLoaded][FG][DEFAULT], m_aDefaultColors[iLoaded][BG][DEFAULT] );
+		m_pBluSkinButton->SetArmedColor( m_aDefaultColors[iLoaded][FG][ARMED], m_aDefaultColors[iLoaded][BG][ARMED] );
+		m_pBluSkinButton->SetDepressedColor( m_aDefaultColors[iLoaded][FG][DEPRESSED], m_aDefaultColors[iLoaded][BG][DEPRESSED] );
 	}
 }

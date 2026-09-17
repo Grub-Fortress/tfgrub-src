@@ -48,7 +48,7 @@
 
 using namespace GCSDK;
 
-#define LOCAL_LOADOUT_FILE		"cfg/local_loadout.txt"
+#define LOCAL_LOADOUT_FILE		"cfg/tfgrub_loadout.txt"
 
 #ifdef CLIENT_DLL
 //-----------------------------------------------------------------------------
@@ -217,6 +217,8 @@ CTFInventoryManager::CTFInventoryManager( void )
 CTFInventoryManager::~CTFInventoryManager( void )
 {
 	m_pBaseLoadoutItems.PurgeAndDeleteElements();
+	// Might as well purge it here, what's the worst that could happen
+	m_pModLoadoutItems.PurgeAndDeleteElements();
 }
 
 //-----------------------------------------------------------------------------
@@ -235,6 +237,7 @@ void CTFInventoryManager::GenerateBaseItems( void )
 {
 	// Purge our lists and make new
 	m_pBaseLoadoutItems.PurgeAndDeleteElements();
+	m_pModLoadoutItems.PurgeAndDeleteElements();
 	
 	// Load a base top level invalid item
 	{
@@ -250,7 +253,33 @@ void CTFInventoryManager::GenerateBaseItems( void )
 		pItem->Init( mapItems[it]->GetDefinitionIndex(), AE_USE_SCRIPT_VALUE, AE_USE_SCRIPT_VALUE, false );
 		m_pBaseLoadoutItems.AddToTail( pItem );
 	}
+	const CEconItemSchema::BaseItemDefinitionMap_t& mapItemsMod = GetItemSchema()->GetSoloItemDefinitionMap();
+	iStart = 0;
+	for (int it = iStart; it != mapItemsMod.InvalidIndex(); it = mapItemsMod.NextInorder(it))
+	{
+		AddModItem( mapItemsMod[it]->GetDefinitionIndex() );
+	}
 }
+
+CEconItemView* CTFInventoryManager::AddModItem( int id )
+{
+	CEconItemView* pItemView = new CEconItemView;
+	CEconItem* pItem = new CEconItem;
+	pItem->m_ulID = id;
+	pItem->m_unAccountID = 0;
+	pItem->m_unDefIndex = id;
+	pItem->m_unLevel = 1;
+	pItem->m_nQuality = 0;
+
+	pItemView->Init( id, AE_USE_SCRIPT_VALUE, AE_USE_SCRIPT_VALUE, false );
+	pItemView->SetItemID( id );
+#if CLIENT_DLL
+	pItemView->SetNonSOEconItem( pItem );
+#endif
+	m_pModLoadoutItems.AddToTail( pItemView );
+	return pItemView;
+}
+
 
 #ifdef CLIENT_DLL
 //-----------------------------------------------------------------------------
@@ -266,6 +295,19 @@ bool CTFInventoryManager::EquipItemInLoadout( int iClass, int iSlot, itemid_t iI
 		return m_LocalInventory.ClearLoadoutSlot( iClass, iSlot );
 
 	CEconItemView *pItem = m_LocalInventory.GetInventoryItemByItemID( iItemID );
+	if (iItemID < 100000)
+	{
+		int count = TFInventoryManager()->GetModItemCount();
+		for (int i = 0; i < count; i++)
+		{
+			pItem = TFInventoryManager()->GetModItem(i);
+			if (pItem && pItem->GetItemDefIndex() == iItemID)
+			{
+				break;
+			}
+		}
+	}
+
 	if ( !pItem )
 		return false;
 
@@ -327,6 +369,21 @@ int	CTFInventoryManager::GetAllUsableItemsForSlot( int iClass, int iSlot, CUtlVe
 			continue;
 
 		pList->AddToTail( m_LocalInventory.GetItem(i) );
+	}
+	iCount = m_pModLoadoutItems.Count();
+	for (int i = 0; i < iCount; i++)
+	{
+		CEconItemView* pItem = m_pModLoadoutItems[i];
+		CTFItemDefinition* pItemData = pItem->GetStaticData();
+
+		if (!bIsAccountIndex && !pItemData->CanBeUsedByClass(iClass))
+			continue;
+
+		// Passing in iSlot of -1 finds all items usable by the class
+		if (iSlot >= 0 && pItem->GetStaticData()->GetLoadoutSlot(iClass) != iSlot)
+			continue;
+
+		pList->AddToTail(pItem);
 	}
 
 	return pList->Count();
@@ -902,10 +959,9 @@ void CTFPlayerInventory::UpdateCachedServerLoadoutItems()
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CTFPlayerInventory::UpdateRealTFLoadoutItems()
+/*void CTFPlayerInventory::UpdateRealTFLoadoutItems()
 {
-	V_memcpy( m_RealTFLoadoutItems, m_LoadoutItems, sizeof( itemid_t ) * ARRAYSIZE( m_RealTFLoadoutItems ) * ARRAYSIZE( m_RealTFLoadoutItems[0] ) );
-}
+}*/
 
 void CTFPlayerInventory::LoadLocalLoadout()
 {
@@ -916,14 +972,14 @@ void CTFPlayerInventory::LoadLocalLoadout()
 		return;
 	}
 
-	KeyValues *pLoadoutKV = new KeyValues("local_loadout");
+	KeyValues *pLoadoutKV = new KeyValues("tfgrub_loadout");
 	if (!pLoadoutKV->LoadFromFile(g_pFullFileSystem, LOCAL_LOADOUT_FILE, "MOD"))
 	{
 		SaveLocalLoadout( true, true );
 
 		if ( !pLoadoutKV->LoadFromFile( g_pFullFileSystem, LOCAL_LOADOUT_FILE, "MOD" ) )
 		{
-			Warning( "Unable to parse local_loadout.txt into keyvalues.\n" );
+			Warning( "Unable to parse tfgrub_loadout.txt into keyvalues.\n" );
 			return;
 		}
 	}
@@ -960,12 +1016,32 @@ void CTFPlayerInventory::LoadLocalLoadout()
 
 				m_PresetItems[iPreset][iClass][iSlot] = uItemId;
 
-				if (iPreset == m_ActivePreset[iClass]) {
+				if (iPreset == m_ActivePreset[iClass]) 
+				{
 					m_LoadoutItems[iClass][iSlot] = uItemId;
 
 					CEconItemView *pItem = GetInventoryItemByItemID(uItemId);
-					if ( pItem && pItem->GetSOCData() ) {
-						pItem->GetSOCData()->Equip(iClass, iSlot);
+
+					if (uItemId < 100000)
+					{
+						int count = TFInventoryManager()->GetModItemCount();
+						for (int i = 0; i < count; i++)
+						{
+							CEconItemView *pTempItem = TFInventoryManager()->GetModItem(i);
+							if ( pTempItem->GetItemID() == uItemId )
+							{
+								pItem = pTempItem;
+							}
+						}
+					}
+
+					if (pItem) 
+					{
+						CEconItem* pItemSOC = pItem->GetSOCData();
+						if (pItemSOC) 
+						{
+							pItemSOC->Equip( iClass, iSlot);
+						}
 					}
 				}
 			}
@@ -989,7 +1065,7 @@ void CTFPlayerInventory::SaveLocalLoadout( bool bReset, bool bDefaultToGC )
 		return;
 	}
 
-	KeyValues *pLoadoutKV = new KeyValues("local_loadout");
+	KeyValues *pLoadoutKV = new KeyValues("tfgrub_loadout");
 
 	KeyValues *pActivePresetKV = new KeyValues("active_preset");
 	for (int iClass = 1; iClass < TF_CLASS_COUNT_ALL; ++iClass)
@@ -1047,19 +1123,56 @@ void CTFPlayerInventory::EquipLocal(uint64 ulItemID, equipped_class_t unClass, e
 	// We will never get those messages, so we do everything locally.
 
 	// Unequip whatever was previously in the slot.
+	itemid_t ulPreviousItem = m_LoadoutItems[unClass][unSlot];
+	if (ulPreviousItem != 0 && ulPreviousItem < 100000)
 	{
-		itemid_t ulPreviousItem = m_LoadoutItems[unClass][unSlot];
-		CEconItemView *pPreviousItem = GetInventoryItemByItemID(ulPreviousItem);
-		if (pPreviousItem) {
+		int count = TFInventoryManager()->GetModItemCount();
+		for (int i = 0; i < count; i++)
+		{
+			CEconItemView* pItem = TFInventoryManager()->GetModItem(i);
+			if (pItem && pItem->GetSOCData() && pItem->GetItemDefIndex() == ulPreviousItem)
+			{
+				pItem->GetSOCData()->UnequipFromClass(unClass);
+			}
+		}
+	}
+	else
+	{
+		CEconItemView* pPreviousItem = GetInventoryItemByItemID(ulPreviousItem);
+		if (pPreviousItem && pPreviousItem->GetSOCData()) {
 			pPreviousItem->GetSOCData()->UnequipFromClass(unClass);
 		}
 	}
 
 	// Equip the new item and add it to our loadout.
-	CEconItemView *pItem = GetInventoryItemByItemID(ulItemID);
-	if ( pItem )
+	if (ulItemID < 100000)
 	{
-		pItem->GetSOCData()->Equip(unClass, unSlot);
+		int count = TFInventoryManager()->GetModItemCount();
+		CEconItemView* pItem;
+		for (int i = 0; i < count; i++)
+		{
+			CEconItemView* pItem = TFInventoryManager()->GetModItem(i);
+			if (pItem && pItem->GetSOCData() && pItem->GetItemDefIndex() == ulItemID)
+			{
+				pItem->GetSOCData()->Equip(unClass, unSlot);
+			}
+		}
+		m_LoadoutItems[unClass][unSlot] = ulItemID;
+
+#ifdef CLIENT_DLL
+		int activePreset = m_ActivePreset[unClass];
+		m_PresetItems[activePreset][unClass][unSlot] = ulItemID;
+
+		GTFGCClientSystem()->LocalInventoryChanged();
+#endif
+	}
+	else
+	{
+		CEconItemView* pItem = GetInventoryItemByItemID(ulItemID);
+		if (pItem && pItem->GetSOCData())
+		{
+			pItem->GetSOCData()->Equip(unClass, unSlot);
+		}
 	}
 
 	m_LoadoutItems[unClass][unSlot] = ulItemID;
@@ -1078,13 +1191,12 @@ void CTFPlayerInventory::UnequipLocal(uint64 ulItemID)
 	{
 		for (int iSlot = 0; iSlot < CLASS_LOADOUT_POSITION_COUNT; ++iSlot)
 		{
-			if (m_LoadoutItems[iClass][iSlot] == ulItemID) {
+//			if (m_LoadoutItems[iClass][iSlot] == ulItemID) {
 				m_LoadoutItems[iClass][iSlot] = 0;
-			}
+//			}
 		}
 	}
 }
-
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
@@ -1463,6 +1575,22 @@ CEconItemView *CTFPlayerInventory::GetItemInLoadout( int iClass, int iSlot )
 			// we need to validate their position on the server when we retrieve them.
 			if ( pItem && AreSlotsConsideredIdentical( pItem->GetStaticData()->GetEquipType(), pItem->GetStaticData()->GetLoadoutSlot( iClass ), iSlot ) )
 				return pItem;
+
+			if (m_LoadoutItems[iClass][iSlot] < 100000)
+			{
+				int count = TFInventoryManager()->GetModItemCount();
+				for (int i = 0; i < count; i++)
+				{
+					CEconItemView* pItem = TFInventoryManager()->GetModItem(i);
+					if (pItem && pItem->GetItemDefIndex() == m_LoadoutItems[iClass][iSlot])
+					{
+						//DevMsg( "Using mod item: %d\n", m_LoadoutItems[iClass][iSlot] );
+						if (pItem && AreSlotsConsideredIdentical(pItem->GetStaticData()->GetEquipType(), pItem->GetStaticData()->GetLoadoutSlot(iClass), iSlot))
+							return pItem;
+					}
+				}
+				return TFInventoryManager()->AddModItem( m_LoadoutItems[iClass][iSlot] );
+			}
 		}
 	}
 
@@ -1486,6 +1614,22 @@ CEconItemView *CTFPlayerInventory::GetCacheServerItemInLoadout( int iClass, int 
 		// we need to validate their position on the server when we retrieve them.
 		if ( pItem && AreSlotsConsideredIdentical( pItem->GetStaticData()->GetEquipType(), pItem->GetStaticData()->GetLoadoutSlot( iClass ), iSlot ) )
 			return pItem;
+
+		if (m_CachedServerLoadoutItems[iClass][iSlot] < 100000)
+		{
+			int count = TFInventoryManager()->GetModItemCount();
+			for (int i = 0; i < count; i++)
+			{
+				CEconItemView* pItem = TFInventoryManager()->GetModItem(i);
+				if (pItem && pItem->GetItemDefIndex() == m_CachedServerLoadoutItems[iClass][iSlot])
+				{
+					//DevMsg( "Using cached mod item: %lld\n", m_CachedServerLoadoutItems[iClass][iSlot] );
+					if (pItem && AreSlotsConsideredIdentical(pItem->GetStaticData()->GetEquipType(), pItem->GetStaticData()->GetLoadoutSlot(iClass), iSlot))
+						return pItem;
+				}
+			}
+			return TFInventoryManager()->AddModItem( m_CachedServerLoadoutItems[iClass][iSlot] );
+		}
 	}
 
 	return TFInventoryManager()->GetBaseItemForClass( iClass, iSlot );
@@ -1785,7 +1929,7 @@ void CTFPlayerInventory::SOCacheSubscribed( const CSteamID & steamIDOwner, GCSDK
 {
 	BaseClass::SOCacheSubscribed( steamIDOwner, eEvent );
 
-	UpdateRealTFLoadoutItems();
+//	UpdateRealTFLoadoutItems();
 	LoadLocalLoadout();
 
 	VerifyChangedLoadoutsAreValid();
@@ -2071,6 +2215,127 @@ CON_COMMAND(clear_loadout_ui, "Clear local loadout back to stock defaults (show 
 		} );
 }
 #endif	// TF_CLIENT_DLL
+
+#ifdef CLIENT_DLL
+CON_COMMAND_F( cl_reload_item_schema, "Reload the item schema on the client", FCVAR_CHEAT )
+{
+	DevMsg("Reloading item schema on client...\n");
+	
+	// Reload the main schema file
+	CUtlVector< CUtlString > vecErrors;
+	bool bSuccess = ItemSystem()->GetItemSchema()->BInit("scripts/items/items_game.txt", "GAME", &vecErrors);
+	
+	if( !bSuccess )
+	{
+		FOR_EACH_VEC( vecErrors, nError )
+		{
+			Warning( "%s\n", vecErrors[nError].String() );
+		}
+		DevMsg("Failed to reload main item schema!\n");
+		return;
+	}
+	
+	// Try to load custom items if the file exists
+	if ( g_pFullFileSystem->FileExists( "scripts/items/items_manifest.txt", "GAME" ) )
+	{
+		DevMsg("Loading custom items from items_manifest.txt...\n");
+		vecErrors.Purge();
+		
+		// Create a KeyValues object to load the custom items
+		KeyValues *pKVCustom = new KeyValues( "ItemsCustom" );
+		if ( pKVCustom->LoadFromFile( g_pFullFileSystem, "scripts/items/items_manifest.txt", "GAME" ) )
+		{
+			// Try to merge the custom items into the schema
+			KeyValues *pKVItems = pKVCustom->FindKey( "items" );
+			if ( pKVItems )
+			{
+				DevMsg("Found custom items section, attempting to merge...\n");
+			}
+		}
+		pKVCustom->deleteThis();
+	}
+	
+	// Clear and regenerate base items
+	TFInventoryManager()->GenerateBaseItems();
+	
+	// Reload the inventory
+	TFInventoryManager()->PostInit();
+	
+	// Refresh attributes on all players without reconnecting
+	C_TFPlayer *pLocalPlayer = C_TFPlayer::GetLocalTFPlayer();
+	if ( pLocalPlayer )
+	{
+		// Update the local player's inventory
+		pLocalPlayer->UpdateInventory( true );
+		
+		// Reapply provision (attributes) on the local player
+		pLocalPlayer->ReapplyProvision();
+		
+		// Mark that local inventory has changed
+		GTFGCClientSystem()->LocalInventoryChanged();
+		
+		DevMsg("Refreshed attributes and inventory for local player.\n");
+	}
+	
+	// Refresh attributes on all other players in the game
+	for ( int i = 1; i <= gpGlobals->maxClients; i++ )
+	{
+		C_TFPlayer *pPlayer = ToTFPlayer( UTIL_PlayerByIndex( i ) );
+		if ( pPlayer && pPlayer != pLocalPlayer && pPlayer->IsAlive() )
+		{
+			// Reapply provision (attributes) on this player
+			pPlayer->ReapplyProvision();
+		}
+	}
+	
+	DevMsg("Item schema reloaded successfully and attributes refreshed.\n");
+}
+#else
+CON_COMMAND_F( sv_reload_item_schema, "Reload the item schema on the server", FCVAR_CHEAT )
+{
+	DevMsg("Reloading item schema on server...\n");
+	
+	// Reload the main schema file
+	CUtlVector< CUtlString > vecErrors;
+	bool bSuccess = ItemSystem()->GetItemSchema()->BInit("scripts/items/items_manifest.txt", "GAME", &vecErrors);
+	
+	if( !bSuccess )
+	{
+		FOR_EACH_VEC( vecErrors, nError )
+		{
+			Warning( "%s\n", vecErrors[nError].String() );
+		}
+		DevMsg("Failed to reload main item schema!\n");
+		return;
+	}
+	
+	DevMsg("Note: Custom items (items_manifest.txt) are handled on the client side.\n");
+	
+	// Clear and regenerate base items
+	TFInventoryManager()->GenerateBaseItems();
+	
+	// Reload the inventory
+	TFInventoryManager()->PostInit();
+	
+	// Refresh attributes on all players without reconnecting
+	for ( int i = 1; i <= gpGlobals->maxClients; i++ )
+	{
+		CTFPlayer *pPlayer = ToTFPlayer( UTIL_PlayerByIndex( i ) );
+		if ( pPlayer && pPlayer->IsAlive() )
+		{
+			// Update the player's inventory
+			pPlayer->UpdateInventory( true );
+			
+			// Reapply provision (attributes) on this player
+			pPlayer->ReapplyProvision();
+			
+			DevMsg("Refreshed attributes and inventory for player %d.\n", i);
+		}
+	}
+	
+	DevMsg("Item schema reloaded successfully and attributes refreshed.\n");
+}
+#endif
 
 #if defined( TF_CLIENT_DLL ) && INVENTORY_VIA_WEBAPI
 bool CTFInventoryManager::LoadPreset(equipped_class_t unClass, equipped_preset_t unPreset)

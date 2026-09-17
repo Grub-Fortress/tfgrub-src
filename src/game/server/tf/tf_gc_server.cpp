@@ -3602,7 +3602,7 @@ void CTFGCServerSystem::SendMvMVictoryResult()
 		{
 			msg.set_tour_name_mannup( m_mvmVictoryInfo.m_sMannUpTourOfDuty );
 		}
-#endif // USE_MVM_TOUR
+//#endif // USE_MVM_TOUR
 		msg.set_lobby_id( m_mvmVictoryInfo.m_nLobbyId );
 		msg.set_event_time( m_mvmVictoryInfo.m_tEventTime );
 
@@ -3614,6 +3614,7 @@ void CTFGCServerSystem::SendMvMVictoryResult()
 		}
 
 		ReliableMsgQueue().Enqueue( pReliable );
+#endif // USE_MVM_TOUR
 	}
 }
 
@@ -4026,7 +4027,7 @@ ConVar tf_mm_trusted( "tf_mm_trusted", "0", FCVAR_NOTIFY | FCVAR_HIDDEN,
 	"Set to 1 on Valve servers to requested trusted status.  (Yes, it is authenticated on the backend, and attempts by non-valve servers are logged.)\n",
 	OnMMServerModeTrustedChanged );
 
-// Backoff api
+/* Backoff api
 void CTFGCServerSystem::WebapiEquipmentState_t::Backoff()
 {
 	if ( m_nBackoffSec == 0 )
@@ -4047,6 +4048,7 @@ bool CTFGCServerSystem::WebapiEquipmentState_t::IsBackingOff()
 {
 	return m_rtNextRequest != 0 && CRTime::RTime32TimeCur() <= m_rtNextRequest;
 }
+*/
 
 CTFGCServerSystem::WebapiEquipmentState_t& CTFGCServerSystem::FindOrCreateWebapiEquipmentState( CSteamID steamID )
 {
@@ -4074,8 +4076,8 @@ void CTFGCServerSystem::WebapiEquipmentThinkRequest( CSteamID steamID, WebapiEqu
 	WebapiEquipmentState_t& state = *pState;
 
 	// If we are waiting on timer/rate limit, don't do anything
-	if ( state.IsBackingOff() )
-		return;
+//	if ( state.IsBackingOff() )
+//		return;
 
 	switch( state.m_eState )
 	{
@@ -4162,7 +4164,7 @@ void CTFGCServerSystem::WebapiEquipmentThinkRequest( CSteamID steamID, WebapiEqu
 		SteamAPICall_t callResult;
 		if ( !SteamHTTP()->SendHTTPRequest( state.m_hEquipmentRequest, &callResult ) )
 		{
-			state.Backoff();
+//			state.Backoff();
 			return;
 		}
 
@@ -4184,8 +4186,8 @@ void CTFGCServerSystem::WebapiEquipmentThinkRequest( CSteamID steamID, WebapiEqu
 		}
 
 		// Don't allow spamming this api -- wait 20 seconds before we ask gc for items again
-		state.RequestSucceeded();
-		state.Backoff();
+//		state.RequestSucceeded();
+//		state.Backoff();
 		state.m_eState = kWebapiEquipmentState_WaitingForClientRequest;
 		break;
 
@@ -4226,7 +4228,7 @@ void CTFGCServerSystem::OnWebapiEquipmentReceived( CSteamID steamID, HTTPRequest
 		return;
 
 	// Assume failure, we'll correct this change if we succeeded
-	state.Backoff();
+//	state.Backoff();
 	state.m_eState = kWebapiEquipmentState_RequestInventory;
 
 	if ( !SteamHTTP() )
@@ -4332,7 +4334,7 @@ void CTFGCServerSystem::OnWebapiEquipmentReceived( CSteamID steamID, HTTPRequest
 	}
 
 	// We were successful, clear backoff timers
-	state.RequestSucceeded();
+//	state.RequestSucceeded();
 	state.m_eState = kWebapiEquipmentState_InventoryReceived;
 }
 
@@ -4388,6 +4390,7 @@ void CTFGCServerSystem::SDK_ApplyLocalLoadout(CGCClientSharedObjectCache* pCache
 			CEconItem soIndex;
 			soIndex.SetItemID(uItemId);
 
+			/*
 			CEconItem* pItem = (CEconItem*) pItemCache->FindSharedObject(soIndex);
 			if (pItem) {
 				pTFInventory->EquipLocal(uItemId, iClass, iSlot);
@@ -4395,6 +4398,9 @@ void CTFGCServerSystem::SDK_ApplyLocalLoadout(CGCClientSharedObjectCache* pCache
 			else {
 				Warning("Failed to find item %llu in shared object, but client says it should be equipped by [%i] in slot [%i].\n", uItemId, iClass, iSlot);
 			}
+			*/
+
+			pTFInventory->EquipLocal(uItemId, iClass, iSlot);
 		}
 	}
 }
