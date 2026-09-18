@@ -378,6 +378,9 @@ $Project "Server (TFGrub)"
 			
 			$File	"$SRCDIR\game\shared\tf\tfgrub\tf_projectile_nail.cpp"
 			$File	"$SRCDIR\game\shared\tf\tfgrub\tf_projectile_nail.h"
+			
+			$File	"$SRCDIR\game\shared\tf\tf_logic_dom.cpp"
+			$File	"$SRCDIR\game\shared\tf\tf_logic_dom.h"
 
 			$Folder	"Weapon"
 			{

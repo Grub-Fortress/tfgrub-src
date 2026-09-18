@@ -11575,6 +11575,34 @@ void CTFPlayer::OnKilledOther_Effects( CBaseEntity *pVictim, const CTakeDamageIn
 		}
 	}
 
+	if ( IsPlayerClass( TF_CLASS_MEDIC ) )
+	{
+		if (pWeapon)
+		{
+			float flUberChargeBonus = 0.0f;
+			CALL_ATTRIB_HOOK_FLOAT_ON_OTHER( pWeapon, flUberChargeBonus, add_onkill_ubercharge );
+
+			if (flUberChargeBonus > 0.0f)
+			{
+				CWeaponMedigun* pMedigun = dynamic_cast<CWeaponMedigun*>(
+					Weapon_OwnsThisID(TF_WEAPON_MEDIGUN));
+
+				if (pMedigun)
+				{
+					if (TFGameRules() && TFGameRules()->IsPowerupMode())
+					{
+						if (m_Shared.GetCarryingRuneType() != RUNE_NONE)
+							flUberChargeBonus *= 0.2f;
+						else
+							flUberChargeBonus *= 0.4f;
+					}
+
+					pMedigun->AddCharge(flUberChargeBonus);
+				}
+			}
+		}
+	}
+
 	int iSpeedBoostOnKill = 0;
 	CALL_ATTRIB_HOOK_INT_ON_OTHER( pWeapon, iSpeedBoostOnKill, speed_boost_on_kill );
 	if ( iSpeedBoostOnKill )
@@ -18944,7 +18972,7 @@ void CTFPlayer::DoTauntAttack( void )
 					CWeaponMedigun *pMedigun = (CWeaponMedigun *) Weapon_OwnsThisID( TF_WEAPON_MEDIGUN );
 					if ( pMedigun )
 					{
-						pMedigun->AddCharge( 0.5f );
+						pMedigun->AddCharge( 1.0f );
 					}
 				}
 			}

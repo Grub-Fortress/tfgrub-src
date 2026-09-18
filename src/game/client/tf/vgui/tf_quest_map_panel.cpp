@@ -1227,25 +1227,25 @@ void CQuestMapPanel::GoToCurrentQuest()
 // Debugging functions
 //
 
-CON_COMMAND( show_quest_log, "Show the quest map panel" )
-{
-	if ( GetQuestMapPanel()->IsVisible() )
-	{
-		engine->ClientCmd_Unrestricted( "gameui_hide" );
-		GetQuestMapPanel()->SetVisible( false );
-	}
-	else
-	{
-		CTFPlayer *pTFLocalPlayer = CTFPlayer::GetLocalTFPlayer();
-		if ( pTFLocalPlayer && ( pTFLocalPlayer->IsTaunting() || pTFLocalPlayer->ShouldShowHudMenuTauntSelection() ) )
-		{
-			internalCenterPrint->Print( "#TF_CYOA_PDA_Taunting" );
-		}
-		else
-		{
-			engine->ClientCmd_Unrestricted( "gameui_activate" );
-			GetQuestMapPanel()->SetVisible( true );
-			GetQuestMapPanel()->GoToCurrentQuest();
-		}
-	}
-}
+//CON_COMMAND( show_quest_log, "Show the quest map panel" )
+//{
+//	if ( GetQuestMapPanel()->IsVisible() )
+//	{
+//		engine->ClientCmd_Unrestricted( "gameui_hide" );
+//		GetQuestMapPanel()->SetVisible( false );
+//	}
+//	else
+//	{
+//		CTFPlayer *pTFLocalPlayer = CTFPlayer::GetLocalTFPlayer();
+//		if ( pTFLocalPlayer && ( pTFLocalPlayer->IsTaunting() || pTFLocalPlayer->ShouldShowHudMenuTauntSelection() ) )
+//		{
+//			internalCenterPrint->Print( "#TF_CYOA_PDA_Taunting" );
+//		}
+//		else
+//		{
+//			engine->ClientCmd_Unrestricted( "gameui_activate" );
+//			GetQuestMapPanel()->SetVisible( true );
+//			GetQuestMapPanel()->GoToCurrentQuest();
+//		}
+//	}
+//}

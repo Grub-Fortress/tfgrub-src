@@ -271,16 +271,16 @@ void CBaseObject::UpdateOnRemove( void )
 	m_bDying = true;
 
 	// check for sapper crits
-	CObjectSapper *pSapper = GetSapper();
-	if ( pSapper )
-	{
-		// give an assist to the sapper's owner
-		CTFPlayer *pSapperOwner = pSapper->GetOwner();
-		if ( pSapperOwner )
-		{
-			pSapperOwner->m_Shared.IncrementRevengeCrits();
-		}
-	}
+//	CObjectSapper *pSapper = GetSapper();
+//	if ( pSapper )
+//	{
+//		// give an assist to the sapper's owner
+//		CTFPlayer *pSapperOwner = pSapper->GetOwner();
+//		if ( pSapperOwner )
+//		{
+//			pSapperOwner->m_Shared.IncrementRevengeCrits();
+//		}
+//	}
 
 	DestroyObject();
 
