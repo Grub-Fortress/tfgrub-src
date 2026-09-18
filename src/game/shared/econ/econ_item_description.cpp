@@ -387,7 +387,7 @@ void CEconItemDescription::GenerateDescriptionLines( const CLocalizationProvider
 		Generate_XifierToolTargetItem( pLocalizationProvider, pEconItem );
 		Generate_LootListDesc( pLocalizationProvider, pEconItem );
 		Generate_EventDetail( pLocalizationProvider, pEconItem );
-		Generate_ItemSetDesc( pLocalizationProvider, pEconItem );
+//		Generate_ItemSetDesc( pLocalizationProvider, pEconItem );
 #ifdef PROJECT_TF
 		Generate_UnusualifierEffectList( pLocalizationProvider, pEconItem );
 #endif // PROJECT_TF
@@ -1339,7 +1339,7 @@ void CEconItemDescription::Generate_ItemLevelDesc_Default( const CLocalizationPr
 				else 
 #endif
 				{
-					if ( bLimitedQuantity )
+/*					if ( bLimitedQuantity )
 					{
 						// Limited Item Description
 						pszFormatString = pLocalizationProvider->Find( "ItemTypeDescLimited" );
@@ -1354,8 +1354,8 @@ void CEconItemDescription::Generate_ItemLevelDesc_Default( const CLocalizationPr
 							usDefIndex
 							);
 						return;
-					}
-					pszFormatString = pLocalizationProvider->Find( "ItemTypeDesc" );
+					}*/
+					pszFormatString = pLocalizationProvider->Find( "ItemTypeDesc_NoLevel" );
 				}
 			}
 
