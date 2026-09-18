@@ -1879,6 +1879,9 @@ void CTFPlayerShared::OnConditionAdded( ETFCond eCond )
 		OnAddHalloweenHellHeal();
 		break;
 
+	case TF_COND_SPEED_BOOST_WATCH:
+		OnAddWatchSpeedBoost( false );
+		break;
 
 	default:
 		break;
@@ -2223,6 +2226,9 @@ void CTFPlayerShared::OnConditionRemoved( ETFCond eCond )
 		OnRemoveHalloweenHellHeal();
 		break;
 
+	case TF_COND_SPEED_BOOST_WATCH:
+		OnRemoveWatchSpeedBoost( false );
+		break;
 
 	default:
 		break;
@@ -4396,6 +4402,22 @@ void CTFPlayerShared::OnRemoveSpeedBoost( bool IsNonCombat )
 #else // !CLIENT_DLL
 	m_pOuter->TeamFortress_SetSpeed();
 #endif // CLIENT_DLL
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void CTFPlayerShared::OnAddWatchSpeedBoost( bool IsNonCombat )
+{
+	m_pOuter->TeamFortress_SetSpeed();
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void CTFPlayerShared::OnRemoveWatchSpeedBoost( bool IsNonCombat )
+{
+	m_pOuter->TeamFortress_SetSpeed();
 }
 
 //-----------------------------------------------------------------------------
@@ -7987,6 +8009,19 @@ void CTFPlayerShared::InvisibilityThink( void )
 		return;
 	}
 
+	if ( m_pOuter->GetPlayerClass()->GetClassIndex() == TF_CLASS_SPY && InCond( TF_COND_STEALTHED ) )
+	{
+		float bModSpeedBoostOnCloak = 0;
+		CALL_ATTRIB_HOOK_FLOAT_ON_OTHER( m_pOuter, bModSpeedBoostOnCloak, mod_speed_boost_on_cloak );
+		if ( bModSpeedBoostOnCloak )
+		{
+			if ( m_flCloakMeter < 1.f )
+			{
+				RemoveCond( TF_COND_SPEED_BOOST_WATCH );
+			}
+		}
+	}
+
 	float flTargetInvis = 0.0f;
 	float flTargetInvisScale = 1.0f;
 	if ( InCond( TF_COND_STEALTHED_BLINK ) || InCond( TF_COND_URINE ) )
@@ -10917,6 +10952,15 @@ float CTFPlayer::TeamFortress_CalculateMaxSpeed( bool bIgnoreSpecialAbility /*= 
 
 #ifdef GAME_DLL
 	if ( m_Shared.InCond( TF_COND_SPEED_BOOST ) )
+	{
+		// We only allow our speed boost to apply if we have a base speed to work with. If we're supposed
+		// to be stationary for whatever reason we don't allow a speed to allow us to move.
+		if ( maxfbspeed > 0.0f )
+		{
+			maxfbspeed += MIN( maxfbspeed * 0.4f, tf_whip_speed_increase.GetFloat() );
+		}
+	}
+	if ( m_Shared.InCond( TF_COND_SPEED_BOOST_WATCH ) )
 	{
 		// We only allow our speed boost to apply if we have a base speed to work with. If we're supposed
 		// to be stationary for whatever reason we don't allow a speed to allow us to move.

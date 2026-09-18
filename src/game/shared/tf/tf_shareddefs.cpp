@@ -475,6 +475,10 @@ static const char *g_aConditionNames[] =
 	"TF_COND_POWERUPMODE_DOMINANT",             // = 129
 	"TF_COND_IMMUNE_TO_PUSHBACK",				// = 130
 
+	// TFGrub Conds
+
+	"TF_COND_SPEED_BOOST_WATCH",				// = 131
+
 	//
 	// ADD NEW ITEMS HERE TO AVOID BREAKING DEMOS
 	//

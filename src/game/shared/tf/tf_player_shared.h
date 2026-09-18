@@ -820,6 +820,8 @@ private:
 	void OnAddCondGas( void );
 	void OnAddRocketPack( void );
 
+	// TFGrub Cond Adds
+	void OnAddWatchSpeedBoost( bool IsNonCombat );
 
 	void OnRemoveZoomed( void );
 	void OnRemoveBurning( void );
@@ -900,6 +902,8 @@ private:
 	void OnRemoveRocketPack( void );
 	void OnRemoveBurningPyro( void );
 	
+	// TFGrub Cond Removes
+	void OnRemoveWatchSpeedBoost( bool IsNonCombat );
 
 	// Starting a new trend, putting Add and Remove next to each other
 	void OnAddCondParachute( void );
