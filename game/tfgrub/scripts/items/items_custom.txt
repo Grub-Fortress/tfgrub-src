@@ -6,12 +6,6 @@
 	{
 		"weapon_nailgun"
 		{
-			"tags"
-			{
-				"can_deal_damage"			"1"
-				"can_deal_posthumous_damage"	"1"
-				"can_deal_long_distance_damage"	"1"
-			}
 			"show_in_armory"			"1"
 			"item_class"				"tf_weapon_nailgun"
 			"item_type_name"			"TFGRUB_Weapon_Nailgun"
