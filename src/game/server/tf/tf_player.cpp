@@ -4423,6 +4423,10 @@ bool CTFPlayer::ItemIsAllowed( CEconItemView *pItem )
 	int iClass = GetPlayerClass()->GetClassIndex();
 	int iSlot = pItem->GetStaticData()->GetLoadoutSlot(iClass);
 
+	// Ban all cosmetics: head, misc, misc2
+	if ( iSlot == LOADOUT_POSITION_HEAD || iSlot == LOADOUT_POSITION_MISC || iSlot == LOADOUT_POSITION_MISC2 )
+		return false;
+
 	// Passtime hack to allow passtime gun
 	if ( V_stristr( pItem->GetItemDefinition()->GetDefinitionName(), "passtime" ) )
 	{
@@ -7797,10 +7801,6 @@ bool CTFPlayer::ClientCommand( const CCommand &args )
 
 			char pszWelcome[128];
 			Q_snprintf( pszWelcome, sizeof(pszWelcome), "#TF_Welcome" );
-			if ( UTIL_GetActiveHolidayString() )
-			{
-				Q_snprintf( pszWelcome, sizeof(pszWelcome), "#TF_Welcome_%s", UTIL_GetActiveHolidayString() );
-			}
 
 			KeyValues *data = new KeyValues( "data" );
 			data->SetString( "title", pszWelcome );		// info panel title
@@ -13649,10 +13649,6 @@ void CTFPlayer::StateEnterWELCOME( void )
 		{
 			char pszWelcome[128];
 			Q_snprintf( pszWelcome, sizeof(pszWelcome), "#TF_Welcome" );
-			if ( UTIL_GetActiveHolidayString() )
-			{
-				Q_snprintf( pszWelcome, sizeof(pszWelcome), "#TF_Welcome_%s", UTIL_GetActiveHolidayString() );
-			}
 
 			KeyValues *data = new KeyValues( "data" );
 			data->SetString( "title", pszWelcome );		// info panel title

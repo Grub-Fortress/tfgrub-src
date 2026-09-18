@@ -63,6 +63,7 @@ END_NETWORK_TABLE()
 // Server specific.
 #ifdef GAME_DLL
 BEGIN_DATADESC( CTFBaseRocket )
+	DEFINE_THINKFUNC( FlyThink ),
 END_DATADESC()
 #endif
 
@@ -165,6 +166,7 @@ void CTFBaseRocket::Spawn( void )
 
 	// Setup the touch and think functions.
 	SetTouch( &CTFBaseRocket::RocketTouch );
+	SetThink( &CTFBaseRocket::FlyThink );
 	SetNextThink( gpGlobals->curtime );
 
 	AddFlag( FL_GRENADE );
@@ -346,6 +348,23 @@ void CTFBaseRocket::RocketTouch( CBaseEntity *pOther )
 	trace_t trace;
 	memcpy( &trace, pTrace, sizeof( trace_t ) );
 	Explode( &trace, pOther );
+}
+
+//-----------------------------------------------------------------------------
+// Purpose:
+//-----------------------------------------------------------------------------
+void CTFBaseRocket::FlyThink( void )
+{
+	Vector vecVelocity = GetAbsVelocity();
+
+	if ( vecVelocity.LengthSqr() > 1.0f )
+	{
+		QAngle angles;
+		VectorAngles( vecVelocity, angles );
+		SetAbsAngles( angles );
+	}
+
+	SetNextThink( gpGlobals->curtime + 0.01f );
 }
 
 //-----------------------------------------------------------------------------

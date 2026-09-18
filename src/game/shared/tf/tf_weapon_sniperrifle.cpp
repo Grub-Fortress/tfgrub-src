@@ -47,6 +47,7 @@ void ToolFramework_RecordMaterialParams( IMaterial *pMaterial );
 
 #ifdef CLIENT_DLL
 ConVar tf_sniper_fullcharge_bell( "tf_sniper_fullcharge_bell", "0", FCVAR_ARCHIVE );
+ConVar tf_hide_aiming_laser( "tfgrub_hide_aiming_laser_infirstperson", "1", FCVAR_DEVELOPMENTONLY );
 #endif
 
 //=============================================================================
@@ -1662,11 +1663,13 @@ bool CSniperDot::ShouldDraw( void )
 
 void CSniperDot::ClientThink( void )
 {
+	C_TFPlayer* pPlayer = ToTFPlayer( GetOwnerEntity() );
+	int bHasMvmLaser = 1;
+	CALL_ATTRIB_HOOK_INT_ON_OTHER( pPlayer, bHasMvmLaser, sniper_has_laserdot );
 	// snipers have laser sights in PvE mode
-	if ( TFGameRules()->IsPVEModeActive() && GetTeamNumber() == TF_TEAM_PVE_INVADERS )
+	if ( TFGameRules()->IsPVEModeActive() && GetTeamNumber() == TF_TEAM_PVE_INVADERS || bHasMvmLaser)
 	{
-		C_TFPlayer *pPlayer = ToTFPlayer( GetOwnerEntity() );
-		if ( pPlayer )
+		if ( pPlayer && !(pPlayer->IsLocalPlayer() && pPlayer->LocalPlayerInFirstPersonView() && tf_hide_aiming_laser.GetBool() ) )
 		{
 			if ( !m_laserBeamEffect )
 			{
@@ -1676,7 +1679,14 @@ void CSniperDot::ClientThink( void )
 			if ( m_laserBeamEffect )
 			{
 				m_laserBeamEffect->SetSortOrigin( m_laserBeamEffect->GetRenderOrigin() );
-				m_laserBeamEffect->SetControlPoint( 2, Vector( 0, 0, 255 ) );
+				if ( GetTeamNumber() == TF_TEAM_BLUE )
+				{
+					m_laserBeamEffect->SetControlPoint( 2, Vector ( 30, 140, 255) );
+				}
+				else
+				{
+					m_laserBeamEffect->SetControlPoint( 2, Vector( 255, 35, 35 ) );
+				}
 
 				Vector vecAttachment;
 				Vector vecEndPos;

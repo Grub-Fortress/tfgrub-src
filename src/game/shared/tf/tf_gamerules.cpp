@@ -759,7 +759,7 @@ void cc_tf_forced_holiday_changed( IConVar *pConVar, const char *pOldString, flo
 }
 #endif // GAME_DLL
 
-ConVar tf_forced_holiday( "tf_forced_holiday", "0", FCVAR_REPLICATED, "Forced holiday, \n   Birthday = 1\n   Halloween = 2\n" //  Christmas = 3\n   Valentines = 4\n   MeetThePyro = 5\n   FullMoon=6
+ConVar tf_forced_holiday( "tf_forced_holiday", "0", FCVAR_REPLICATED | FCVAR_DEVELOPMENTONLY, "Forced holiday, \n   Birthday = 1\n   Halloween = 2\n" //  Christmas = 3\n   Valentines = 4\n   MeetThePyro = 5\n   FullMoon=6
 #ifdef GAME_DLL
 , cc_tf_forced_holiday_changed
 #endif // GAME_DLL
@@ -769,7 +769,7 @@ ConVar tf_item_based_forced_holiday( "tf_item_based_forced_holiday", "0", FCVAR_
 	, cc_tf_forced_holiday_changed
 #endif // GAME_DLL
 );
-ConVar tf_force_holidays_off( "tf_force_holidays_off", "0", FCVAR_NOTIFY | FCVAR_REPLICATED | FCVAR_DEVELOPMENTONLY, ""
+ConVar tf_force_holidays_off( "tf_force_holidays_off", "1", FCVAR_NOTIFY | FCVAR_REPLICATED | FCVAR_DEVELOPMENTONLY, ""
 #ifdef GAME_DLL
 , cc_tf_forced_holiday_changed
 #endif // GAME_DLL

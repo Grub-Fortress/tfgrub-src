@@ -13,7 +13,7 @@
 #ifdef CLIENT_DLL
 #include "c_tf_player.h"
 #include "c_tf_gamestats.h"
-
+#include "prediction.h"
 // Server specific.
 #else
 #include "tf_player.h"
@@ -50,6 +50,11 @@ END_PREDICTION_DATA()
 LINK_ENTITY_TO_CLASS( tf_weapon_knife, CTFKnife );
 PRECACHE_WEAPON_REGISTER( tf_weapon_knife );
 
+#define TF_KNIFE_BLOODY_BODYGROUP 0
+// Absolute body number of bloody/clean since the server can't figure them out from the studiohdr.  Would only
+// matter if we had other body groups going on anyway
+#define TF_KNIFE_BODY_CLEAN 0
+#define TF_KNIFE_BODY_BLOODY 1
 
 //=============================================================================
 //
@@ -64,10 +69,57 @@ CTFKnife::CTFKnife()
 	m_bReadyToBackstab = false;
 	m_flBlockedTime = 0.f;
 	m_bAllowHolsterBecauseForced = false;
+	m_bBloody = false;
 
 	ResetVars();
 }
 
+bool CTFKnife::DefaultDeploy(char* szViewModel, char* szWeaponModel, int iActivity, char* szAnimExt)
+{
+	bool bRet = BaseClass::DefaultDeploy(szViewModel, szWeaponModel, iActivity, szAnimExt);
+
+	if (bRet)
+	{
+		SwitchBodyGroups();
+	}
+	return bRet;
+}
+
+void CTFKnife::SwitchBodyGroups( void )
+{
+	int iState = 0;
+
+	if ( m_bBloody == true )
+	{
+		iState = 1;
+	}
+
+#ifdef CLIENT_DLL
+	// We'll successfully predict m_nBody along with m_bBloody, but this can be called outside prediction, in which case
+	// we want to use the networked m_nBody value -- but still fixup our viewmodel which is clientside only.
+	if ( prediction->InPrediction() )
+		{ SetBodygroup( TF_KNIFE_BLOODY_BODYGROUP, iState ); }
+
+	CTFPlayer *pTFPlayer = ToTFPlayer( GetOwner() );
+	if ( pTFPlayer && pTFPlayer->GetActiveWeapon() == this )
+	{
+		C_BaseAnimating *pViewWpn = GetAppropriateWorldOrViewModel();
+		if ( pViewWpn != this )
+		{
+			pViewWpn->SetBodygroup( TF_KNIFE_BLOODY_BODYGROUP, iState );
+		}
+	}
+#else // CLIENT_DLL
+	m_nBody = iState ? TF_KNIFE_BODY_BLOODY : TF_KNIFE_BODY_CLEAN;
+#endif // CLIENT_DLL
+}
+
+bool CTFKnife::UpdateBodygroups( CBaseCombatCharacter* pOwner, int iState )
+{
+	SwitchBodyGroups();
+
+	return BaseClass::UpdateBodygroups( pOwner, iState );
+}
 
 //-----------------------------------------------------------------------------
 // Purpose: 
@@ -99,6 +151,11 @@ void CTFKnife::WeaponRegenerate( void )
 void CTFKnife::WeaponReset( void )
 {
 	BaseClass::WeaponReset();
+
+	if (!GetOwner() || !GetOwner()->IsAlive())
+	{
+		m_bBloody = false;
+	}
 
 	ResetVars();
 }
@@ -206,6 +263,7 @@ void CTFKnife::PrimaryAttack( void )
 				if ( CanPerformBackstabAgainstTarget( pTarget ) )
 				{
 					// store the victim to compare when we do the damage
+					SetBloody( true );
 					m_hBackstabVictim.Set( pTarget );
 					iBackstabVictimHealth = Max( m_hBackstabVictim->GetHealth(), 75 );
 					nBackStabVictimRuneType = m_hBackstabVictim->m_Shared.GetCarryingRuneType();
@@ -283,6 +341,28 @@ void CTFKnife::PrimaryAttack( void )
 		if ( iDeltaHealth > 0 )
 		{
 			pPlayer->TakeHealth( iDeltaHealth, DMG_IGNORE_MAXHEALTH );
+			pPlayer->m_Shared.HealthKitPickupEffects( iDeltaHealth );
+		}
+	}
+
+	int iSanguisuge_NoOverheal = 0;
+	CALL_ATTRIB_HOOK_INT( iSanguisuge_NoOverheal, sanguisuge_nooverheal );
+	if ( bSuccessfulBackstab && iSanguisuge_NoOverheal > 0 )
+	{
+		// Our health cap is 3x our default maximum health cap. This is so high to make up for
+		// the fact that our default is lowered by equipping the weapon.
+		int iBaseMaxHealth = ( pPlayer->GetMaxHealth() - pPlayer->GetRuneHealthBonus() ),
+			iNewHealth = MIN( pPlayer->GetHealth() + iBackstabVictimHealth, iBaseMaxHealth ),
+			iDeltaHealth = iNewHealth - pPlayer->GetHealth();
+
+		if ( TFGameRules() && TFGameRules()->IsPowerupMode() && ( nBackStabVictimRuneType == RUNE_REFLECT ) )
+		{
+			iDeltaHealth = 0;
+		}
+
+		if ( iDeltaHealth > 0 )
+		{
+			pPlayer->TakeHealth(iDeltaHealth, DMG_IGNORE_MAXHEALTH );
 			pPlayer->m_Shared.HealthKitPickupEffects( iDeltaHealth );
 		}
 	}
@@ -391,6 +471,12 @@ float CTFKnife::GetMeleeDamage( CBaseEntity *pTarget, int* piDamageType, int* pi
 	}
 
 	return flBaseDamage;
+}
+
+void CTFKnife::SetBloody(bool bBloody)
+{
+	m_bBloody = bBloody;
+	SwitchBodyGroups();
 }
 
 //-----------------------------------------------------------------------------

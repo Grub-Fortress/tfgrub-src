@@ -534,6 +534,7 @@ FodyWeavers.xsd
 /game/tfgrub/voice_ban.dt
 /game/tfgrub/stats.txt
 /game/tfgrub/GameState.txt
+/game/tfgrub/materials/vgui/logos/ui/spray.vmt
 *.lst
 *.ain
 /game/tfgrub/scripts/decrypt/*
