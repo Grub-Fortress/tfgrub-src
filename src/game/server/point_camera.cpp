@@ -304,6 +304,9 @@ BEGIN_DATADESC( CPointCamera )
 	DEFINE_KEYFIELD( m_flFogMaxDensity,	FIELD_FLOAT, "fogMaxDensity" ),
 	DEFINE_KEYFIELD( m_bFogRadial, FIELD_BOOLEAN, "fogRadial" ),
 	DEFINE_KEYFIELD( m_bUseScreenAspectRatio, FIELD_BOOLEAN, "UseScreenAspectRatio" ),
+	DEFINE_KEYFIELD( m_bMirrored, FIELD_BOOLEAN, "isMirrored" ),
+	DEFINE_KEYFIELD( m_fOffsetX, FIELD_FLOAT, "OffsetX" ),
+	DEFINE_KEYFIELD( m_fOffsetY, FIELD_FLOAT, "OffsetY" ),
 #ifdef MAPBASE
 	DEFINE_KEYFIELD( m_iSkyMode, FIELD_INTEGER, "SkyMode" ),
 	DEFINE_KEYFIELD( m_iszRenderTarget, FIELD_STRING, "RenderTarget" ),
@@ -341,6 +344,9 @@ IMPLEMENT_SERVERCLASS_ST( CPointCamera, DT_PointCamera )
 	SendPropInt( SENDINFO( m_bFogRadial ), 1, SPROP_UNSIGNED ),
 	SendPropInt( SENDINFO( m_bActive ), 1, SPROP_UNSIGNED ),
 	SendPropInt( SENDINFO( m_bUseScreenAspectRatio ), 1, SPROP_UNSIGNED ),
+	SendPropInt( SENDINFO( m_bMirrored ), 0, SPROP_UNSIGNED ),
+	SendPropFloat( SENDINFO( m_fOffsetX ), 0, SPROP_NOSCALE ),
+	SendPropFloat( SENDINFO( m_fOffsetY ), 0, SPROP_NOSCALE ),
 #ifdef MAPBASE
 	SendPropInt( SENDINFO( m_iSkyMode ) ),
 	SendPropStringT( SENDINFO( m_iszRenderTarget ) ),

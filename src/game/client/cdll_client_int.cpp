@@ -157,6 +157,8 @@
 
 extern vgui::IInputInternal *g_InputInternal;
 
+const char *COM_GetModDirectory(); 
+
 //=============================================================================
 // HPE_BEGIN
 // [dwenger] Necessary for stats display
@@ -980,6 +982,15 @@ int CHLClient::Init( CreateInterfaceFn appSystemFactory, CreateInterfaceFn physi
 		return false;
 #endif
 
+	if ( V_strstr( COM_GetModDirectory(), "tfgrub" ) == 0 && V_strstr(COM_GetModDirectory(), "tfgrub_dev" ) == 0 )
+	{
+		ConColorMsg( Color( 60, 238, 60, 255 ), "%s\n", COM_GetModDirectory() );
+		Error("The game's directory must have the exact name \"tfgrub\" in order for the mod to work correctly. Please change it.");
+	}
+
+	if ( g_pMaterialSystemHardwareConfig->GetDXSupportLevel() < 90 )
+		Error( "TF:Grub has a minimum requirement of DirectX 9.0 to run properly.\nPlease launch the game with -dxlevel 90 or higher" );
+
 #ifdef MAPBASE
 	// Implements the server engine interface on the client.
 	// I'm extremely confused as to how this is even possible, but Saul Rennison's worldlight did it.
@@ -1074,6 +1085,12 @@ int CHLClient::Init( CreateInterfaceFn appSystemFactory, CreateInterfaceFn physi
 	IGameSystem::Add( CustomTextureToolCacheGameSystem() );
 	IGameSystem::Add( TFSharedContentManager() );
 	#endif
+
+	// HACK (I think): Loading the localization for tf2 and then later the overrides through cdll_client_int.cpp instead 
+	// of using AdditionalLocalization for TF2 to make sure TF:Grub can override TF2 localization strings
+	// - Grub
+	g_pVGuiLocalize->AddFile( "resource/tf_%language%.txt" );
+	g_pVGuiLocalize->AddFile( "resource/tf_override_%language%.txt" );
 
 #if defined( TF_CLIENT_DLL )
 	if ( g_AbuseReportMgr != NULL )

@@ -49,14 +49,6 @@ DESCRIPTION INFO_OPTIONS
 		{ "0" }
 	}
 	
-	"cf_use_radial_voice_menu"
-	{
-		"#TF_UseRadialVoiceMenu"
-		"#Tooltip_UseRadialVoiceMenu"
-		{ BOOL }
-		{ "0" }
-	}
-	
 	"hud_fastswitch"
 	{
 		"#GameUI_FastSwitchCheck"
@@ -120,7 +112,7 @@ DESCRIPTION INFO_OPTIONS
 		"#TF_LastHitbeeps"
 		"#Tooltip_Hitbeeps"
 		{ BOOL }
-		{ "0" }
+		{ "1" }
 	}
 
 	"tf_dingaling_lasthit_volume"
@@ -178,7 +170,7 @@ DESCRIPTION INFO_OPTIONS
 		"#TF_CombatTextBatching"
 		"#Tooltip_CombatTextBatching"
 		{ BOOL }
-		{ "0" }
+		{ "1" }
 	}
 
 	"hud_combattext_doesnt_block_overhead_text"
@@ -272,7 +264,7 @@ DESCRIPTION INFO_OPTIONS
 		"#TF_medigun_autoheal"
 		"#Tooltip_medigun_autoheal"
 		{ BOOL }
-		{ "0" }
+		{ "1" }
 	}
 	
 	"hud_medichealtargetmarker"
@@ -280,7 +272,7 @@ DESCRIPTION INFO_OPTIONS
 		"#TF_HealTargetMarker"
 		"#Tooltip_HealTargetMarker"
 		{ BOOL }
-		{ "0" }
+		{ "1" }
 	}
 	
 	"hud_medicautocallers"
@@ -299,14 +291,6 @@ DESCRIPTION INFO_OPTIONS
 		{ "75" }
 	}
 	
-	"cf_medic_show_crit_heal_indicator"
-	{
-		"#TF_MedicShowCritHealIndicator"
-		"#Tooltip_MedicShowCritHealIndicator"
-		{ BOOL }
-		{ "1" }
-	}
-	
 	"category4"
 	{
 		"#TF_OptionCategory_HUD"
@@ -317,14 +301,6 @@ DESCRIPTION INFO_OPTIONS
 	{
 		"#GameUI_EnableHUDMinMode"
 		"#Tooltip_EnableHUDMinMode"
-		{ BOOL }
-		{ "0" }
-	}
-	
-	"tfgrub_ammobucket"
-	{
-		"#TFGrub_Ammobucket"
-		"#Tooltip_TFGrub_Ammobucket"
 		{ BOOL }
 		{ "0" }
 	}
@@ -366,7 +342,7 @@ DESCRIPTION INFO_OPTIONS
 		"#GameUI_HudPlayerClassUsePlayerModel"
 		"#ToolTip_HudPlayerClassUsePlayerModel"
 		{ BOOL }
-		{ "1" }
+		{ "0" }
 	}
 	
 	"viewmodel_fov"
@@ -472,14 +448,6 @@ DESCRIPTION INFO_OPTIONS
 		"#TF_ScoreBoard_PingAsText"
 		{ BOOL }
 		{ "1" }
-	}
-	
-	"cf_clean_spectator_hud"
-	{
-		"#BF_CleanSpectatorHUD"
-		"#Tooltip_CleanSpectatorHUD"
-		{ BOOL }
-		{ "0" }
 	}
 	
 	"category6"
@@ -644,14 +612,6 @@ DESCRIPTION INFO_OPTIONS
 		{ NUMBER 5 15}
 		{ "5" }
 	}
-
-	"cf_disable_weapon_skins"
-	{
-		"#CF_DisableWeaponSkins"
-		"#Tooltip_DisableWeaponSkins"
-		{ BOOL }
-		{ "0" }
-	}
 	
 	"category1"
 	{
@@ -681,14 +641,6 @@ DESCRIPTION INFO_OPTIONS
 		"#Tooltip_ChatFilterSettings"
 		{ BUTTON }
 		{ "open_chat_filter_settings" }
-	}
-	
-	"cl_clear_chat_on_disconnect"
-	{
-		"#TF_ClearTextChatOnDisconnect"
-		"#Tooltip_ClearTextChatOnDisconnect"
-		{ BOOL }
-		{ "0" }
 	}
 
 	"category5"

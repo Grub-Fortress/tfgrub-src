@@ -74,6 +74,8 @@ bool ToolFramework_SetupEngineMicrophone( Vector &origin, QAngle &angles );
 extern ConVar default_fov;
 extern bool g_bRenderingScreenshot;
 
+extern ConVar tfgrub_mirrored;
+
 #if !defined( _X360 )
 #define SAVEGAME_SCREENSHOT_WIDTH	180
 #define SAVEGAME_SCREENSHOT_HEIGHT	100
@@ -326,6 +328,12 @@ void CViewRender::Init( void )
 	m_flLastFOV = default_fov.GetFloat();
 #endif
 
+	// Load the mirror materials
+	m_ScreenFlipMaterial.Init( materials->FindMaterial( "engine/mirror_screen", TEXTURE_GROUP_VGUI ) );
+	m_ScreenFlipMaterial->IncrementReferenceCount();
+
+	m_CameraFlipMaterial.Init( materials->FindMaterial( "engine/mirror_camera", TEXTURE_GROUP_VGUI ) );
+	m_CameraFlipMaterial->IncrementReferenceCount();
 }
 
 //-----------------------------------------------------------------------------
@@ -818,9 +826,19 @@ void CViewRender::SetUpViews()
 		&g_vecVForward, &g_vecVRight, &g_vecVUp, &g_matCamInverse );
 
 	// set up the hearing origin...
+	QAngle view_angles_before = QAngle( viewEye.angles.x, viewEye.angles.y, viewEye.angles.z );
 	AudioState_t audioState;
 	audioState.m_Origin = viewEye.origin;
-	audioState.m_Angles = viewEye.angles;
+	QAngle audioStateAngles;
+	if (tfgrub_mirrored.GetBool())
+	{
+		audioStateAngles = QAngle(viewEye.angles.x, viewEye.angles.y + 180.0f, viewEye.angles.z);
+	}
+	else
+	{
+		audioStateAngles = QAngle(viewEye.angles.x, viewEye.angles.y, viewEye.angles.z);
+	}
+	audioState.m_Angles = audioStateAngles;
 	audioState.m_bIsUnderwater = pPlayer && pPlayer->AudioStateIsUnderwater( viewEye.origin );
 
 	ToolFramework_SetupAudioState( audioState );
@@ -829,7 +847,7 @@ void CViewRender::SetUpViews()
     Assert ( viewEye.origin == audioState.m_Origin );
     Assert ( viewEye.angles == audioState.m_Angles );
 	viewEye.origin = audioState.m_Origin;
-	viewEye.angles = audioState.m_Angles;
+	viewEye.angles = view_angles_before;
 
 	engine->SetAudioState( audioState );
 

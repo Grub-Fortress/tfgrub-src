@@ -37,6 +37,8 @@
 
 extern ConVar cl_hud_minmode;
 
+extern ConVar tfgrub_mirrored;
+
 DECLARE_HUDELEMENT( CMainTargetID );
 DECLARE_HUDELEMENT( CSpectatorTargetID );
 DECLARE_HUDELEMENT( CSecondaryTargetID );
@@ -1526,6 +1528,12 @@ bool CFloatingHealthIcon::CalculatePosition( )
 
 	int iX, iY;
 	GetVectorInHudSpace( vecTarget, iX, iY );				// TODO: GetVectorInHudSpace or GetVectorInScreenSpace?
+
+	if ( tfgrub_mirrored.GetBool() )
+	{
+		iX = ScreenWidth() - iX;
+	}
+
 	SetPos( iX - ( GetWide() / 2 ), iY - GetTall() );
 
 	return true;

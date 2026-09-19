@@ -41,6 +41,9 @@ public:
 	float			GetFogEnd();
 	bool			GetFogRadial();
 	bool			UseScreenAspectRatio() const { return m_bUseScreenAspectRatio; }
+	bool			IsMirrored();
+	float			GetOffsetX();
+	float			GetOffsetY();
 #ifdef MAPBASE
 	virtual bool	IsOrtho() const { return false; }
 	virtual void	GetOrthoDimensions(float &up, float &dn, float &lf, float &rt) const {}
@@ -63,6 +66,9 @@ private:
 	bool m_bFogRadial;
 	bool m_bActive;
 	bool m_bUseScreenAspectRatio;
+	bool m_bMirrored;
+	float m_fOffsetX;
+	float m_fOffsetY;
 #ifdef MAPBASE
 	SkyboxVisibility_t m_iSkyMode;
 	ITexture *m_pRenderTarget;

@@ -26,6 +26,9 @@ IMPLEMENT_CLIENTCLASS_DT( C_PointCamera, DT_PointCamera, CPointCamera )
 	RecvPropInt( RECVINFO( m_bFogRadial ) ),
 	RecvPropInt( RECVINFO( m_bActive ) ),
 	RecvPropInt( RECVINFO( m_bUseScreenAspectRatio ) ),
+	RecvPropInt( RECVINFO( m_bMirrored ) ),
+	RecvPropFloat( RECVINFO( m_fOffsetX ) ),
+	RecvPropFloat( RECVINFO( m_fOffsetY ) ),
 #ifdef MAPBASE
 	RecvPropInt( RECVINFO( m_iSkyMode ) ),
 	RecvPropString( RECVINFO( m_iszRenderTarget ) ),
@@ -120,6 +123,21 @@ bool C_PointCamera::GetFogRadial()
 	return m_bFogRadial;
 }
 
+bool C_PointCamera::IsMirrored()
+{
+	return m_bMirrored;
+}
+
+float C_PointCamera::GetOffsetX()
+{
+	return m_fOffsetX;
+}
+
+float C_PointCamera::GetOffsetY()
+{
+	return m_fOffsetY;
+}
+
 void C_PointCamera::GetToolRecordingState( KeyValues *msg )
 {
 	BaseClass::GetToolRecordingState( msg );
@@ -133,6 +151,9 @@ void C_PointCamera::GetToolRecordingState( KeyValues *msg )
 	state.m_flFogEnd = GetFogEnd();
 	GetFogColor( r, g, b );
 	state.m_FogColor.SetColor( r, g, b, 255 );
+	state.m_bMirrored = IsMirrored();
+	state.m_fOffsetX = GetOffsetX();
+	state.m_fOffsetY = GetOffsetY();
 					  
 	msg->SetPtr( "monitor", &state );
 }

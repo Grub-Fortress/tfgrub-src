@@ -50,6 +50,8 @@ ConVar tf_rd_flag_ui_mode( "tf_rd_flag_ui_mode", "3", FCVAR_DEVELOPMENTONLY, "Wh
 
 extern ConVar tf_flag_caps_per_round;
 
+extern ConVar tfgrub_mirrored;
+
 void AddSubKeyNamed( KeyValues *pKeys, const char *pszName );
 
 //-----------------------------------------------------------------------------
@@ -192,6 +194,11 @@ float CTFArrowPanel::GetAngleRotation( void )
 
 		float dot = DotProduct( vecFlag, forward );
 		float angleBetween = acos( dot );
+
+		if ( tfgrub_mirrored.GetBool() )
+		{
+			right = -right;
+		}
 
 		dot = DotProduct( vecFlag, right );
 

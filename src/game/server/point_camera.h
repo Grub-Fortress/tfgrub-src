@@ -61,6 +61,11 @@ private:
 	CNetworkVar( bool, m_bFogRadial );
 	CNetworkVar( bool, m_bActive );
 	CNetworkVar( bool, m_bUseScreenAspectRatio );
+
+	CNetworkVar( bool, m_bMirrored );
+	CNetworkVar( float, m_fOffsetX );
+	CNetworkVar( float, m_fOffsetY );
+
 #ifdef MAPBASE
 	CNetworkVar( int, m_iSkyMode );
 	CNetworkVar( string_t, m_iszRenderTarget );

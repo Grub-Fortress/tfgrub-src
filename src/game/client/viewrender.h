@@ -474,6 +474,9 @@ private:
 	IMaterial		*GetScreenOverlayMaterial( );
 	void			PerformScreenOverlay( int x, int y, int w, int h );
 
+	void			DrawQuad( IMaterial* pMat, int width, int height );
+	void			DrawQuadOffsetUV( IMaterial* pMat, int width, int height, float du, float dv );
+
 #ifdef MAPBASE
 	void			SetIndexedScreenOverlayMaterial( int i, IMaterial *pMaterial );
 	IMaterial		*GetIndexedScreenOverlayMaterial( int i );
@@ -529,6 +532,9 @@ private:
 	bool m_bUsingIndexedScreenOverlays;
 #endif
 	CMaterialReference m_UnderWaterOverlayMaterial;
+
+	CMaterialReference m_ScreenFlipMaterial;
+	CMaterialReference m_CameraFlipMaterial;
 
 	CMaterialReference	m_ScriptOverlayMaterial;
 	char m_szCurrentScriptMaterialName[ MAX_PATH ];
