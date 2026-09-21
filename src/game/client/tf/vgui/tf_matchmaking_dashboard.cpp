@@ -295,22 +295,22 @@ CTFMatchmakingDashboard::~CTFMatchmakingDashboard()
 
 void CTFMatchmakingDashboard::ApplySchemeSettings( vgui::IScheme *pScheme ) 
 {
-	BaseClass::ApplySchemeSettings( pScheme );
+	//BaseClass::ApplySchemeSettings( pScheme );
 
-	SetMouseInputEnabled( true );
-	LoadControlSettings( "resource/UI/MatchMakingDashboard.res" );
+	//SetMouseInputEnabled( true );
+	//LoadControlSettings( "resource/UI/MatchMakingDashboard.res" );
 
-	// This cannot ever be true or else things get weird when in-game
-	SetKeyBoardInputEnabled( false );
+	//// This cannot ever be true or else things get weird when in-game
+	//SetKeyBoardInputEnabled( false );
 
-	GetMMDashboardParentManager()->UpdateParenting();
+	//GetMMDashboardParentManager()->UpdateParenting();
 
-	for( int i=0; i < ARRAYSIZE( m_colorPartyMembers ); ++i )
-	{
-		m_colorPartyMembers[ i ] = pScheme->GetColor( CFmtStr( "PartyMember%d", i +1 ), Color( 255, 255, 255, 255 ) );
-	}
+	//for( int i=0; i < ARRAYSIZE( m_colorPartyMembers ); ++i )
+	//{
+	//	m_colorPartyMembers[ i ] = pScheme->GetColor( CFmtStr( "PartyMember%d", i +1 ), Color( 255, 255, 255, 255 ) );
+	//}
 
-	UpdateDisconnectAndResume();
+	//UpdateDisconnectAndResume();
 }
 
 const Color& CTFMatchmakingDashboard::GetPartyMemberColor( int nSlot ) const

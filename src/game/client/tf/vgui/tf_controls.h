@@ -63,6 +63,8 @@ void PositionTooltip( const tooltippos_t ePreferredTooltipPosition,
 					  vgui::Panel* pMouseOverPanel,
 					  vgui::Panel *pToolTipPanel );
 
+#define RES_CREDITSMENU "resource/ui/CreditsPanel.res"
+
 //-----------------------------------------------------------------------------
 // Purpose: Xbox-specific panel that displays button icons text labels
 //-----------------------------------------------------------------------------
@@ -497,3 +499,43 @@ private:
 	wchar_t m_wszBuff[ 1024 ];
 };
 #endif // TF_CONTROLS_H
+
+//-----------------------------------------------------------------------------
+// Purpose: Displays scrollable mod credits window
+//-----------------------------------------------------------------------------
+class CTFModCreditsDialog : public vgui::EditablePanel
+{
+	DECLARE_CLASS_SIMPLE(CTFModCreditsDialog, vgui::EditablePanel);
+
+public:
+	CTFModCreditsDialog(vgui::Panel* parent);
+	~CTFModCreditsDialog();
+
+	virtual void	ApplySchemeSettings(vgui::IScheme* pScheme);
+	virtual void	ApplySettings(KeyValues* pResourceData);
+
+	void	Deploy(void);
+
+private:
+
+	void CreateControls();
+	void DestroyControls();
+	void GatherCurrentValues();
+
+	virtual void OnCommand(const char* command);
+	virtual void OnClose();
+	virtual void OnKeyCodeTyped(vgui::KeyCode code);
+	virtual void OnKeyCodePressed(vgui::KeyCode code);
+
+private:
+	CInfoDescription* m_pDescription;
+	mpcontrol_t* m_pList;
+	vgui::PanelListPanel* m_pListPanel;
+	CTFTextToolTip* m_pToolTip;
+	vgui::EditablePanel* m_pToolTipEmbeddedPanel;
+
+	CPanelAnimationVarAliasType(int, m_iControlW, "control_w", "0", "proportional_int");
+	CPanelAnimationVarAliasType(int, m_iControlH, "control_h", "0", "proportional_int");
+	CPanelAnimationVarAliasType(int, m_iSliderW, "slider_w", "0", "proportional_int");
+	CPanelAnimationVarAliasType(int, m_iSliderH, "slider_h", "0", "proportional_int");
+};

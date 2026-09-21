@@ -1,4 +1,4 @@
-"Resource\UI\TFModCreditssDialog.res"
+"Resource\UI\CreditsPanel.res"
 {
 	"TFModCreditsDialog"
 	{
