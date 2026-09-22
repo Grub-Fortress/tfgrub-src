@@ -1718,6 +1718,10 @@ void CSniperDot::ClientThink( void )
 				{
 					m_laserBeamEffect->SetControlPoint( 1, vecAttachment );
 				}
+				else if ( pPlayer->GetAttachment( "righteye", vecAttachment ) )
+				{
+					m_laserBeamEffect->SetControlPoint( 1, vecAttachment );
+				}
 				else if ( GetRenderingPositions( pPlayer, vecAttachment, vecEndPos, flSize ) )
 				{
 					m_laserBeamEffect->SetControlPoint( 1, vecAttachment );
