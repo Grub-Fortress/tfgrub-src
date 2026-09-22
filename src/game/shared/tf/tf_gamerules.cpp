@@ -4323,16 +4323,21 @@ void CTFGameRules::Activate()
 	if ( CTFRobotDestructionLogic::GetRobotDestructionLogic() )
 	{
 		m_bPlayingRobotDestructionMode.Set( true );
-		if ( CTFRobotDestructionLogic::GetRobotDestructionLogic()->GetType() == CTFRobotDestructionLogic::TYPE_ROBOT_DESTRUCTION )
+		if ( CTFRobotDestructionLogic::GetRobotDestructionLogic()->GetType() == CTFRobotDestructionLogic::TYPE_ROBOT_DESTRUCTION ) // Robot Destruction
 		{
 			tf_gamemode_rd.SetValue( 1 );
 			m_nGameType.Set( TF_GAMETYPE_RD );
 			tf_beta_content.SetValue( 1 );
 		}
-		else
+		else if ( CTFRobotDestructionLogic::GetRobotDestructionLogic()->GetType() == CTFRobotDestructionLogic::TYPE_PLAYER_DESTRUCTION ) // Player Destruction
 		{
 			tf_gamemode_pd.SetValue( 1 );
 			m_nGameType.Set( TF_GAMETYPE_PD );
+		}
+		else // Domination
+		{
+			tf_gamemode_cp.SetValue( 1 ); // uses Control Points for bot compat while there's no proper gametype for domination yet
+			m_nGameType.Set( TF_GAMETYPE_CP ); 
 		}
 	}
 	else if ( pMannVsMachineLogic )
