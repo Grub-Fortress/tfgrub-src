@@ -1245,7 +1245,7 @@ void CC_God_f (void)
 	if ( !pPlayer )
 		return;
 
-#ifdef TF_DLL
+/*#ifdef TF_DLL  // Get rid of this, no real reason why godmode should be blocked in tf2 -Grub
    if ( TFGameRules() && ( TFGameRules()->IsPVEModeActive() == false ) )
    {
 	   if ( gpGlobals->deathmatch )
@@ -1255,6 +1255,7 @@ void CC_God_f (void)
 	if ( gpGlobals->deathmatch )
 		return;
 #endif
+*/ 
 
 	pPlayer->ToggleFlag( FL_GODMODE );
 	if (!(pPlayer->GetFlags() & FL_GODMODE ) )

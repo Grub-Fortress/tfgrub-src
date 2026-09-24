@@ -41,6 +41,8 @@ ConVar cl_chatfilter_version( "cl_chatfilter_version", "0", FCVAR_CLIENTDLL | FC
 ConVar cl_mute_all_comms("cl_mute_all_comms", "1", FCVAR_ARCHIVE, "If 1, then all communications from a player will be blocked when that player is muted, including chat messages.");
 ConVar cl_enable_text_chat( "cl_enable_text_chat", "1", FCVAR_ARCHIVE, "Enable text chat in this game" );
 
+ConVar tfgrub_sound_chatping("tfgrub_sound_chatping", "0", FCVAR_NONE, "Play a sound whenever a new message gets sent.");
+
 const int kChatFilterVersion = 1;
 
 Color g_ColorBlue( 153, 204, 255, 255 );
@@ -789,9 +791,11 @@ void CBaseHudChat::MsgFunc_SayText( bf_read &msg )
 		Printf( CHAT_FILTER_NONE, "%s", hudtextmessage->LookupString( szString ) );
 	}
 
-	CLocalPlayerFilter filter;
-	C_BaseEntity::EmitSound( filter, SOUND_FROM_LOCAL_PLAYER, "HudChat.Message" );
-
+	if ( tfgrub_sound_chatping.GetBool() )
+	{ 
+		CLocalPlayerFilter filter;
+		C_BaseEntity::EmitSound( filter, SOUND_FROM_LOCAL_PLAYER, "HudChat.Message" );
+	}
 	Msg( "%s", szString );
 }
 
@@ -854,8 +858,11 @@ void CBaseHudChat::MsgFunc_SayText2( bf_read &msg )
 
 		Msg( "%s\n", RemoveColorMarkup(ansiString) );
 
-		CLocalPlayerFilter filter;
-		C_BaseEntity::EmitSound( filter, SOUND_FROM_LOCAL_PLAYER, "HudChat.Message" );
+		if ( tfgrub_sound_chatping.GetBool() )
+		{ 
+			CLocalPlayerFilter filter;
+			C_BaseEntity::EmitSound( filter, SOUND_FROM_LOCAL_PLAYER, "HudChat.Message" );
+		}
 	}
 	else
 	{

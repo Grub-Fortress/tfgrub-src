@@ -10115,38 +10115,108 @@ const char *CTFGameRules::GetChatFormat( bool bTeamOnly, CBasePlayer *pPlayer )
 	{
 		return NULL;
 	}
-
+	int bModDev = UTIL_PlayerIsModDev( pPlayer );
 	const char *pszFormat = NULL;
 
 	// coach?
 	CTFPlayer *pTFPlayer = ToTFPlayer( pPlayer );
 	if ( pTFPlayer && pTFPlayer->IsCoaching() )
 	{
-		pszFormat = "TF_Chat_Coach";
+		switch( bModDev )
+		{
+			case 0:
+				pszFormat = "TF_Chat_Coach";
+				break;
+			case 1:
+				pszFormat = "TF_Chat_Coach_Dev";
+				break;
+			case 2:
+				pszFormat = "TF_Chat_Coach_Contributor";
+				break;
+			case 3:
+				pszFormat = "TF_Chat_Coach_Playtester";
+				break;
+		}
 	}
 	// team only
 	else if ( bTeamOnly == true )
 	{
 		if ( pPlayer->GetTeamNumber() == TEAM_SPECTATOR )
 		{
-			pszFormat = "TF_Chat_Spec";
+			switch( bModDev )
+			{
+				case 0:
+					pszFormat = "TF_Chat_Spec";
+					break;
+				case 1:
+					pszFormat = "TF_Chat_Spec_Dev";
+					break;
+				case 2:
+					pszFormat = "TF_Chat_Spec_Contributor";
+					break;
+				case 3:
+					pszFormat = "TF_Chat_Spec_Playtester";
+					break;
+			}
 		}
 		else
 		{
 			if ( pPlayer->IsAlive() == false && State_Get() != GR_STATE_TEAM_WIN )
 			{
-				pszFormat = "TF_Chat_Team_Dead";
+				switch( bModDev )
+				{
+					case 0:
+						pszFormat = "TF_Chat_Team_Dead";
+						break;
+					case 1:
+						pszFormat = "TF_Chat_Team_Dead_Dev";
+						break;
+					case 2:
+						pszFormat = "TF_Chat_Team_Dead_Contributor";
+						break;
+					case 3:
+						pszFormat = "TF_Chat_Team_Dead_Playtester";
+						break;
+				}
 			}
 			else
 			{
 				const char *chatLocation = GetChatLocation( bTeamOnly, pPlayer );
 				if ( chatLocation && *chatLocation )
 				{
-					pszFormat = "TF_Chat_Team_Loc";
+					switch( bModDev )
+					{
+						case 0:
+							pszFormat = "TF_Chat_Team_Loc";
+							break;
+						case 1:
+							pszFormat = "TF_Chat_Team_Loc_Dev";
+							break;
+						case 2:
+							pszFormat = "TF_Chat_Team_Loc_Contributor";
+							break;
+						case 3:
+							pszFormat = "TF_Chat_Team_Loc_Playtester";
+							break;
+					}
 				}
 				else
 				{
-					pszFormat = "TF_Chat_Team";
+					switch( bModDev )
+					{
+						case 0:
+							pszFormat = "TF_Chat_Team";
+							break;
+						case 1:
+							pszFormat = "TF_Chat_Team_Dev";
+							break;
+						case 2:
+							pszFormat = "TF_Chat_Team_Contributor";
+							break;
+						case 3:
+							pszFormat = "TF_Chat_Team_Playtester";
+							break;
+					}
 				}
 			}
 		}
@@ -10156,21 +10226,62 @@ const char *CTFGameRules::GetChatFormat( bool bTeamOnly, CBasePlayer *pPlayer )
 	{	
 		if ( pPlayer->GetTeamNumber() == TEAM_SPECTATOR )
 		{
-			pszFormat = "TF_Chat_AllSpec";	
+			switch( bModDev )
+			{
+				case 0:
+					pszFormat = "TF_Chat_AllSpec";
+					break;
+				case 1:
+					pszFormat = "TF_Chat_AllSpec_Dev";
+					break;
+				case 2:
+					pszFormat = "TF_Chat_AllSpec_Contributor";
+					break;
+				case 3:
+					pszFormat = "TF_Chat_AllSpec_Playtester";
+					break;
+			}
 		}
 		else
 		{
 			if ( pPlayer->IsAlive() == false && State_Get() != GR_STATE_TEAM_WIN )
 			{
-				pszFormat = "TF_Chat_AllDead";
+				switch( bModDev )
+				{
+					case 0:
+						pszFormat = "TF_Chat_AllDead";
+						break;
+					case 1:
+						pszFormat = "TF_Chat_AllDead_Dev";
+						break;
+					case 2:
+						pszFormat = "TF_Chat_AllDead_Contributor";
+						break;
+					case 3:
+						pszFormat = "TF_Chat_AllDead_Playtester";
+						break;
+				}
 			}
 			else
 			{
-				pszFormat = "TF_Chat_All";	
+				switch( bModDev )
+				{
+					case 0:
+						pszFormat = "TF_Chat_All";
+						break;
+					case 1:
+						pszFormat = "TF_Chat_All_Dev";
+						break;
+					case 2:
+						pszFormat = "TF_Chat_All_Contributor";
+						break;
+					case 3:
+						pszFormat = "TF_Chat_All_Playtester";
+						break;
+				}
 			}
 		}
 	}
-
 	return pszFormat;
 }
 

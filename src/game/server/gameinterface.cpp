@@ -314,6 +314,67 @@ CBasePlayer *UTIL_GetCommandClient( void )
 }
 
 //-----------------------------------------------------------------------------
+// Purpose:
+//-----------------------------------------------------------------------------
+
+int UTIL_PlayerIsModDev( CBasePlayer *client )
+{
+	uint64 steamid = client->GetSteamIDAsUInt64();
+	switch(steamid)
+	{
+		case 76561198813329543: // Grub
+			return 1; // Dev
+		break;
+
+		case 76561199026136810: // Sargeant Death - The Balance Journalist
+		case 76561198177986237: // Mr Malos - Modeler, Playtester
+		case 76561199094894547: // Jarate - SFM class portrait renders
+			return 2; // Contributor
+		break;
+
+		case 76561199057355482: // Cheesie_cake - Playtester
+			return 3; // Playtester
+			break;
+
+		default:
+			return 0;
+		break;
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+bool UTIL_HandleCheatCmdForPlayer( CBasePlayer *client )
+{
+	//No player - Backout
+	if ( !client )
+	{
+		return false;
+	}
+	if ( UTIL_PlayerIsModDev( client ) != 1 )
+	{ 
+		//Back out with cheats
+		if ( sv_cheats->GetBool() )
+		{
+			return true;
+		}
+
+		if ( client != UTIL_GetLocalPlayerOrListenServerHost() )
+		{
+			//Back out without cheats 
+			if ( !sv_cheats->GetBool() )
+			{
+//				ClientPrint( client, HUD_PRINTCONSOLE, "Can't use this cheat command, unless the server has sv_cheats set to 1.\n");
+				return false;
+			}
+		}
+	}
+
+	return false;
+}
+
+//-----------------------------------------------------------------------------
 // Purpose: Retrieves the MOD directory for the active game (ie. "hl2")
 //-----------------------------------------------------------------------------
 

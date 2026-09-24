@@ -539,6 +539,7 @@ BEGIN_DATADESC( CTFPlayer )
 	DEFINE_INPUTFUNC( FIELD_VOID, "TriggerLootIslandAchievement2", InputTriggerLootIslandAchievement2 ),
 	DEFINE_INPUTFUNC( FIELD_STRING,	"SpeakResponseConcept",	InputSpeakResponseConcept ),
 	DEFINE_INPUTFUNC( FIELD_VOID, "RollRareSpell", InputRollRareSpell ),
+	DEFINE_INPUTFUNC( FIELD_INTEGER, "GiveItem", InputGiveItem ),
 	DEFINE_INPUTFUNC( FIELD_VOID, "RoundSpawn", InputRoundSpawn ),
 END_DATADESC()
 
@@ -857,6 +858,96 @@ void cc_CreatePredictionError_f()
 ConCommand cc_CreatePredictionError( "CreatePredictionError", cc_CreatePredictionError_f, "Create a prediction error", FCVAR_CHEAT | FCVAR_DEVELOPMENTONLY );
 
 // -------------------------------------------------------------------------------- //
+
+CON_COMMAND_F( give_econ, "Give ECON item with specified ID from item schema.\nFormat: <id> <classname> <attribute1> <value1> <attribute2> <value2> ... <attributeN> <valueN>", FCVAR_NONE )
+{
+	if ( args.ArgC() < 2 )
+		return;
+
+	//Check who is calling the command
+	CTFPlayer* pPlayer = ToTFPlayer( UTIL_GetCommandClient() );;
+	if( !UTIL_HandleCheatCmdForPlayer( pPlayer ) ) 
+		return;
+
+	int iItemID = atoi( args[1] );
+	CEconItemDefinition* pItemDef = GetItemSchema()->GetItemDefinition( iItemID );
+	if ( !pItemDef )
+		return;
+
+	//KeyValues* pKVInitValues = pItemDef->GetRawDefinition();
+
+	TFPlayerClassData_t* pData = pPlayer->GetPlayerClass()->GetData();
+	CEconItemView econItem;
+
+	econItem.Init( iItemID, AE_UNIQUE, AE_USE_SCRIPT_VALUE, true );
+
+	//bool bAddedAttributes = false;
+
+	// Additonal params are attributes.
+	/*for (int i = 3; i + 1 < args.ArgC(); i += 2)
+	{
+		int iAttribIndex = atoi(args[i]);
+		float flValue = V_atof(args[i + 1]);
+
+		CEconItemAttribute econAttribute(iAttribIndex, flValue);
+		bAddedAttributes = econItem.AddAttribute(&econAttribute);
+	}
+
+	econItem.SkipBaseAttributes(bAddedAttributes);*/
+
+
+
+	// Nuke whatever we have in this slot.
+	//int iClass = pPlayer->GetPlayerClass()->GetClassIndex();
+	const char* pszLoadoutSlot = econItem.GetDefinitionString( "item_slot", "class" );
+	int iSlot = StringFieldToInt( pszLoadoutSlot, GetItemSchema()->GetLoadoutStrings( EQUIP_TYPE_CLASS ), true );
+	CBaseEntity* pEntity = pPlayer->GetEntityForLoadoutSlot( iSlot );
+
+	if ( pEntity )
+	{
+		CBaseCombatWeapon* pWeapon = pEntity->MyCombatWeaponPointer();
+		if ( pWeapon )
+		{
+			if ( pWeapon == pPlayer->GetActiveWeapon() )
+				pWeapon->Holster();
+
+			pPlayer->Weapon_Detach( pWeapon );
+			UTIL_Remove( pWeapon );
+		}
+		else if ( pEntity->IsWearable() )
+		{
+			CEconWearable* pWearable = static_cast<CEconWearable*>( pEntity );
+			pPlayer->RemoveWearable( pWearable );
+		}
+		else
+		{
+			Assert( false );
+			UTIL_Remove( pEntity );
+		}
+	}
+
+	const char* pszClassname = args.ArgC() > 2 ? args[2] : pItemDef->GetItemClass();
+	CEconEntity* pEconEnt = dynamic_cast<CEconEntity*>( pPlayer->GiveNamedItem( pszClassname, 0, &econItem ) );
+
+	if ( pEconEnt )
+	{
+		pEconEnt->GiveTo( pPlayer );
+
+		CBaseCombatWeapon* pWeapon = pEconEnt->MyCombatWeaponPointer();
+		if ( pWeapon )
+		{
+			int iAmmo = pWeapon->GetPrimaryAmmoType();
+			if ( iAmmo > -1 )
+				pPlayer->SetAmmoCount( pPlayer->GetMaxAmmo( iAmmo ), iAmmo );
+		}
+
+		CTFWeaponBuilder *pBuilder = dynamic_cast<CTFWeaponBuilder*>( pEconEnt );
+		if ( pBuilder )
+		{
+			pBuilder->SetSubType( pData->m_aBuildable[0] );
+		}
+	}
+}
 
 enum eCoachCommand
 {
@@ -20791,6 +20882,163 @@ void CTFPlayer::SetCustomModelWithClassAnimations( const char *pszModel )
 void CTFPlayer::InputSetCustomModelWithClassAnimations( inputdata_t &inputdata )
 {
 	SetCustomModelWithClassAnimations( inputdata.value.String() );
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+
+void CTFPlayer::GiveItem(int inputdata)
+{
+
+	if (!IsAlive())
+		return;
+
+	CTFPlayer* pPlayer = this;
+
+	
+	CEconItemDefinition* pItemDef = GetItemSchema()->GetItemDefinition(inputdata);
+	if (!pItemDef)
+		return;
+
+	TFPlayerClassData_t* pData = pPlayer->GetPlayerClass()->GetData();
+	CEconItemView econItem;
+
+	econItem.Init(inputdata, AE_UNIQUE, AE_USE_SCRIPT_VALUE, true);
+
+	// Nuke whatever we have in this slot.
+	const char* pszLoadoutSlot = econItem.GetDefinitionString("item_slot", "class");
+	int iSlot = StringFieldToInt(pszLoadoutSlot, GetItemSchema()->GetLoadoutStrings(EQUIP_TYPE_CLASS), true);
+	CBaseEntity* pEntity = pPlayer->GetEntityForLoadoutSlot(iSlot);
+
+	if (pEntity)
+	{
+		CBaseCombatWeapon* pWeapon = pEntity->MyCombatWeaponPointer();
+		if (pWeapon)
+		{
+			if (pWeapon == pPlayer->GetActiveWeapon())
+				pWeapon->Holster();
+
+			pPlayer->Weapon_Detach(pWeapon);
+			UTIL_Remove(pWeapon);
+		}
+		else if (pEntity->IsWearable())
+		{
+			CEconWearable* pWearable = static_cast<CEconWearable*>(pEntity);
+			pPlayer->RemoveWearable(pWearable);
+		}
+		else
+		{
+			Assert(false);
+			UTIL_Remove(pEntity);
+		}
+	}
+
+	const char* pszClassname = pItemDef->GetItemClass();
+	CEconEntity* pEconEnt = dynamic_cast<CEconEntity*>(pPlayer->GiveNamedItem(pszClassname, 0, &econItem));
+
+	if (pEconEnt)
+	{
+		pEconEnt->GiveTo(pPlayer);
+
+		CBaseCombatWeapon* pWeapon = pEconEnt->MyCombatWeaponPointer();
+		if (pWeapon)
+		{
+			int iAmmo = pWeapon->GetPrimaryAmmoType();
+			if (iAmmo > -1)
+				pPlayer->SetAmmoCount(pPlayer->GetMaxAmmo(iAmmo), iAmmo);
+		}
+
+		CTFWeaponBuilder* pBuilder = dynamic_cast<CTFWeaponBuilder*>(pEconEnt);
+		if (pBuilder)
+		{
+			pBuilder->SetSubType(pData->m_aBuildable[0]);
+		}
+	}
+}
+
+void CTFPlayer::GiveItemString( const char* pszItemName )
+{
+	CItemSelectionCriteria criteria;
+	criteria.SetQuality( AE_USE_SCRIPT_VALUE );
+	criteria.BAddCondition( "name", k_EOperator_String_EQ, pszItemName, true );
+
+	CBaseEntity *pItem = ItemGeneration()->GenerateRandomItem( &criteria, WorldSpaceCenter(), vec3_angle, TranslateWeaponEntForClass( pszItemName, GetPlayerClass()->GetClassIndex() ) );
+	if ( pItem )
+	{
+		CEconItemView *pScriptItem = static_cast< CBaseCombatWeapon * >( pItem )->GetAttributeContainer()->GetItem();
+
+		// If we already have an item in that slot, remove it
+		int iClass = GetPlayerClass()->GetClassIndex();
+		int iSlot = pScriptItem->GetStaticData()->GetLoadoutSlot( iClass );
+		equip_region_mask_t unNewItemRegionMask = pScriptItem->GetItemDefinition() ? pScriptItem->GetItemDefinition()->GetEquipRegionConflictMask() : 0;
+
+		if ( IsWearableSlot( iSlot ) )
+		{
+			// Remove any wearable that has a conflicting equip_region
+			for ( int wbl = 0; wbl < GetNumWearables(); wbl++ )
+			{
+				CEconWearable *pWearable = GetWearable( wbl );
+				if ( !pWearable )
+					continue;
+
+				equip_region_mask_t unWearableRegionMask = 0;
+				if ( pWearable->GetAttributeContainer()->GetItem() )
+				{
+					unWearableRegionMask = pWearable->GetAttributeContainer()->GetItem()->GetItemDefinition()->GetEquipRegionConflictMask();
+				}
+
+				if ( unWearableRegionMask & unNewItemRegionMask )
+				{
+					RemoveWearable( pWearable );
+				}
+			}
+		}
+		else
+		{
+			CTFWeaponBuilder *pBuilder = dynamic_cast<CTFWeaponBuilder*>( (CBaseEntity*)pItem );
+			if ( pBuilder )
+			{
+				pBuilder->SetSubType( GetPlayerClass()->GetData()->m_aBuildable[0] );
+			}
+
+			CBaseEntity	*pEntity = GetEntityForLoadoutSlot( iSlot );
+			if ( pEntity )
+			{
+				CBaseCombatWeapon *pWpn = dynamic_cast< CBaseCombatWeapon * >( pEntity );
+				Weapon_Detach( pWpn );
+				UTIL_Remove( pEntity );
+				//DevMsg( "CTFPlayer::GiveItemString: Discarding Weapon...\n" );
+			}
+		}
+
+		// Fake global id
+		pScriptItem->SetItemID( 1 );
+
+		DispatchSpawn( pItem );
+
+		CEconEntity *pNewItem = assert_cast<CEconEntity*>( pItem );
+		if ( pNewItem )
+		{
+			pNewItem->GiveTo( this );
+		}
+
+		PostInventoryApplication();
+	}
+	else
+	{
+		if ( pszItemName && pszItemName[0] )
+		{
+			DevMsg( "CTFPlayer::GiveItemString: Invalid item %s.\n", pszItemName );
+		}
+	}
+}
+
+
+void CTFPlayer::InputGiveItem( inputdata_t& input )
+{
+	int iItem = input.value.Int();
+	GiveItem( iItem );
 }
 
 //-----------------------------------------------------------------------------
