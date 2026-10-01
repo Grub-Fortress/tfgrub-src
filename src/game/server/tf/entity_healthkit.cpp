@@ -14,6 +14,7 @@
 #include "tf_weapon_lunchbox.h"
 #include "tf_gamestats.h"
 
+ConVar tfgrub_lunchbox_owner_can_heal( "tfgrub_lunchbox_owner_can_heal", "0", FCVAR_NOTIFY, "If set to 1, allows Lunchbox owners to pick up their thrown Lunchbox item as a health pack." );
 
 //=============================================================================
 //
@@ -76,8 +77,11 @@ bool CHealthKit::MyTouch( CBasePlayer *pPlayer )
 
 		bool bPerformPickup = false;
 
+		bool bIsSandvichOwner = GetOwnerEntity() == pPlayer && bIsAnyHeavyWithSandvichEquippedPickingUp;
+
 		// In the case of sandvich's owner, only restore ammo
-		if ( GetOwnerEntity() == pPlayer && bIsAnyHeavyWithSandvichEquippedPickingUp )
+		// also check if Sandvich owner can receive health if the ConVar is enabled
+		if ( bIsSandvichOwner && !tfgrub_lunchbox_owner_can_heal.GetBool() )
 		{
 			if ( pPlayer->GiveAmmo( 1, TF_AMMO_GRENADES1, false ) )
 			{
