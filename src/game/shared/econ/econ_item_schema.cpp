@@ -2307,6 +2307,9 @@ m_pOwningPackBundle( NULL ),
 m_bIsPackItem( false ),
 m_bBaseItem( false ),
 m_bModItem( true ),
+// TF Bot Give Items
+m_bUsableByBots( true ),
+
 m_pszItemLogClassname( NULL ),
 m_pszItemIconClassname( NULL ),
 m_pszDatabaseAuditTable( NULL ),
@@ -3187,6 +3190,8 @@ bool CEconItemDefinition::BInitFromKV( KeyValues *pKVItem, CUtlVector<CUtlString
 	{
 		m_bModItem = m_pKVItem->GetInt( "experimentalitem", 0 ) != 0;
 	}
+	// TF Bot Give Items
+	m_bUsableByBots = m_pKVItem->GetInt("usable_by_bots", 0) != 0;
 	m_pszItemLogClassname = m_pKVItem->GetString( "item_logname", NULL );
 	m_pszItemIconClassname = m_pKVItem->GetString( "item_iconname", NULL );
 	m_pszDatabaseAuditTable = m_pKVItem->GetString( "database_audit_table", NULL );

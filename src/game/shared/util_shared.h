@@ -649,6 +649,12 @@ public:
 		return 0.0f;
 	}
 
+	// TF Bot Give Items
+	bool HasStopped( void ) const
+	{
+		return ( m_timestamp == -1.0f );
+	}
+
 private:
 	float m_duration;
 	float m_timestamp;
