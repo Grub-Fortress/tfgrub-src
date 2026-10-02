@@ -30,11 +30,8 @@ $Group "game"
 
 $Group "shaders"
 {
-	//"game_shader_generic_example"
-	"game_shader_generic_std"
-
-	"mathlib"
-	"tier1"
+	"game_shader_generic_example"
+	//"game_shader_generic_std"
 }
 
 $Group "everything"
