@@ -45,7 +45,7 @@ DESCRIPTION SERVER_OPTIONS
 	{
 		"#Valve_Hostname"
 		{ STRING }
-		{ "Team Fortress 2" }
+		{ "Grub Fortress" }
 	}
 
 	"maxplayers"
@@ -82,21 +82,15 @@ DESCRIPTION SERVER_OPTIONS
 		{ "0" }
 	}
 	
-	"tfgrub_lunchbox_owner_can_heal"
-	{
-		"#TFGRUB_Lunchbox_OwnerPickup"
-		{ BOOL }
-		{ "0" }
-	}
 	"tf_bot_quota"
 	{
-		"Number of Bots"
+		"#TFGRUB_CSMenu_AmountOfBots"
 		{ NUMBER 0 100 }
 		{ "0" }
 	}
 	"tf_bot_difficulty"
 	{
-		"Bot Difficulty"
+		"#TF_Bot_Difficulty"
 		{
 			LIST
 			"#TF_Bot_Difficulty0" "0"
@@ -108,8 +102,185 @@ DESCRIPTION SERVER_OPTIONS
 	}
 	"tf_bot_join_after_player"
 	{
-		"Bots Join After Player"
+		"#TFGRUB_CSMenu_BotsAfterPlayer"
 		{ BOOL }
 		{ "0" }
+	}
+	"sv_alltalk"
+	{
+		"#TFGRUB_CSMenu_AllTalk"
+		{ BOOL }
+		{ "1" }
+	}
+	"sv_voiceenable"
+	{
+		"#TFGRUB_CSMenu_VoiceChat"
+		{ BOOL }
+		{ "1" }
+	}
+	"mp_timelimit"
+	{
+		"#TFGRUB_CSMenu_TimeLimit"
+		{ NUMBER 0 -1 }
+		{ "0" }
+	}
+	"mp_winlimit"
+	{
+		"#TF_MatchOption_WinLimit"
+		{ NUMBER 0 -1 }
+		{ "0" }
+	}
+	"mp_maxrounds"
+	{
+		"#TF_MatchOption_Rounds"
+		{ NUMBER 0 -1 }
+		{ "0" }
+	}
+	"mp_bonusroundtime"
+	{
+		"#TFGRUB_CSMenu_BonusRoundTime"
+		{ NUMBER 0 -1 }
+		{ "15" }
+	}
+	"mp_stalemate_enable"
+	{
+		"#TFGRUB_CSMenu_Stalemate"
+		{ BOOL }
+		{ "0" }
+	}
+	"mp_teams_unbalance_limit"
+	{
+		"#TFGRUB_CSMenu_BalanceLimit"
+		{ NUMBER 0 -1 }
+		{ "1" }
+	}
+	"mp_autoteambalance"
+	{
+		"#TF_MatchOption_AutoBalance"
+		{ BOOL }
+		{ "1" }
+	}
+	"mp_scrambleteams_auto"
+	{
+		"#TFGRUB_CSMenu_AutoScramble"
+		{ BOOL }
+		{ "1" }
+	}
+	"sv_downloadurl"
+	{
+		"#TFGRUB_CSMenu_FastDLURL"
+		{ STRING }
+		{ "" }
+	}
+	"sv_allowupload"
+	{
+		"#TFGRUB_CSMenu_AllowUpload"
+		{ BOOL }
+		{ "1" }
+	}
+	"sv_allowdownload"
+	{
+		"#TFGRUB_CSMenu_AllowDownload"
+		{ BOOL }
+		{ "1" }
+	}
+	"tf_classlimit"
+	{
+		"#TFGRUB_CSMenu_GlobalClassLimit"
+		{ BOOL }
+		{ "0" }
+	}
+	"tf_weapon_criticals"
+	{
+		"#TFGRUB_CSMenu_EnableRandomCrits"
+		{
+			LIST
+			"#TFGRUB_CSMenu_Off"		"0"
+			"#TFGRUB_CSMenu_On"			"1"
+		}
+		{ "1" }
+	}
+	"tf_weapon_criticals_melee"
+	{
+		"#TFGRUB_CSMenu_EnableRandomMeleeCrits"
+		{
+			LIST
+			"#TFGRUB_CSMenu_Off"		"0"
+			"#TFGRUB_CSMenu_On"			"1"
+			"#TFGRUB_CSMenu_OnNoMelle"	"2"
+		}
+		{ "2" }
+	}
+	"tf_use_fixed_weaponspreads"
+	{
+		"#TFGRUB_CSMenu_UseFixedSpread"
+		{ BOOL }
+		{ "0" }
+	}
+	"mp_tournament"
+	{
+		"#TFGRUB_CSMenu_TMEnable"
+		{ BOOL }
+		{ "0" }
+	}
+	"mp_highlander"
+	{
+		"#TFGRUB_CSMenu_TMEnableHighlanderMode"
+		{ BOOL }
+		{ "0" }
+	}
+	"tf_tournament_classlimit_scout"
+	{
+		"#TFGRUB_CSMenu_TMScoutClassLimit"
+		{ NUMBER 0 -1 }
+		{ "-1" }
+	}
+	"tf_tournament_classlimit_soldier"
+	{
+		"#TFGRUB_CSMenu_TMSoldierClassLimit"
+		{ NUMBER 0 -1 }
+		{ "-1" }
+	}
+	"tf_tournament_classlimit_pyro"
+	{
+		"#TFGRUB_CSMenu_TMPyroClassLimit"
+		{ NUMBER 0 -1 }
+		{ "-1" }
+	}
+	"tf_tournament_classlimit_demoman"
+	{
+		"#TFGRUB_CSMenu_TMDemomanClassLimit"
+		{ NUMBER 0 -1 }
+		{ "-1" }
+	}
+	"tf_tournament_classlimit_heavy"
+	{
+		"#TFGRUB_CSMenu_TMHeavyClassLimit"
+		{ NUMBER 0 -1 }
+		{ "-1" }
+	}
+	"tf_tournament_classlimit_engineer"
+	{
+		"#TFGRUB_CSMenu_TMEngineerClassLimit"
+		{ NUMBER 0 -1 }
+		{ "-1" }
+	}
+	"tf_tournament_classlimit_medic"
+	{
+		"#TFGRUB_CSMenu_TMMedicClassLimit"
+		{ NUMBER 0 -1 }
+		{ "-1" }
+	}
+	"tf_tournament_classlimit_sniper"
+	{
+		"#TFGRUB_CSMenu_TMSniperClassLimit"
+		{ NUMBER 0 -1 }
+		{ "-1" }
+	}
+	"tf_tournament_classlimit_spy"
+	{
+		"#TFGRUB_CSMenu_TMSpyClassLimit"
+		{ NUMBER 0 -1 }
+		{ "-1" }
 	}
 }

@@ -65,8 +65,8 @@ ConVar tf_bot_debug_tags( "tf_bot_debug_tags", "0", FCVAR_CHEAT, "ent_text will 
 ConVar tf_bot_spawn_use_preset_roster( "tf_bot_spawn_use_preset_roster", "1", FCVAR_CHEAT, "Bot will choose class from a preset class table." );
 
 // TF Bot Give Items
-ConVar tf_bot_give_items( "tf_bot_give_items", "1", FCVAR_GAMEDLL );
-ConVar tf_bot_give_items_nosteamcheck( "tf_bot_give_items_nosteamcheck", "0", FCVAR_GAMEDLL );
+ConVar tfgrub_bot_give_items( "tfgrub_bot_give_items", "1", FCVAR_GAMEDLL );
+ConVar tfgrub_bot_give_items_nosteamcheck( "tfgrub_bot_give_items_nosteamcheck", "0", FCVAR_GAMEDLL );
 
 extern ConVar tf_bot_sniper_spot_max_count;
 extern ConVar tf_bot_fire_weapon_min_time;
@@ -4657,9 +4657,9 @@ void CTFBot::HandleLoadout(void)
 	if (!m_InitialLoadoutLoadTimer.IsElapsed())
 		return;
 
-	bool bLoggedIntoSteam = !tf_bot_give_items_nosteamcheck.GetBool() && (steamapicontext && steamapicontext->SteamUser() && steamapicontext->SteamUser()->BLoggedOn());
+	bool bLoggedIntoSteam = !tfgrub_bot_give_items_nosteamcheck.GetBool() && (steamapicontext && steamapicontext->SteamUser() && steamapicontext->SteamUser()->BLoggedOn());
 
-	if (bLoggedIntoSteam && tf_bot_give_items.GetBool())
+	if (bLoggedIntoSteam && tfgrub_bot_give_items.GetBool())
 	{
 		if (vecSavedRandomLoadout.Count() > 0)
 		{
@@ -4680,8 +4680,8 @@ void CTFBot::ResetLoadout(void)
 	if (TFGameRules() && TFGameRules()->IsMannVsMachineMode())
 		return;
 
-	bool bLoggedIntoSteam = !tf_bot_give_items_nosteamcheck.GetBool() && (steamapicontext && steamapicontext->SteamUser() && steamapicontext->SteamUser()->BLoggedOn());
-	if (bLoggedIntoSteam && tf_bot_give_items.GetBool() && !(TFGameRules() && TFGameRules()->IsMannVsMachineMode()))
+	bool bLoggedIntoSteam = !tfgrub_bot_give_items_nosteamcheck.GetBool() && (steamapicontext && steamapicontext->SteamUser() && steamapicontext->SteamUser()->BLoggedOn());
+	if (bLoggedIntoSteam && tfgrub_bot_give_items.GetBool() && !(TFGameRules() && TFGameRules()->IsMannVsMachineMode()))
 	{
 		vecSavedRandomLoadout.RemoveAll();
 		SelectRandomizedLoadout();
