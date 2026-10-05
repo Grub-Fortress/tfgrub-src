@@ -87,23 +87,23 @@ DESCRIPTION INFO_OPTIONS
 		"Community Help/Contributions"
 		{ CATEGORY }
 	}	
+	"mapbase"
+	{
+		"Mapbase - The base for the TF:Grub Source code"
+		"github.com/mapbase-source/source-sdk-2013"
+		{ BOOL }
+		{ "1" }
+	}
 	"betam"
 	{
-		"BetaM - Custom Items, Credits menu, misc. fixes"
+		"BetaM - Custom Items, Credits menu"
 		"www.youtube.com/BetaM"
 		{ BOOL }
 		{ "1" }
 	}	
-	"cf"
-	{
-		"Custom Fortress - The mod Grub Fortress is a fork of"
-		"github.com/ALIEN31ITA/Better-Fortress-2"
-		{ BOOL }
-		{ "1" }
-	}
 	"lux"
 	{
-		"LUX - ShiroDkxtro2"
+		"LUX Shaders - ShiroDkxtro2"
 		"github.com/LUX-Shaders-Team/LUX-Shaders"
 		{ BOOL }
 		{ "1" }
@@ -173,7 +173,7 @@ DESCRIPTION INFO_OPTIONS
 	}
 	"YourSourceBoiii"
 	{
-		"YourSourceBoiii - chat filter for voice commands"
+		"YourSourceBoiii - Chat filter for voice commands"
 		"github.com/ValveSoftware/source-sdk-2013/pull/1884"
 		{ BOOL }
 		{ "1" }
