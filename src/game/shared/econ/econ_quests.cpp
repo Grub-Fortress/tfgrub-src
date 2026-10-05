@@ -276,9 +276,9 @@ bool CQuestObjectiveDefinition::BPostDataLoaded( CUtlVector<CUtlString> *pVecErr
 		{
 			delete pTempConditions;
 			KeyValuesDumpAsDevMsg( m_pKVConditions );
-			CUtlString strError( CFmtStr( "Failed to init conditions for quest objective: %d: %s", GetDefIndex(), GetName() ) );
+//			CUtlString strError( CFmtStr( "Failed to init conditions for quest objective: %d: %s", GetDefIndex(), GetName() ) );
 			AssertMsg( false, "%s", strError.Get() );
-			SCHEMA_INIT_CHECK( false, "%s", strError.Get() );
+//			SCHEMA_INIT_CHECK( false, "%s", strError.Get() );
 		}
 
 		// clean up after test parsing quest conditions

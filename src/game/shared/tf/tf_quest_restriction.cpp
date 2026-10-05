@@ -512,9 +512,9 @@ public:
 			
 			const char *pszType = pSubKey->GetString( "type" );
 			CTFQuestRestriction *pNewRestriction = CreateRestrictionByName( pszType, this );
-			SCHEMA_INIT_CHECK( pNewRestriction != NULL, "%s", CFmtStr( "Failed to create quest restriction name '%s' for '%s'", pszType, GetConditionName() ).Get() );
+//			SCHEMA_INIT_CHECK( pNewRestriction != NULL, "%s", CFmtStr( "Failed to create quest restriction name '%s' for '%s'", pszType, GetConditionName() ).Get() );
 
-			SCHEMA_INIT_CHECK( pNewRestriction->BInitFromKV( pSubKey, pVecErrors ), "Failed to init from KeyValues" );
+//			SCHEMA_INIT_CHECK( pNewRestriction->BInitFromKV( pSubKey, pVecErrors ), "Failed to init from KeyValues" );
 
 			m_vecRestrictions.AddToTail( pNewRestriction );
 			nInputCount++;

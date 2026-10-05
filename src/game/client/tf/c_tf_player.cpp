@@ -4893,10 +4893,10 @@ void C_TFPlayer::OnDataChanged( DataUpdateType_t updateType )
 		{
 			pActiveWeapon->UpdateVisibility();
 
-			if ( GetLocalTFPlayer() == this && pActiveWeapon->CanInspect() )
-			{
-				HandleInspectHint();
-			}
+//			if ( GetLocalTFPlayer() == this && pActiveWeapon->CanInspect() )
+//			{
+//				HandleInspectHint();
+//			}
 		}
 
 		m_hOldActiveWeapon = pActiveWeapon;
@@ -11586,7 +11586,7 @@ void C_TFPlayer::GetPowerupGlowEffectColor( float *r, float *g, float *b )
 static ConVar tf_inspect_hint_count( "tf_inspect_hint_count", "0", FCVAR_ARCHIVE );
 void C_TFPlayer::HandleInspectHint()
 {
-	int nNotifyCount = tf_inspect_hint_count.GetInt();
+/*	int nNotifyCount = tf_inspect_hint_count.GetInt();
 	if ( nNotifyCount > 10 )
 		return;
 
@@ -11615,7 +11615,7 @@ void C_TFPlayer::HandleInspectHint()
 		}
 
 		m_bNotifiedWeaponInspectThisLife = true;
-	}
+	}*/
 }
 
 
