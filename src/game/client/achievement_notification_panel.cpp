@@ -21,6 +21,8 @@
 #include "steam/steam_api.h"
 #include "iachievementmgr.h"
 #include "fmtstr.h"
+#include "baseachievement.h"
+#include "c_tf_player.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -28,6 +30,9 @@
 using namespace vgui;
 
 #define ACHIEVEMENT_NOTIFICATION_DURATION 10.0f
+
+ConVar cl_achievements_theme("cl_achievements_theme", "0", FCVAR_CLIENTDLL | FCVAR_ARCHIVE, "0 = light grey, 1 = dark grey, 2 = light green (original)");
+ConVar tfgrub_show_achievement_notification("tfgrub_show_achievement_notification", "1", FCVAR_CLIENTDLL | FCVAR_ARCHIVE, "Enables the Achievement notification");
 
 //-----------------------------------------------------------------------------
 // Purpose: 
@@ -60,6 +65,7 @@ CAchievementNotificationPanel::CAchievementNotificationPanel( const char *pEleme
 void CAchievementNotificationPanel::Init()
 {
 	ListenForGameEvent( "achievement_event" );
+	ListenForGameEvent( "achievement_earned" );
 }
 
 //-----------------------------------------------------------------------------
@@ -85,7 +91,24 @@ void CAchievementNotificationPanel::PerformLayout( void )
 	SetBgColor( Color( 0, 0, 0, 0 ) );
 	m_pLabelHeading->SetBgColor( Color( 0, 0, 0, 0 ) );
 	m_pLabelTitle->SetBgColor( Color( 0, 0, 0, 0 ) );
-	m_pPanelBackground->SetBgColor( Color( 62,70,55, 200 ) );
+
+	Color defaultColor = Color( 62, 70, 55, 200 );
+	Color c = defaultColor;
+
+	vgui::IScheme* pSourceScheme = vgui::scheme()->GetIScheme( vgui::scheme()->GetScheme( "SourceScheme" ) );
+	if (pSourceScheme)
+	{
+		if ( cl_achievements_theme.GetInt() == 0 )
+		{
+			c = pSourceScheme->GetColor( "AchievementsLightGrey", defaultColor );
+		}
+		else if ( cl_achievements_theme.GetInt() == 1 )
+		{
+			c = pSourceScheme->GetColor( "AchievementsDarkGrey", defaultColor );
+		}
+	}
+
+	m_pPanelBackground->SetBgColor(c);
 }
 
 //-----------------------------------------------------------------------------
@@ -93,30 +116,15 @@ void CAchievementNotificationPanel::PerformLayout( void )
 //-----------------------------------------------------------------------------
 void CAchievementNotificationPanel::FireGameEvent( IGameEvent * event )
 {
-	const char *name = event->GetName();
-	if ( 0 == Q_strcmp( name, "achievement_event" ) )
+	if ( tfgrub_show_achievement_notification.GetBool() )
 	{
-		const char *pchName = event->GetString( "achievement_name" );
-		int iCur = event->GetInt( "cur_val" );
-		int iMax = event->GetInt( "max_val" );
-		wchar_t szLocalizedName[256]=L"";
-
-		if ( IsPC() )
+		const char *name = event->GetName();
+		if ( 0 == Q_strcmp( name, "achievement_event" ) )
 		{
-			// shouldn't ever get achievement progress if steam not running and user logged in, but check just in case
-			if ( !steamapicontext->SteamUserStats() )
-			{				
-				Msg( "Steam not running, achievement progress notification not displayed\n" );
-			}
-			else 
-			{
-				// use Steam to show achievement progress UI
-				steamapicontext->SteamUserStats()->IndicateAchievementProgress( pchName, iCur, iMax );
-			}
-		}
-		else 
-		{
-			// on X360 we need to show our own achievement progress UI
+			const char *pchName = event->GetString( "achievement_name" );
+			int iCur = event->GetInt( "cur_val" );
+			int iMax = event->GetInt( "max_val" );
+			wchar_t szLocalizedName[256]=L"";
 
 			const wchar_t *pchLocalizedName = ACHIEVEMENT_LOCALIZED_NAME_FROM_STR( pchName );
 			Assert( pchLocalizedName );
@@ -139,6 +147,28 @@ void CAchievementNotificationPanel::FireGameEvent( IGameEvent * event )
 
 			g_pVGuiLocalize->ConstructString_safe( szText, szFmt, 3, szLocalizedName, szNumFound, szNumTotal );
 			AddNotification( pchName, g_pVGuiLocalize->Find( "#GameUI_Achievement_Progress" ), szText );
+		}
+		else if (0 == Q_strcmp(name, "achievement_earned"))
+		{
+			int iID = event->GetInt("achievement");
+
+			IAchievementMgr* pAchievementMgr = engine->GetAchievementMgr();
+			if (!pAchievementMgr)
+				return;
+
+			CBaseAchievement* pAchievement = pAchievementMgr->GetAchievementByID(iID);
+			if (!pAchievement)
+				return;
+
+			wchar_t szLocalizedName[256] = L"";
+
+			const wchar_t* pchLocalizedName = ACHIEVEMENT_LOCALIZED_NAME(pAchievement);
+			Assert(pchLocalizedName);
+			if (!pchLocalizedName || !pchLocalizedName[0])
+				return;
+			Q_wcsncpy(szLocalizedName, pchLocalizedName, sizeof(szLocalizedName));
+
+			AddNotification(pAchievement->GetName(), g_pVGuiLocalize->Find("#GameUI_Achievement_Awarded"), szLocalizedName);
 		}
 	}
 }
@@ -222,7 +252,19 @@ void CAchievementNotificationPanel::ShowNextNotification()
 	int iIconWidth = m_pIcon->GetWide();
 	int iSpacing = XRES( 10 );
 	int iPanelWidth = iSpacing + iIconWidth + iSpacing + iTextWidth + iSpacing;
-	int iPanelX = GetWide() - iPanelWidth;
+//	int iPanelX = GetWide() - iPanelWidth;
+	int iPanelX = XRES( 20 );
+
+	int iPopupX = 0;
+	int iPopupY = YRES( 20 );
+
+	C_TFPlayer *pPlayer = C_TFPlayer::GetLocalTFPlayer();
+	if ( pPlayer && pPlayer->IsPlayerClass( TF_CLASS_ENGINEER ) )
+	{
+		iPopupY += YRES( 160 );
+	}
+
+	SetPos( iPopupX, iPopupY );
 	int iIconX = iPanelX + iSpacing;
 	int iTextX = iIconX + iIconWidth + iSpacing;
 	// resize all the elements
@@ -245,7 +287,7 @@ void CAchievementNotificationPanel::SetXAndWide( Panel *pPanel, int x, int wide 
 	pPanel->SetWide( wide );
 }
 
-CON_COMMAND_F( achievement_notification_test, "Test the hud notification UI", FCVAR_CHEAT | FCVAR_DEVELOPMENTONLY )
+CON_COMMAND_F( achievement_notification_test, "Test the hud notification UI", FCVAR_CHEAT )
 {
 	static int iCount=0;
 
