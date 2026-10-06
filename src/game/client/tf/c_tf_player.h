@@ -234,6 +234,9 @@ public:
 	void CreateSaveMeEffect( MedicCallerType nType = CALLER_TYPE_NORMAL );
 	void StopSaveMeEffect( bool bForceRemoveInstantly = false );
 
+	void UpdateTypingEffect();
+	void ToggleTypingEffect( bool bToggle );
+
 	void CreateTauntWithMeEffect();
 	void StopTauntWithMeEffect();
 
@@ -606,6 +609,7 @@ private:
 	// Medic callout particle effect
 	CNewParticleEffect	*m_pSaveMeEffect;
 	CNewParticleEffect	*m_pTauntWithMeEffect;
+	CNewParticleEffect	*m_pTypingEffect;
 
 	bool m_bUpdateObjectHudState;
 	bool	m_bBodygroupsDirty;
@@ -963,6 +967,7 @@ private:
 	CNetworkVar( float, m_flHelpmeButtonPressTime );
 	CNetworkVar( bool, m_bViewingCYOAPDA );
 	CNetworkVar( bool, m_bRegenerating );
+	CNetworkVar( bool, m_bTyping );
 
 	bool m_bNotifiedWeaponInspectThisLife;
 

@@ -853,6 +853,13 @@ void RichText::Paint()
 		if ( m_LineBreaks.IsValidIndex( lineBreakIndexIndex ) && m_LineBreaks[lineBreakIndexIndex] <= iLim )
 			iLim = m_LineBreaks[lineBreakIndexIndex] - 1;
 
+		// Stop in selection range
+		if ( iLim >= selection0  && i < selection0 )
+			iLim = selection0;
+		if ( iLim >= selection1 && i < selection1 && i >= selection0 )
+			iLim = selection1;
+
+
 		// Stop at the next format change
 		if ( m_FormatStream.IsValidIndex(renderState.formatStreamIndex) && 
 			m_FormatStream[renderState.formatStreamIndex].textStreamIndex <= iLim &&
@@ -1239,8 +1246,6 @@ void RichText::RecalculateLineBreaks()
 	_recalcSavedRenderState = true;
 	if (!HasText())
 		return;
-	
-	int selection0 = -1, selection1 = -1;
 
 	// subtract the scrollbar width
 	if (_vertScrollBar->IsVisible())
@@ -1351,16 +1356,9 @@ void RichText::RecalculateLineBreaks()
 		}
 
 		float w = 0;
-		wchar_t wchBefore = 0;
-		wchar_t wchAfter = 0;
-
-		if ( i > 0 && i > lineStartIndex && i != selection0 && i-1 != selection1 )
-			wchBefore = m_TextStream[i-1];
-		if ( i < m_TextStream.Count() - 1 && i+1 != selection0 && i != selection1 )
-			wchAfter = m_TextStream[i+1];
 
 		float flabcA;
-		surface()->GetKernedCharWidth( font, ch, wchBefore, wchAfter, w, flabcA );
+		surface()->GetKernedCharWidth( font, ch, 0, 0, w, flabcA );
 		flLineWidthSoFar += w;
 	
 		// See if we've exceeded the width we have available, with 
