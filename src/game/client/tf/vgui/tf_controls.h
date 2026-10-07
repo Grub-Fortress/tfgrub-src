@@ -498,7 +498,6 @@ public:
 private:
 	wchar_t m_wszBuff[ 1024 ];
 };
-#endif // TF_CONTROLS_H
 
 //-----------------------------------------------------------------------------
 // Purpose: Displays scrollable mod credits window
@@ -539,3 +538,5 @@ private:
 	CPanelAnimationVarAliasType(int, m_iSliderW, "slider_w", "0", "proportional_int");
 	CPanelAnimationVarAliasType(int, m_iSliderH, "slider_h", "0", "proportional_int");
 };
+
+#endif // TF_CONTROLS_H
