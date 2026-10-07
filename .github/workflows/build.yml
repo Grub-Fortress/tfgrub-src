@@ -1,0 +1,284 @@
+# Updated for proper 64-bit builds
+name: Build
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-windows:
+    runs-on: windows-2025
+    env:
+        build_script: createtfgrubprojects-nopause.bat
+        build_cmd: msbuild grub_fortress.sln /p:Configuration=Release /p:Platform=win64 /m
+        artifact_name: tfgrub-windows
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Restore Windows build cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            C:\Users\runneradmin\AppData\Local\Microsoft\MSBuild
+            C:\Users\runneradmin\AppData\Local\Temp
+          key: ${{ runner.os }}-msvc-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-msvc-
+      #-- end caching
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Generate project files
+        run: ${{ env.build_script }}
+        shell: cmd
+        working-directory: src
+
+      - name: Build
+        working-directory: src
+        run: ${{ env.build_cmd }}
+
+      - name: Save Windows build cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            C:\Users\runneradmin\AppData\Local\Microsoft\MSBuild
+            C:\Users\runneradmin\AppData\Local\Temp
+          key: ${{ runner.os }}-msvc-${{ github.sha }}
+
+      - name: Clean up Windows build
+        run: |
+            for /r "game" %%f in (*.pdb) do del /q "%%f"
+        shell: cmd
+
+      - name: Upload Binaries
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.artifact_name }}-binaries
+          path: game/tfgrub/bin
+
+      - name: Upload Game Folder
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.artifact_name }}-game
+          path: game/
+          
+      - name: Upload TF:Grub Folder
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.artifact_name }}-tfgrub_folder
+          path: game/tfgrub/
+          
+  build-linux:
+    runs-on: ubuntu-latest
+    env:
+        build_script: ./buildtfgrubprojects
+        build_cmd: ""
+        artifact_name: tfgrub-linux
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+          
+      - name: Install Python
+        run: sudo apt-get install -y python3
+
+      #-- caching
+      - name: Setup ccache
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ccache
+          echo 'export PATH="/usr/lib/ccache:$PATH"' >> $GITHUB_ENV
+
+      - name: ~/.ccache stuff
+        run: |
+          if [ ! -d ~/.ccache ]; then
+            mkdir ~/.ccache
+          fi
+
+      - name: Restore ccache cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.ccache
+          key: ${{ runner.os }}-ccache-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-ccache-
+      
+      - name: Make build script executable
+        run: chmod +x ./buildtfgrubprojects
+        working-directory: src
+
+      - name: Install Linux build dependencies
+        run: |
+          sudo apt-get install -y g++-multilib ninja-build lib32z1-dev podman file
+
+      # Set 64-bit compilation environment
+      - name: Set 64-bit build environment
+        run: |
+          echo "CFLAGS=-m64" >> $GITHUB_ENV
+          echo "CXXFLAGS=-m64" >> $GITHUB_ENV
+          echo "LDFLAGS=-m64" >> $GITHUB_ENV
+          echo "CCACHE_DIR=$HOME/.ccache" >> $GITHUB_ENV
+        shell: bash
+
+      - name: Clean previous builds
+        run: |
+          cd src
+          rm -rf _vpc_/
+        shell: bash
+
+      - name: Build
+        run: ${{ env.build_script }}
+        working-directory: src
+        shell: bash
+
+      # Verify all libraries are 64-bit
+      - name: Verify library architecture
+        run: |
+          echo "Verifying all .so files are 64-bit..."
+          
+          # Check libraries in src/lib/public/linux64/
+          if [ -d "src/lib/public/linux64" ]; then
+            for lib in src/lib/public/linux64/*.so; do
+              if [ -f "$lib" ]; then
+                echo "Checking $lib:"
+                file "$lib" | grep -q "ELF 64-bit" || {
+                  echo "ERROR: $lib is not 64-bit!"
+                  file "$lib"
+                  exit 1
+                }
+                echo "✓ $lib is 64-bit"
+              fi
+            done
+          fi
+          
+          # Check game binaries
+          if [ -d "game/tfgrub/bin/linux64" ]; then
+            for lib in game/tfgrub/bin/linux64/*.so; do
+              if [ -f "$lib" ]; then
+                echo "Checking $lib:"
+                file "$lib" | grep -q "ELF 64-bit" || {
+                  echo "ERROR: $lib is not 64-bit!"
+                  file "$lib"
+                  exit 1
+                }
+                echo "✓ $lib is 64-bit"
+              fi
+            done
+          fi
+          
+          # Check main executable
+          if [ -f "game/tfgrub_linux64" ]; then
+            echo "Checking game/tfgrub_linux64:"
+            file "game/tfgrub_linux64" | grep -q "ELF 64-bit" || {
+              echo "ERROR: tfgrub_linux64 is not 64-bit!"
+              file "game/tfgrub_linux64"
+              exit 1
+            }
+            echo "✓ tfgrub_linux64 is 64-bit"
+          fi
+          
+          echo "All binaries verified as 64-bit ✓"
+        shell: bash
+
+      - name: Clean and strip
+        run: |
+          find game/tfgrub/bin/linux64 -type f -executable -exec strip --strip-all {} +
+          if [ -f game/tfgrub_linux64 ]; then
+            strip --strip-all game/tfgrub_linux64
+          fi
+        shell: bash
+
+      - name: Save ccache
+        uses: actions/cache@v4
+        with:
+          path: ~/.ccache
+          key: ${{ runner.os }}-ccache-${{ github.sha }}
+
+      - name: Upload Binaries
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.artifact_name }}-binaries
+          path: game/tfgrub/bin
+
+      - name: Upload Game Folder
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.artifact_name }}-game
+          path: game/
+          
+      - name: Upload TF:Grub Folder
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.artifact_name }}-tfgrub_folder
+          path: game/tfgrub/
+          
+  publish_dev_build:
+    name: push-windows
+    needs: build-windows
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && needs.build-windows.result == 'success'
+
+    steps:
+      - name: Download Windows TFGrub artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: tfgrub-windows-tfgrub_folder
+          path: artifact
+
+      - name: Clone dev repository
+        run: |
+          git clone https://x-access-token:${{ secrets.TFGRUB_DEV_TOKEN }}@github.com/Grub-Fortress/tfgrub_dev.git target_repo
+
+      - name: Replace repo contents with new Windows build
+        run: |
+          cd target_repo
+          find . -mindepth 1 -maxdepth 1 ! -name ".git" -exec rm -rf {} +
+          cp -r ../artifact/* .
+
+      - name: Clean-up
+        run: |
+            cd target_repo
+                rm -f cfg/devtesting.cfg
+                rm -f bin/*.fgd
+                rm -rf "models"
+                rm -rf "materials"
+                rm -rf "particles"
+                rm -rf "sound"
+                rm -rf "media"
+                rm -rf "mapsrc"
+                rm -rf "materialsrc"
+                rm -rf "content/tfgrub_content_hammer"
+                
+      - name: Dev Build Specific stuff
+        run: |
+            cd target_repo
+            rm -f gameinfo.txt
+            mv gameinfo_dev.txt gameinfo.txt
+            
+            cd resource
+            for file in tfgrub_*; do
+              if [ -f "$file" ]; then
+                mv "$file" "tfgrub_dev_${file#tfgrub_}"
+              fi
+            done
+
+      - name: Commit and push
+        run: |
+          cd target_repo
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add .
+          git commit -m "Dev build from ${{ github.sha }}" || echo "No changes"
+          git push
