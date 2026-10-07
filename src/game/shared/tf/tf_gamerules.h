@@ -456,7 +456,14 @@ public:
 			flRetVal = m_flCTFCaptureBonusTime;
 		}
 
-		return flRetVal; 
+		if ( IsInBombDeliveryMode() ) // prevent bonus crits in bomb delivery
+		{
+			return 0.0f;
+		}
+		else
+		{
+			return flRetVal; 
+		} 
 	}
 
 	// populate vector with set of control points the player needs to capture
@@ -591,6 +598,7 @@ public:
 	// Game Modes
 	virtual bool IsInArenaMode( void ) const OVERRIDE;
 	virtual bool IsInKothMode( void ) const OVERRIDE { return m_bPlayingKoth; }
+	virtual bool IsInBombDeliveryMode( void ) const { return m_bPlayingBombDelivery; }
 	bool IsInMedievalMode( void ) const { return m_bPlayingMedieval; }
 	bool IsHolidayMap( int nHoliday ) const { return m_nMapHolidayType == nHoliday; }
 	
@@ -1190,6 +1198,7 @@ private:
 	CNetworkHandle( CBonusRoundLogic, m_hBonusLogic );
 
 	CNetworkVar( bool, m_bPlayingKoth );
+	CNetworkVar( bool, m_bPlayingBombDelivery );
 	CNetworkVar( bool, m_bPowerupMode );
 	CNetworkVar( bool, m_bPlayingRobotDestructionMode );
 	CNetworkVar( bool, m_bPlayingMedieval );
@@ -1814,6 +1823,13 @@ private:
 	CHandle< CTeamRoundTimer > m_hRedTimer;
 	CHandle< CTeamRoundTimer > m_hBlueTimer;
 };
+
+class CBombDeliveryLogic : public CPointEntity
+{
+	DECLARE_CLASS( CBombDeliveryLogic, CPointEntity );
+	DECLARE_DATADESC();
+};
+
 
 #define CP_TIMER_THINK "CCPTimerLogicThink"
 class CCPTimerLogic : public CPointEntity
