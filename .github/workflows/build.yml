@@ -10,7 +10,7 @@ jobs:
     runs-on: windows-2025
     env:
         build_script: createtfgrubprojects-nopause.bat
-        build_cmd: msbuild grub_fortress.sln /p:Configuration=Release /p:Platform=win64 /m
+        build_cmd: msbuild tfgrub.sln /p:Configuration=Release /p:Platform=win64 /m
         artifact_name: tfgrub-windows
 
     steps:
