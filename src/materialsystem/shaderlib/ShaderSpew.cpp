@@ -13,7 +13,7 @@
 #include "shaderapi/commandbuffer.h"
 
 // Need this for ConColorMsg
-#include "color.h"
+#include "Color.h"
 
 // Need to set the fake shadow state for spew
 #include "ProxyShaderShadow.h"
@@ -30,7 +30,7 @@ void CShaderSpew::SortFloatConstants()
 		[](const FloatShaderConstant_t& a, const FloatShaderConstant_t& b)
 		{
 			return a.m_nRegister < b.m_nRegister;
-		});
+		});S
 
 	std::sort(m_pCurDynamicState->m_PSFloatConstants.begin(), m_pCurDynamicState->m_PSFloatConstants.end(),
 		[](const FloatShaderConstant_t& a, const FloatShaderConstant_t& b)

@@ -24,7 +24,7 @@
 
 // Needed on the SDK, in TF2C this is included via one of the other Headers.
 #include "utlbuffer.h"
-#include "color.h"
+#include "Color.h"
 
 // NOTE: This must be the last include File in a .cpp File!
 #include "tier0/memdbgon.h"

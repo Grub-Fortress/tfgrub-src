@@ -15,7 +15,7 @@
 #include "shaderlib_cvar.h"
 #include "mathlib/mathlib.h"
 #include "tier1/tier1.h"
-#include "color.h"
+#include "Color.h"
 #include "../stdshaders/lux_common_defines.h"
 #ifndef ASWSDK
 #include "filesystem.h"

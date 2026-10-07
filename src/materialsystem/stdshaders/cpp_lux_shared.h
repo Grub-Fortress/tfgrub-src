@@ -42,7 +42,7 @@
 #include "cpp_lux_commandbuilder.h"
 
 // Used for verbose and more readable Console Messages. Shader Debugging via ConColorMsg()
-#include "color.h"
+#include "Color.h"
 
 // Macro Register Map
 #include "lux_registermap_cpp.h"
