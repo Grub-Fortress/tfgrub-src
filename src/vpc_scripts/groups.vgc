@@ -64,10 +64,11 @@ $Group "everything"
 	"vvis_dll"
 	"vvis_launcher"
 
-	//"game_shader_generic_example"
+	"game_shader_generic_example"
 
 	// For Mapbase, we want to override all shaders
-	"game_shader_generic_std"
+	// But for TF:Grub/LUX, we want to use the generic example shaders
+//	"game_shader_generic_std"
 }
 
 $Group "dedicated"
