@@ -712,16 +712,17 @@ static vgui::DHANDLE<CTFItemDiscardPanel> g_TFItemDiscardPanel;
 //-----------------------------------------------------------------------------
 CItemPickupPanel *CCharacterInfoPanel::OpenItemPickupPanel( void )
 {
-	if (!g_TFItemPickupPanel.Get())
-	{
-		g_TFItemPickupPanel = vgui::SETUP_PANEL( new CTFItemPickupPanel( NULL ) );
-		g_TFItemPickupPanel->InvalidateLayout( false, true );
-	}
+	return 0;
+	//if (!g_TFItemPickupPanel.Get())
+	//{
+	//	g_TFItemPickupPanel = vgui::SETUP_PANEL( new CTFItemPickupPanel( NULL ) );
+	//	g_TFItemPickupPanel->InvalidateLayout( false, true );
+	//}
 
-	engine->ClientCmd_Unrestricted( "gameui_activate" );
-	g_TFItemPickupPanel->ShowPanel( true );
+	//engine->ClientCmd_Unrestricted( "gameui_activate" );
+	//g_TFItemPickupPanel->ShowPanel( true );
 
-	return g_TFItemPickupPanel;
+	//return g_TFItemPickupPanel;
 }
 
 //-----------------------------------------------------------------------------

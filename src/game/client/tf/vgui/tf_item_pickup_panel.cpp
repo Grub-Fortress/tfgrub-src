@@ -29,17 +29,17 @@
 #include "character_info_panel.h"
 #include "tf_matchmaking_dashboard_parent_manager.h"
 
-ConVar tf_explanations_discardpanel( "tf_explanations_discardpanel", "0", FCVAR_ARCHIVE, "Whether the user has seen explanations for this panel." );
+//ConVar tf_explanations_discardpanel( "tf_explanations_discardpanel", "0", FCVAR_ARCHIVE, "Whether the user has seen explanations for this panel." );
 
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
 CTFItemPickupPanel::CTFItemPickupPanel( Panel *parent ) : CItemPickupPanel( parent, false )
 {
-	m_pClassImage = NULL;
-	m_pClassImageBG = NULL;
-	SetZPos( 10000 );
-	GetMMDashboardParentManager()->AddPanel( this );
+	//m_pClassImage = NULL;
+	//m_pClassImageBG = NULL;
+	//SetZPos( 10000 );
+	//GetMMDashboardParentManager()->AddPanel( this );
 }
 
 //-----------------------------------------------------------------------------
@@ -47,7 +47,7 @@ CTFItemPickupPanel::CTFItemPickupPanel( Panel *parent ) : CItemPickupPanel( pare
 //-----------------------------------------------------------------------------
 CTFItemPickupPanel::~CTFItemPickupPanel()
 {
-	GetMMDashboardParentManager()->RemovePanel( this );
+	//GetMMDashboardParentManager()->RemovePanel( this );
 }
 
 //-----------------------------------------------------------------------------
@@ -55,10 +55,10 @@ CTFItemPickupPanel::~CTFItemPickupPanel()
 //-----------------------------------------------------------------------------
 void CTFItemPickupPanel::ApplySchemeSettings( vgui::IScheme *pScheme )
 {
-	BaseClass::ApplySchemeSettings( pScheme );
+	//BaseClass::ApplySchemeSettings( pScheme );
 
-	m_pClassImage = dynamic_cast<vgui::ImagePanel*>(FindChildByName( "classimage" ));
-	m_pClassImageBG = FindChildByName( "classimageoutline" );
+	//m_pClassImage = dynamic_cast<vgui::ImagePanel*>(FindChildByName( "classimage" ));
+	//m_pClassImageBG = FindChildByName( "classimageoutline" );
 }
 
 //-----------------------------------------------------------------------------
@@ -66,50 +66,50 @@ void CTFItemPickupPanel::ApplySchemeSettings( vgui::IScheme *pScheme )
 //-----------------------------------------------------------------------------
 void CTFItemPickupPanel::OnCommand( const char *command )
 {
-	if ( !Q_stricmp( command, "changeloadout" ) )
-	{
-		// We dont want the UI to close -- we're about to change our loadout
-		SetReturnToGame( false );
-		AcknowledgeItems();
+	//if ( !Q_stricmp( command, "changeloadout" ) )
+	//{
+	//	// We dont want the UI to close -- we're about to change our loadout
+	//	SetReturnToGame( false );
+	//	AcknowledgeItems();
 
-		int iClass = TF_CLASS_UNDEFINED;
-		if ( m_iSelectedItem >= 0 && m_iSelectedItem < m_aItems.Count() )
-		{
-			if ( m_aItems[m_iSelectedItem].pItem.IsValid() && !m_aItems[m_iSelectedItem].bDiscarded )
-			{
-				// Open the loadout panel with the first class that can use this item (or the base loadout screen if it's an all-class item)
-				if ( m_aItems[m_iSelectedItem].pItem.GetStaticData()->CanBeUsedByAllClasses() )
-				{
-					iClass = TF_CLASS_UNDEFINED;
-				}
-				else
-				{
-					for ( int i = TF_FIRST_NORMAL_CLASS; i < TF_LAST_NORMAL_CLASS; i++ )
-					{
-						if ( m_aItems[m_iSelectedItem].pItem.GetStaticData()->CanBeUsedByClass(i) )
-						{
-							iClass = -i;
-							break;
-						}
-					}
+	//	int iClass = TF_CLASS_UNDEFINED;
+	//	if ( m_iSelectedItem >= 0 && m_iSelectedItem < m_aItems.Count() )
+	//	{
+	//		if ( m_aItems[m_iSelectedItem].pItem.IsValid() && !m_aItems[m_iSelectedItem].bDiscarded )
+	//		{
+	//			// Open the loadout panel with the first class that can use this item (or the base loadout screen if it's an all-class item)
+	//			if ( m_aItems[m_iSelectedItem].pItem.GetStaticData()->CanBeUsedByAllClasses() )
+	//			{
+	//				iClass = TF_CLASS_UNDEFINED;
+	//			}
+	//			else
+	//			{
+	//				for ( int i = TF_FIRST_NORMAL_CLASS; i < TF_LAST_NORMAL_CLASS; i++ )
+	//				{
+	//					if ( m_aItems[m_iSelectedItem].pItem.GetStaticData()->CanBeUsedByClass(i) )
+	//					{
+	//						iClass = -i;
+	//						break;
+	//					}
+	//				}
 
-					if ( iClass == TF_CLASS_UNDEFINED )
-					{
-						// Item's not usable by any class. Go to backpack.
-						iClass = ECONUI_BACKPACK;
-					}
-				}
-			}
-		}
+	//				if ( iClass == TF_CLASS_UNDEFINED )
+	//				{
+	//					// Item's not usable by any class. Go to backpack.
+	//					iClass = ECONUI_BACKPACK;
+	//				}
+	//			}
+	//		}
+	//	}
 
-		ShowPanel( false );
+	//	ShowPanel( false );
 
-		EconUI()->OpenEconUI( iClass, true );
-	}
-	else 
-	{
-		BaseClass::OnCommand( command );
-	}
+	//	EconUI()->OpenEconUI( iClass, true );
+	//}
+	//else 
+	//{
+	//	BaseClass::OnCommand( command );
+	//}
 }
 
 //-----------------------------------------------------------------------------
@@ -117,91 +117,91 @@ void CTFItemPickupPanel::OnCommand( const char *command )
 //-----------------------------------------------------------------------------
 void CTFItemPickupPanel::UpdateModelPanels( void )
 {
-	BaseClass::UpdateModelPanels();
+	//BaseClass::UpdateModelPanels();
 
-	if ( m_pClassImage )
-	{
-		m_pClassImage->SetVisible( false );
-		if ( m_pClassImageBG )
-		{
-			m_pClassImageBG->SetVisible( false );
-		}
-		if ( m_aModelPanels[2]->HasItem() )
-		{
-			CEconItemView *pItem = m_aModelPanels[2]->GetItem();
-			
-			int iClass = -1;
-			if ( pItem->GetStaticData()->CanBeUsedByAllClasses() )
-			{
-				iClass = TF_CLASS_UNDEFINED;
-			}
-			else
-			{
-				// Find a class that can use the item, and show that class image
-				for ( int i = TF_FIRST_NORMAL_CLASS; i < TF_LAST_NORMAL_CLASS; i++ )
-				{
-					if ( pItem->GetStaticData()->CanBeUsedByClass(i) )
-					{
-						iClass = i;
-						break;
-					}
-				}
-			}
+	//if ( m_pClassImage )
+	//{
+	//	m_pClassImage->SetVisible( false );
+	//	if ( m_pClassImageBG )
+	//	{
+	//		m_pClassImageBG->SetVisible( false );
+	//	}
+	//	if ( m_aModelPanels[2]->HasItem() )
+	//	{
+	//		CEconItemView *pItem = m_aModelPanels[2]->GetItem();
+	//		
+	//		int iClass = -1;
+	//		if ( pItem->GetStaticData()->CanBeUsedByAllClasses() )
+	//		{
+	//			iClass = TF_CLASS_UNDEFINED;
+	//		}
+	//		else
+	//		{
+	//			// Find a class that can use the item, and show that class image
+	//			for ( int i = TF_FIRST_NORMAL_CLASS; i < TF_LAST_NORMAL_CLASS; i++ )
+	//			{
+	//				if ( pItem->GetStaticData()->CanBeUsedByClass(i) )
+	//				{
+	//					iClass = i;
+	//					break;
+	//				}
+	//			}
+	//		}
 
-			if ( iClass != -1 )
-			{
-				m_pClassImage->SetImage( g_pszItemClassImagesRed[iClass] );
-				m_pClassImage->SetVisible( true );
-				if ( m_pClassImageBG )
-				{
-					m_pClassImageBG->SetVisible( true );
-				}
-			}
-		}
-	}
+	//		if ( iClass != -1 )
+	//		{
+	//			m_pClassImage->SetImage( g_pszItemClassImagesRed[iClass] );
+	//			m_pClassImage->SetVisible( true );
+	//			if ( m_pClassImageBG )
+	//			{
+	//				m_pClassImageBG->SetVisible( true );
+	//			}
+	//		}
+	//	}
+	//}
 
-	// Update the loadout button as appropriate
-	if ( m_iSelectedItem >= 0 && m_iSelectedItem < m_aItems.Count() )
-	{
-		bool bDiscarded = false;
-		if ( m_iSelectedItem >= 0 && m_iSelectedItem < m_aItems.Count() )
-		{
-			bDiscarded = m_aItems[m_iSelectedItem].bDiscarded;
-		}
+	//// Update the loadout button as appropriate
+	//if ( m_iSelectedItem >= 0 && m_iSelectedItem < m_aItems.Count() )
+	//{
+	//	bool bDiscarded = false;
+	//	if ( m_iSelectedItem >= 0 && m_iSelectedItem < m_aItems.Count() )
+	//	{
+	//		bDiscarded = m_aItems[m_iSelectedItem].bDiscarded;
+	//	}
 
-		// Open the loadout panel with the first class that can use this item
-		if ( m_aItems[m_iSelectedItem].pItem.IsValid() && !bDiscarded )
-		{
-			if ( m_aItems[m_iSelectedItem].pItem.GetStaticData()->CanBeUsedByAllClasses() )
-			{
-				SetDialogVariable("loadouttext", g_pVGuiLocalize->Find( "#OpenGeneralLoadout" ) );
-			}
-			else
-			{
-				int iClass = TF_CLASS_UNDEFINED;
-				for ( int i = TF_FIRST_NORMAL_CLASS; i < TF_LAST_NORMAL_CLASS; i++ )
-				{
-					if ( m_aItems[m_iSelectedItem].pItem.GetStaticData()->CanBeUsedByClass(i) )
-					{
-						iClass = i;
-						break;
-					}
-				}
+	//	// Open the loadout panel with the first class that can use this item
+	//	if ( m_aItems[m_iSelectedItem].pItem.IsValid() && !bDiscarded )
+	//	{
+	//		if ( m_aItems[m_iSelectedItem].pItem.GetStaticData()->CanBeUsedByAllClasses() )
+	//		{
+	//			SetDialogVariable("loadouttext", g_pVGuiLocalize->Find( "#OpenGeneralLoadout" ) );
+	//		}
+	//		else
+	//		{
+	//			int iClass = TF_CLASS_UNDEFINED;
+	//			for ( int i = TF_FIRST_NORMAL_CLASS; i < TF_LAST_NORMAL_CLASS; i++ )
+	//			{
+	//				if ( m_aItems[m_iSelectedItem].pItem.GetStaticData()->CanBeUsedByClass(i) )
+	//				{
+	//					iClass = i;
+	//					break;
+	//				}
+	//			}
 
-				if ( iClass != TF_CLASS_UNDEFINED )
-				{
-					wchar_t wzLocalized[128];
-					g_pVGuiLocalize->ConstructString_safe( wzLocalized, g_pVGuiLocalize->Find( "#OpenSpecificLoadout" ), 1, g_pVGuiLocalize->Find( g_aPlayerClassNames[iClass] ) );
-					SetDialogVariable("loadouttext", wzLocalized );
-				}
-				else
-				{
-					SetDialogVariable("loadouttext", g_pVGuiLocalize->Find( "#OpenBackpack" ) );
-					m_pOpenLoadoutButton->SetVisible( true );
-				}
-			}
-		}
-	}
+	//			if ( iClass != TF_CLASS_UNDEFINED )
+	//			{
+	//				wchar_t wzLocalized[128];
+	//				g_pVGuiLocalize->ConstructString_safe( wzLocalized, g_pVGuiLocalize->Find( "#OpenSpecificLoadout" ), 1, g_pVGuiLocalize->Find( g_aPlayerClassNames[iClass] ) );
+	//				SetDialogVariable("loadouttext", wzLocalized );
+	//			}
+	//			else
+	//			{
+	//				SetDialogVariable("loadouttext", g_pVGuiLocalize->Find( "#OpenBackpack" ) );
+	//				m_pOpenLoadoutButton->SetVisible( true );
+	//			}
+	//		}
+	//	}
+	//}
 }
 
 static vgui::DHANDLE<CTFItemPickupPanel> g_TFItemPickupPanel;
@@ -211,16 +211,17 @@ static vgui::DHANDLE<CTFItemPickupPanel> g_TFItemPickupPanel;
 //-----------------------------------------------------------------------------
 CTFItemPickupPanel *OpenTFItemPickupPanel( void )
 {
-	if (!g_TFItemPickupPanel.Get())
-	{
-		g_TFItemPickupPanel = vgui::SETUP_PANEL( new CTFItemPickupPanel( NULL ) );
-		g_TFItemPickupPanel->InvalidateLayout( false, true );
-	}
+	return 0;
+	//if (!g_TFItemPickupPanel.Get())
+	//{
+	//	g_TFItemPickupPanel = vgui::SETUP_PANEL( new CTFItemPickupPanel( NULL ) );
+	//	g_TFItemPickupPanel->InvalidateLayout( false, true );
+	//}
 
-	engine->ClientCmd_Unrestricted( "gameui_activate" );
-	g_TFItemPickupPanel->ShowPanel( true );
+	//engine->ClientCmd_Unrestricted( "gameui_activate" );
+	//g_TFItemPickupPanel->ShowPanel( true );
 
-	return g_TFItemPickupPanel;
+	//return g_TFItemPickupPanel;
 }
 
 //-----------------------------------------------------------------------------
@@ -272,11 +273,11 @@ void CTFItemDiscardPanel::ApplySchemeSettings( vgui::IScheme *pScheme )
 //-----------------------------------------------------------------------------
 void CTFItemDiscardPanel::PerformLayout( void ) 
 {
-	BaseClass::PerformLayout();
+	//BaseClass::PerformLayout();
 
-	m_pExplanationALabel->SetVisible( !m_bDiscardedNewItem && !m_bMadeRoom );
-	m_pExplanationBLabel->SetVisible( !m_bDiscardedNewItem && !m_bMadeRoom );
-	m_pExplanationCaratLabel->SetVisible( !m_bDiscardedNewItem && !m_bMadeRoom );
+	//m_pExplanationALabel->SetVisible( !m_bDiscardedNewItem && !m_bMadeRoom );
+	//m_pExplanationBLabel->SetVisible( !m_bDiscardedNewItem && !m_bMadeRoom );
+	//m_pExplanationCaratLabel->SetVisible( !m_bDiscardedNewItem && !m_bMadeRoom );
 }
 
 //-----------------------------------------------------------------------------
@@ -284,16 +285,16 @@ void CTFItemDiscardPanel::PerformLayout( void )
 //-----------------------------------------------------------------------------
 void CTFItemDiscardPanel::ShowPanel(bool bShow)
 {
-	BaseClass::ShowPanel( bShow );
+	//BaseClass::ShowPanel( bShow );
 
-	if ( bShow )
-	{
-		if ( !tf_explanations_discardpanel.GetBool() )
-		{
-			m_flStartExplanationsAt = engine->Time() + 0.5;
-			vgui::ivgui()->AddTickSignal( GetVPanel() );
-		}
-	}
+	//if ( bShow )
+	//{
+	//	if ( !tf_explanations_discardpanel.GetBool() )
+	//	{
+	//		m_flStartExplanationsAt = engine->Time() + 0.5;
+	//		vgui::ivgui()->AddTickSignal( GetVPanel() );
+	//	}
+	//}
 }
 
 //-----------------------------------------------------------------------------
@@ -301,25 +302,25 @@ void CTFItemDiscardPanel::ShowPanel(bool bShow)
 //-----------------------------------------------------------------------------
 void CTFItemDiscardPanel::OnTick( void )
 {
-	BaseClass::OnTick();
+	//BaseClass::OnTick();
 
-	if ( m_flStartExplanationsAt && m_flStartExplanationsAt < engine->Time() && TFModalStack()->IsEmpty() )
-	{
-		m_flStartExplanationsAt = 0;
+	//if ( m_flStartExplanationsAt && m_flStartExplanationsAt < engine->Time() && TFModalStack()->IsEmpty() )
+	//{
+	//	m_flStartExplanationsAt = 0;
 
-		tf_explanations_discardpanel.SetValue( 1 );
+	//	tf_explanations_discardpanel.SetValue( 1 );
 
-		CExplanationPopup *pPopup = dynamic_cast<CExplanationPopup*>( FindChildByName("StartExplanation") );
-		if ( pPopup )
-		{
-			pPopup->Popup();
-		}
-	}
+	//	CExplanationPopup *pPopup = dynamic_cast<CExplanationPopup*>( FindChildByName("StartExplanation") );
+	//	if ( pPopup )
+	//	{
+	//		pPopup->Popup();
+	//	}
+	//}
 
-	if ( !m_flStartExplanationsAt )
-	{
-		vgui::ivgui()->RemoveTickSignal( GetVPanel() );
-	}
+	//if ( !m_flStartExplanationsAt )
+	//{
+	//	vgui::ivgui()->RemoveTickSignal( GetVPanel() );
+	//}
 }
 
 //-----------------------------------------------------------------------------
@@ -327,19 +328,19 @@ void CTFItemDiscardPanel::OnTick( void )
 //-----------------------------------------------------------------------------
 void CTFItemDiscardPanel::OnCommand( const char *command )
 {
-	if ( !Q_stricmp( command, "show_explanations" ) )
-	{
-		if ( !m_flStartExplanationsAt )
-		{
-			m_flStartExplanationsAt = engine->Time();
-			vgui::ivgui()->AddTickSignal( GetVPanel() );
-		}
-		RequestFocus();
-	}
-	else
-	{
-		BaseClass::OnCommand( command );
-	}
+	//if ( !Q_stricmp( command, "show_explanations" ) )
+	//{
+	//	if ( !m_flStartExplanationsAt )
+	//	{
+	//		m_flStartExplanationsAt = engine->Time();
+	//		vgui::ivgui()->AddTickSignal( GetVPanel() );
+	//	}
+	//	RequestFocus();
+	//}
+	//else
+	//{
+	//	BaseClass::OnCommand( command );
+	//}
 }
 
 #if defined(DEBUG)
