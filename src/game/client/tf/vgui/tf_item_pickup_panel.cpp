@@ -344,63 +344,63 @@ void CTFItemDiscardPanel::OnCommand( const char *command )
 }
 
 #if defined(DEBUG)
-//-----------------------------------------------------------------------------
-// Purpose: 
-//-----------------------------------------------------------------------------
-void Test_ItemPickupPanel( const CCommand &args )
-{
-	int iClass = TF_CLASS_PYRO;
-	C_TFPlayer *pLocalPlayer = C_TFPlayer::GetLocalTFPlayer();
-	if ( pLocalPlayer )
-	{
-		iClass = pLocalPlayer->GetPlayerClass()->GetClassIndex();
-	}
-
-	CItemPickupPanel *pItemPanel = EconUI()->OpenItemPickupPanel();
-	pItemPanel->InvalidateLayout( false, true );
-
-	for ( int i = 0; i < CLASS_LOADOUT_POSITION_COUNT; i++ )
-	{
-		CEconItemView *pItem = TFInventoryManager()->GetItemInLoadoutForClass( iClass, i );
-		if ( pItem && pItem->IsValid() )
-		{
-			pItemPanel->AddItem( pItem );
-		}
-	}
-
-	pItemPanel->DebugRandomizePickupMethods();
-}
-ConCommand test_itempickuppanel( "test_itempickuppanel", Test_ItemPickupPanel, "Debugging tool to test the item pickup panel. Usage: test_itempickuppanel\n", FCVAR_CHEAT );
-
-//-----------------------------------------------------------------------------
-// Purpose: 
-//-----------------------------------------------------------------------------
-void Test_ItemDiscardPanel( const CCommand &args )
-{
-	int iClass = TF_CLASS_PYRO;
-	C_TFPlayer *pLocalPlayer = C_TFPlayer::GetLocalTFPlayer();
-	if ( pLocalPlayer )
-	{
-		iClass = pLocalPlayer->GetPlayerClass()->GetClassIndex();
-	}
-
-	CItemDiscardPanel *pItemPanel = EconUI()->OpenItemDiscardPanel();
-	pItemPanel->InvalidateLayout( false, true );
-
-	CEconItemView *pItemView = NULL;
-
-	bool bAllItems = (args.ArgC() <= 1);
-	for ( int i = bAllItems ? 0 : clamp( atoi(args[1]), 0, 2 ); i <= 2 && !pItemView; i++ )
-	{
-		pItemView = TFInventoryManager()->GetItemInLoadoutForClass( iClass, i );
-	}
-
-	if ( pItemView )
-	{
-		pItemPanel->SetItem( pItemView );
-	}
-}
-
-ConCommand test_itemdiscardpanel( "test_itemdiscardpanel", Test_ItemDiscardPanel, "Debugging tool to test the item discard panel. Usage: test_itemdiscardpanel <weapon name>\n   <weapon id>: 0 = primary, 1 = secondary, 2 = melee.", FCVAR_CHEAT );
+////-----------------------------------------------------------------------------
+//// Purpose: 
+////-----------------------------------------------------------------------------
+//void Test_ItemPickupPanel( const CCommand &args )
+//{
+//	int iClass = TF_CLASS_PYRO;
+//	C_TFPlayer *pLocalPlayer = C_TFPlayer::GetLocalTFPlayer();
+//	if ( pLocalPlayer )
+//	{
+//		iClass = pLocalPlayer->GetPlayerClass()->GetClassIndex();
+//	}
+//
+//	CItemPickupPanel *pItemPanel = EconUI()->OpenItemPickupPanel();
+//	pItemPanel->InvalidateLayout( false, true );
+//
+//	for ( int i = 0; i < CLASS_LOADOUT_POSITION_COUNT; i++ )
+//	{
+//		CEconItemView *pItem = TFInventoryManager()->GetItemInLoadoutForClass( iClass, i );
+//		if ( pItem && pItem->IsValid() )
+//		{
+//			pItemPanel->AddItem( pItem );
+//		}
+//	}
+//
+//	pItemPanel->DebugRandomizePickupMethods();
+//}
+//ConCommand test_itempickuppanel( "test_itempickuppanel", Test_ItemPickupPanel, "Debugging tool to test the item pickup panel. Usage: test_itempickuppanel\n", FCVAR_CHEAT );
+//
+////-----------------------------------------------------------------------------
+//// Purpose: 
+////-----------------------------------------------------------------------------
+//void Test_ItemDiscardPanel( const CCommand &args )
+//{
+//	int iClass = TF_CLASS_PYRO;
+//	C_TFPlayer *pLocalPlayer = C_TFPlayer::GetLocalTFPlayer();
+//	if ( pLocalPlayer )
+//	{
+//		iClass = pLocalPlayer->GetPlayerClass()->GetClassIndex();
+//	}
+//
+//	CItemDiscardPanel *pItemPanel = EconUI()->OpenItemDiscardPanel();
+//	pItemPanel->InvalidateLayout( false, true );
+//
+//	CEconItemView *pItemView = NULL;
+//
+//	bool bAllItems = (args.ArgC() <= 1);
+//	for ( int i = bAllItems ? 0 : clamp( atoi(args[1]), 0, 2 ); i <= 2 && !pItemView; i++ )
+//	{
+//		pItemView = TFInventoryManager()->GetItemInLoadoutForClass( iClass, i );
+//	}
+//
+//	if ( pItemView )
+//	{
+//		pItemPanel->SetItem( pItemView );
+//	}
+//}
+//
+//ConCommand test_itemdiscardpanel( "test_itemdiscardpanel", Test_ItemDiscardPanel, "Debugging tool to test the item discard panel. Usage: test_itemdiscardpanel <weapon name>\n   <weapon id>: 0 = primary, 1 = secondary, 2 = melee.", FCVAR_CHEAT );
 #endif // defined(DEBUG)
 
