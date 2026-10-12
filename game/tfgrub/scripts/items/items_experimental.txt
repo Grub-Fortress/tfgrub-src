@@ -527,9 +527,73 @@
 				"weapon_stattrak_module_scale"			"1"
 				"min_viewmodel_offset"					"10 -3 -10"
 			}
-			"mouse_pressed_sound"	"ui/item_heavy_gun_pickup.wav"
-			"drop_sound"		"ui/item_heavy_gun_drop.wav"
-			"particle_suffix"		"rocketlauncher"
+			"mouse_pressed_sound"		"ui/item_heavy_gun_pickup.wav"
+			"drop_sound"				"ui/item_heavy_gun_drop.wav"
+			"particle_suffix"			"rocketlauncher"
+		}
+		"34015" // The Welder
+		{
+			"name"						"Welder"
+			"item_class"				"tf_weapon_wrench"
+			"show_in_armory"			"1"
+			"item_type_name"			"#TF_Weapon_Wrench"
+			"item_name"					"Welder"
+			"item_slot"					"melee"
+			"item_quality"				"unique"
+			"propername"				"1"
+			"attach_to_hands"			"1"
+			"experimentalitem"			"1"
+			"item_logname"				"welder"
+			"item_iconname"				"welder"
+			"image_inventory"			"backpack/workshop/weapons/c_models/c_jag/c_jag"
+			"image_inventory_size_w"	"128"
+			"image_inventory_size_h"	"82"
+			"model_player"				"models/weapons/c_models/c_pistol/c_pistol.mdl"
+			"anim_slot"					"secondary"
+			"used_by_classes"
+			{
+				"engineer"				"1"
+			}
+			"static_attrs"
+			{
+				"min_viewmodel_offset"				"10 -2 -9"	
+				"weapon_stattrak_module_scale"		"0.756"			
+			}
+			"mouse_pressed_sound"		"ui/item_metal_weapon_pickup.wav"
+			"drop_sound"				"ui/item_metal_weapon_drop.wav"
+			"attributes"
+			{
+				"fire rate bonus"
+				{
+					"attribute_class"	"mult_postfiredelay"
+					"value"				"0.25"
+				}
+				"Repair rate decreased"
+				{
+					"attribute_class"	"mult_repair_value"
+					"value"				"0.15"
+				}
+				"upgrade rate decrease"
+				{
+					"attribute_class"	"upgrade_rate_mod"
+					"value"				"0.15"
+				}
+				"damage penalty"
+				{
+					"attribute_class"	"mult_dmg"
+					"value"				"0.15"
+				}
+				"crit mod disabled"
+				{
+					"attribute_class"	"mod_crit_chance"
+					"value"				"0"
+				}
+				"is experimental item"
+				{
+					"attribute_class"	"is_experimental_item_DISPLAY"
+					"value"				"1"
+				}
+			}
 		}
 		"35000" // Leadpipe Beta 1
 		{

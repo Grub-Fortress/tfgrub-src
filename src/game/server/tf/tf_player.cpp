@@ -860,14 +860,13 @@ ConCommand cc_CreatePredictionError( "CreatePredictionError", cc_CreatePredictio
 
 // -------------------------------------------------------------------------------- //
 
-CON_COMMAND_F( give_econ, "Give ECON item with specified ID from item schema.\nFormat: <id> <classname> <attribute1> <value1> <attribute2> <value2> ... <attributeN> <valueN>", FCVAR_NONE )
+CON_COMMAND_F( give_econ, "Give ECON item with specified ID from item schema.\nFormat: <id> <classname> <attribute1> <value1> <attribute2> <value2> ... <attributeN> <valueN>", FCVAR_CHEAT )
 {
 	if ( args.ArgC() < 2 )
 		return;
 
-	//Check who is calling the command
-	CTFPlayer* pPlayer = ToTFPlayer( UTIL_GetCommandClient() );;
-	if( !UTIL_HandleCheatCmdForPlayer( pPlayer ) ) 
+	CTFPlayer* pPlayer = ToTFPlayer(UTIL_GetCommandClient() );
+	if ( !pPlayer )
 		return;
 
 	int iItemID = atoi( args[1] );
