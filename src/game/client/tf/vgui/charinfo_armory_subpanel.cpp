@@ -15,6 +15,7 @@
 #include "gamestringpool.h"
 #include "tf_item_inventory.h"
 #include "econ_item_system.h"
+#include "econ_item_schema.h"
 #include "iachievementmgr.h"
 #include "store/store_panel.h"
 #include "character_info_panel.h"
@@ -27,13 +28,8 @@ ConVar tf_armory_page_skip( "tf_armory_page_skip", "10", FCVAR_ARCHIVE, "Number 
 
 const char *g_szArmoryFilterStrings[ARMFILT_TOTAL] =
 {
-	"#ArmoryFilter_AllItems",		// ARMFILT_ALL_ITEMS.
-	"#ArmoryFilter_Weapons",		// ARMFILT_WEAPONS,
-	"#ArmoryFilter_MiscItems",		// ARMFILT_MISCITEMS,
-	"#ArmoryFilter_ActionItems",	// ARMFILT_ACTIONITEMS,
-	"#ArmoryFilter_CraftItems",		// ARMFILT_CRAFTITEMS,
-	"#ArmoryFilter_Tools",			// ARMFILT_TOOLS,
-	"#ArmoryFilter_AllClass",		// ARMFILT_CLASS_ALL,
+	"#ArmoryFilter_Weapons",		// ARMFILT_WEAPONS.
+	"#ArmoryFilter_ModItems",		// ARMFILT_MODITEMS,
 	"#ArmoryFilter_Scout",			// ARMFILT_CLASS_SCOUT,
 	"#ArmoryFilter_Sniper",			// ARMFILT_CLASS_SNIPER,
 	"#ArmoryFilter_Soldier",		// ARMFILT_CLASS_SOLDIER,
@@ -43,7 +39,6 @@ const char *g_szArmoryFilterStrings[ARMFILT_TOTAL] =
 	"#ArmoryFilter_Pyro",			// ARMFILT_CLASS_PYRO,
 	"#ArmoryFilter_Spy",			// ARMFILT_CLASS_SPY,
 	"#ArmoryFilter_Engineer",		// ARMFILT_CLASS_ENGINEER,
-	"#ArmoryFilter_Donationitems",	// ARMFILT_DONATIONITEMS,
 
 	"",								// ARMFILT_NUM_IN_DROPDOWN
 	"Not Used",						// ARMFILT_CUSTOM
@@ -58,8 +53,8 @@ CArmoryPanel::CArmoryPanel(Panel *parent, const char *panelName) : vgui::Editabl
 	m_pSelectedItemImageModelPanel = new CItemModelPanel( this, "SelectedItemImageModelPanel" );
 	m_pThumbnailModelPanelKVs = NULL;
 	m_bReapplyItemKVs = false;
-	m_CurrentFilter = ARMFILT_ALL_ITEMS;
-	m_OldFilter = ARMFILT_ALL_ITEMS;
+	m_CurrentFilter = ARMFILT_WEAPONS;
+	m_OldFilter = ARMFILT_WEAPONS;
 	m_iFilterPage = 0;
 	m_pViewSetButton = NULL;
 	m_pStoreButton = NULL;
@@ -587,49 +582,23 @@ bool CArmoryPanel::DefPassesFilter( const CTFItemDefinition *pDef, armory_filter
 
 	switch (iFilter)
 	{
-	case ARMFILT_ALL_ITEMS:
-		{
-			bInList = true;
-			break;
-		}
-
 	case ARMFILT_WEAPONS:
 		{
 			int iSlot = pDef->GetDefaultLoadoutSlot();
-			bInList = ( iSlot == LOADOUT_POSITION_PRIMARY || iSlot == LOADOUT_POSITION_SECONDARY || iSlot == LOADOUT_POSITION_MELEE );
+			bInList = ( iSlot == LOADOUT_POSITION_PRIMARY ||
+						iSlot == LOADOUT_POSITION_SECONDARY || 
+						iSlot == LOADOUT_POSITION_MELEE || 
+						iSlot == LOADOUT_POSITION_BUILDING || 
+						iSlot == LOADOUT_POSITION_PDA || 
+						iSlot == LOADOUT_POSITION_PDA2 );
 			break;
 		}
 
-	case ARMFILT_MISCITEMS:
-		{
-			bInList = (pDef->GetDefaultLoadoutSlot() == LOADOUT_POSITION_MISC);
-			break;
-		}
-
-	case ARMFILT_ACTIONITEMS:
-		{
-			bInList = (pDef->GetDefaultLoadoutSlot() == LOADOUT_POSITION_ACTION);
-			break;
-		}
-
-	case ARMFILT_CRAFTITEMS:
-		{
-			bInList = pDef->GetItemClass() && ( !V_strcmp( pDef->GetItemClass(), "craft_item" ) || !V_strcmp( pDef->GetItemClass(), "class_token" ) || !V_strcmp( pDef->GetItemClass(), "slot_token" ) );
-			break;
-		}
-
-	case ARMFILT_TOOLS:
-		{
-			// For now, put the supply crates into the tool list, since it's the only item that shows up in no other lists
-			bInList = pDef->GetItemClass() && ( !V_strcmp( pDef->GetItemClass(), "tool" ) || !V_strcmp( pDef->GetItemClass(), "supply_crate" ) );
-			break;
-		}
-
-	case ARMFILT_CLASS_ALL:
-		{
-			bInList = pDef->CanBeUsedByAllClasses();
-			break;
-		}
+	case ARMFILT_MODITEMS:
+	{
+		bInList = pDef->IsModItem();
+		break;
+	}
 
 	case ARMFILT_CLASS_SCOUT:
 	case ARMFILT_CLASS_SNIPER:
@@ -645,14 +614,19 @@ bool CArmoryPanel::DefPassesFilter( const CTFItemDefinition *pDef, armory_filter
 			if ( pDef->GetItemClass() && !V_strcmp( pDef->GetItemClass(), "class_token" ) )
 				break;
 
-			bInList = ( !pDef->CanBeUsedByAllClasses() && pDef->CanBeUsedByClass( iFilter - ARMFILT_CLASS_SCOUT + 1 ) );
-			break;
-		}
+			int iSlot = pDef->GetDefaultLoadoutSlot();
+			int iClassIndex = iFilter - ARMFILT_CLASS_SCOUT + 1;
 
-	case ARMFILT_DONATIONITEMS:
-		{
-			// Don't show class/slot usage for class/slot tokens
-			bInList = pDef->GetItemClass() && !V_strcmp( pDef->GetItemClass(), "map_token" );
+			bool bValidSlot = ( iSlot == LOADOUT_POSITION_PRIMARY || 
+								iSlot == LOADOUT_POSITION_SECONDARY || 
+								iSlot == LOADOUT_POSITION_MELEE ||
+								iSlot == LOADOUT_POSITION_BUILDING ||
+								iSlot == LOADOUT_POSITION_PDA ||
+								iSlot == LOADOUT_POSITION_PDA2 );
+
+			bool bUsableByClass = pDef->CanBeUsedByAllClasses() || pDef->CanBeUsedByClass( iClassIndex );
+
+			bInList = bValidSlot && bUsableByClass;
 			break;
 		}
 	}
@@ -962,7 +936,7 @@ void CArmoryPanel::OnItemLinkClicked( KeyValues *pParams )
 {
 	const char *pURL = pParams->GetString( "url" );
 	int iItemDef = atoi( pURL + 7 );
-	JumpToItem( iItemDef, ARMFILT_ALL_ITEMS );
+	JumpToItem( iItemDef, ARMFILT_WEAPONS);
 	m_pFilterComboBox->ActivateItemByRow( 0 );
 }
 

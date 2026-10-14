@@ -6499,38 +6499,38 @@ bool CEconItemSchema::BInitArmoryData( KeyValues *pKVArmoryData, CUtlVector<CUtl
 			}
 		}
 
-		pKVItemTypes = pKVArmoryData->FindKey( "armory_item_classes" );
-		if ( pKVItemTypes )
-		{
-			FOR_EACH_SUBKEY( pKVItemTypes, pKVEntry )
-			{
-				const char *pszDataKey = pKVEntry->GetName();
-				const CUtlConstString sLocString( pKVEntry->GetString() );
-				m_dictArmoryItemClassesDataStrings.Insert( pszDataKey, sLocString );
-			}
-		}
+		//pKVItemTypes = pKVArmoryData->FindKey( "armory_item_classes" );
+		//if ( pKVItemTypes )
+		//{
+		//	FOR_EACH_SUBKEY( pKVItemTypes, pKVEntry )
+		//	{
+		//		const char *pszDataKey = pKVEntry->GetName();
+		//		const CUtlConstString sLocString( pKVEntry->GetString() );
+		//		m_dictArmoryItemClassesDataStrings.Insert( pszDataKey, sLocString );
+		//	}
+		//}
 
-		KeyValues *pKVAttribs = pKVArmoryData->FindKey( "armory_attributes" );
-		if ( pKVAttribs )
-		{
-			FOR_EACH_SUBKEY( pKVAttribs, pKVEntry )
-			{
-				const char *pszDataKey = pKVEntry->GetName();
-				const CUtlConstString sLocString( pKVEntry->GetString() );
-				m_dictArmoryAttributeDataStrings.Insert( pszDataKey, sLocString );
-			}
-		}
+		//KeyValues *pKVAttribs = pKVArmoryData->FindKey( "armory_attributes" );
+		//if ( pKVAttribs )
+		//{
+		//	FOR_EACH_SUBKEY( pKVAttribs, pKVEntry )
+		//	{
+		//		const char *pszDataKey = pKVEntry->GetName();
+		//		const CUtlConstString sLocString( pKVEntry->GetString() );
+		//		m_dictArmoryAttributeDataStrings.Insert( pszDataKey, sLocString );
+		//	}
+		//}
 
-		KeyValues *pKVItems = pKVArmoryData->FindKey( "armory_items" );
-		if ( pKVItems )
-		{
-			FOR_EACH_SUBKEY( pKVItems, pKVEntry )
-			{
-				const char *pszDataKey = pKVEntry->GetName();
-				const CUtlConstString sLocString( pKVEntry->GetString() );
-				m_dictArmoryItemDataStrings.Insert( pszDataKey, sLocString );
-			}
-		}
+		//KeyValues *pKVItems = pKVArmoryData->FindKey( "armory_items" );
+		//if ( pKVItems )
+		//{
+		//	FOR_EACH_SUBKEY( pKVItems, pKVEntry )
+		//	{
+		//		const char *pszDataKey = pKVEntry->GetName();
+		//		const CUtlConstString sLocString( pKVEntry->GetString() );
+		//		m_dictArmoryItemDataStrings.Insert( pszDataKey, sLocString );
+		//	}
+		//}
 	}
 	return SCHEMA_INIT_SUCCESS();
 }

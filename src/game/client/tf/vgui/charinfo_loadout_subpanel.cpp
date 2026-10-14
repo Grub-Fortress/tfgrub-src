@@ -900,9 +900,28 @@ void CCharInfoLoadoutSubPanel::UpdateLabelFromClass( int nClass )
 		m_pItemsLabel->SetVisible( true );
 	}
 
-	CUtlVector<CEconItemView*> pList;
-	int iNumItems = TFInventoryManager()->GetAllUsableItemsForSlot( nClass, -1, &pList );
+    CUtlVector<CEconItemView*> pAllItems;
+    TFInventoryManager()->GetAllUsableItemsForSlot( nClass, -1, &pAllItems );
 
+    int iNumItems = 0;
+    for ( int i = 0; i < pAllItems.Count(); ++i )
+    {
+        CEconItemView *pItem = pAllItems[i];
+        if ( !pItem )
+            continue;
+
+        int iEquipSlot = pItem->GetStaticData()->GetLoadoutSlot( nClass );
+
+        if ( iEquipSlot == LOADOUT_POSITION_PRIMARY ||
+			 iEquipSlot == LOADOUT_POSITION_SECONDARY ||
+			 iEquipSlot == LOADOUT_POSITION_MELEE ||
+			 iEquipSlot == LOADOUT_POSITION_BUILDING ||
+			 iEquipSlot == LOADOUT_POSITION_PDA ||
+			 iEquipSlot == LOADOUT_POSITION_PDA2 )
+        {
+            iNumItems++;
+        }
+    }
 	if ( !iNumItems )
 	{
 		const wchar_t *wszItemsName = g_pVGuiLocalize->Find( "#NoItemsFoundShort" );

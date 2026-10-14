@@ -1249,37 +1249,37 @@ void CEconItemDetailsRichText::DataText_AppendUsageData( const CEconItemDefiniti
 void CEconItemDetailsRichText::DataText_AppendToolUsage( const CEconItemDefinition *pDef )
 {
 	// Loop through the tools, and list any that can be applied to this item
-	bool bFirstTool = true;
-	for ( int i = 0; i < m_ToolList.Count(); i++ )
-	{
-		const GameItemDefinition_t *pToolDef = dynamic_cast<const GameItemDefinition_t *>( GetItemSchema()->GetItemDefinition( m_ToolList[i] ) );
+	//bool bFirstTool = true;
+	//for ( int i = 0; i < m_ToolList.Count(); i++ )
+	//{
+	//	const GameItemDefinition_t *pToolDef = dynamic_cast<const GameItemDefinition_t *>( GetItemSchema()->GetItemDefinition( m_ToolList[i] ) );
 
-		if ( !CEconSharedToolSupport::ToolCanApplyToDefinition( pToolDef, dynamic_cast<const GameItemDefinition_t *>( pDef ) ) )
-			continue;
+	//	if ( !CEconSharedToolSupport::ToolCanApplyToDefinition( pToolDef, dynamic_cast<const GameItemDefinition_t *>( pDef ) ) )
+	//		continue;
 
-		if ( bFirstTool )
-		{
-			bFirstTool = false;
-			AddDataText( "#TF_Armory_Item_ToolUsage", false );
-		}
-		else
-		{
-			AddDataText( ", " );
-		}
+	//	if ( bFirstTool )
+	//	{
+	//		bFirstTool = false;
+	//		AddDataText( "#TF_Armory_Item_ToolUsage", false );
+	//	}
+	//	else
+	//	{
+	//		AddDataText( ", " );
+	//	}
 
-		// Create a link to the item
-		{
-			// we need an econ item view here for just the item name
-			CEconItemView tmpTool;
-			tmpTool.Init( m_ToolList[i], AE_USE_SCRIPT_VALUE, AE_USE_SCRIPT_VALUE, true );
+	//	// Create a link to the item
+	//	{
+	//		// we need an econ item view here for just the item name
+	//		CEconItemView tmpTool;
+	//		tmpTool.Init( m_ToolList[i], AE_USE_SCRIPT_VALUE, AE_USE_SCRIPT_VALUE, true );
 
-			InsertItemLink( tmpTool.GetItemName(), pToolDef->GetDefinitionIndex() );
-		}
-	}
-	if ( !bFirstTool )
-	{
-		AddDataText( ".\n" );
-	}
+	//		InsertItemLink( tmpTool.GetItemName(), pToolDef->GetDefinitionIndex() );
+	//	}
+	//}
+	//if ( !bFirstTool )
+	//{
+	//	AddDataText( ".\n" );
+	//}
 }
 
 //-----------------------------------------------------------------------------
@@ -1287,35 +1287,35 @@ void CEconItemDetailsRichText::DataText_AppendToolUsage( const CEconItemDefiniti
 //-----------------------------------------------------------------------------
 void CEconItemDetailsRichText::DataText_AppendStoreFlags( const CEconItemDefinition *pDef )
 {
-	if ( !ItemSystem() || !ItemSystem()->GetItemSchema() )
-		return;
+	//if ( !ItemSystem() || !ItemSystem()->GetItemSchema() )
+	//	return;
 
-	const bool bHolidayRestriction = pDef->GetHolidayRestriction() != NULL && V_strlen( pDef->GetHolidayRestriction() ) > 0;
-	if ( bHolidayRestriction )
-	{
-		wchar_t *pRestrictedText = g_pVGuiLocalize->Find( "#Store_HolidayRestrictionText" );
+	//const bool bHolidayRestriction = pDef->GetHolidayRestriction() != NULL && V_strlen( pDef->GetHolidayRestriction() ) > 0;
+	//if ( bHolidayRestriction )
+	//{
+	//	wchar_t *pRestrictedText = g_pVGuiLocalize->Find( "#Store_HolidayRestrictionText" );
 
-		if ( pRestrictedText )
-		{
-			InsertColorChange( Color( 200, 80, 60, 255 ) );
-			InsertString( pRestrictedText );
-			InsertString( L".\n\n" );
-		}
-	}
+	//	if ( pRestrictedText )
+	//	{
+	//		InsertColorChange( Color( 200, 80, 60, 255 ) );
+	//		InsertString( pRestrictedText );
+	//		InsertString( L".\n\n" );
+	//	}
+	//}
 
-	if ( m_bLimitedItem )
-	{
-		wchar_t *pLocText = bHolidayRestriction
-						  ? g_pVGuiLocalize->Find( "#TF_Armory_Item_Limited_Holiday" )
-						  : g_pVGuiLocalize->Find( "#TF_Armory_Item_Limited" );
-		
-		if ( pLocText )
-		{
-			InsertColorChange( Color( 255, 140, 0, 255 ) );
-			InsertString ( pLocText );
-			InsertString( L"\n\n" );
-		}
-	}
+	//if ( m_bLimitedItem )
+	//{
+	//	wchar_t *pLocText = bHolidayRestriction
+	//					  ? g_pVGuiLocalize->Find( "#TF_Armory_Item_Limited_Holiday" )
+	//					  : g_pVGuiLocalize->Find( "#TF_Armory_Item_Limited" );
+	//	
+	//	if ( pLocText )
+	//	{
+	//		InsertColorChange( Color( 255, 140, 0, 255 ) );
+	//		InsertString ( pLocText );
+	//		InsertString( L"\n\n" );
+	//	}
+	//}
 }
 
 //-----------------------------------------------------------------------------
@@ -1380,21 +1380,21 @@ void CEconItemDetailsRichText::DataText_AppendItemData( const CEconItemDefinitio
 	}
 
 	// Can this item be earned by an achievement?
-	const AchievementAward_t *pAchievementAward = GetItemSchema()->GetAchievementRewardByDefIndex( pDef->GetDefinitionIndex() );
-	if( pAchievementAward )
-	{
-		wchar_t *pszAchName = ACHIEVEMENT_LOCALIZED_NAME_FROM_STR( pAchievementAward->m_sNativeName.String() );
-		if ( pszAchName )
-		{
-			AddDataText( "#TF_Armory_Item_AchievementReward", true, pszAchName );
-		}
-	}
+	//const AchievementAward_t *pAchievementAward = GetItemSchema()->GetAchievementRewardByDefIndex( pDef->GetDefinitionIndex() );
+	//if( pAchievementAward )
+	//{
+	//	wchar_t *pszAchName = ACHIEVEMENT_LOCALIZED_NAME_FROM_STR( pAchievementAward->m_sNativeName.String() );
+	//	if ( pszAchName )
+	//	{
+	//		AddDataText( "#TF_Armory_Item_AchievementReward", true, pszAchName );
+	//	}
+	//}
 
 	// Is this a Holiday item?
-	if ( pDef->GetHolidayRestriction() )
-	{
-		AddDataText( "#TF_Armory_Item_HolidayRestriction" );
-	}
+	//if ( pDef->GetHolidayRestriction() )
+	//{
+	//	AddDataText( "#TF_Armory_Item_HolidayRestriction" );
+	//}
 }
 
 //-----------------------------------------------------------------------------
@@ -1491,52 +1491,52 @@ void CEconItemDetailsRichText::DataText_AppendSetData( const CEconItemDefinition
 	if ( !ItemSystem() || !ItemSystem()->GetItemSchema() )
 		return;
 
-	CEconItemSchema *pSchema = ItemSystem()->GetItemSchema();
-	if ( pSchema )
-	{
-		const CEconItemSetDefinition *pItemSet = pDef->GetItemSetDefinition();
-		if ( pItemSet )
-		{
-			// Does this set provide bonus attributes when completely worn?
-			if ( pItemSet->m_iAttributes.Count() > 0 )
-			{
-				// Used for grabbing display colors.
-				vgui::HScheme hScheme = vgui::scheme()->GetScheme( "ClientScheme" );
-				vgui::IScheme *pScheme = vgui::scheme()->GetIScheme( hScheme );
+	//CEconItemSchema *pSchema = ItemSystem()->GetItemSchema();
+	//if ( pSchema )
+	//{
+	//	const CEconItemSetDefinition *pItemSet = pDef->GetItemSetDefinition();
+	//	if ( pItemSet )
+	//	{
+	//		// Does this set provide bonus attributes when completely worn?
+	//		if ( pItemSet->m_iAttributes.Count() > 0 )
+	//		{
+	//			// Used for grabbing display colors.
+	//			vgui::HScheme hScheme = vgui::scheme()->GetScheme( "ClientScheme" );
+	//			vgui::IScheme *pScheme = vgui::scheme()->GetIScheme( hScheme );
 
-				Assert( pScheme );
+	//			Assert( pScheme );
 
-				// Insert the set description
-				wchar_t *pLocText = g_pVGuiLocalize->Find( pItemSet->m_pszLocalizedName );
-				AddDataText( "#TF_Armory_Item_InSet", false, pLocText, NULL, m_bAllowItemSetLinks ? &pItemSet->m_iBundleItemDef : NULL );
+	//			// Insert the set description
+	//			wchar_t *pLocText = g_pVGuiLocalize->Find( pItemSet->m_pszLocalizedName );
+	//			AddDataText( "#TF_Armory_Item_InSet", false, pLocText, NULL, m_bAllowItemSetLinks ? &pItemSet->m_iBundleItemDef : NULL );
 
-				for ( int i = 0;  i < pItemSet->m_iAttributes.Count(); i++ )
-				{
-					const CEconItemAttributeDefinition *pAttrDef = GetItemSchema()->GetAttributeDefinition( pItemSet->m_iAttributes[i].m_iAttribDefIndex );
-					if ( !pAttrDef )
-						continue;
+	//			for ( int i = 0;  i < pItemSet->m_iAttributes.Count(); i++ )
+	//			{
+	//				const CEconItemAttributeDefinition *pAttrDef = GetItemSchema()->GetAttributeDefinition( pItemSet->m_iAttributes[i].m_iAttribDefIndex );
+	//				if ( !pAttrDef )
+	//					continue;
 
-					CEconAttributeDescription AttrDesc( GLocalizationProvider(), pAttrDef, pItemSet->m_iAttributes[i].m_flValue );
-					if ( !AttrDesc.GetDescription().IsEmpty() )
-					{
-						InsertColorChange( pScheme->GetColor( GetColorNameForAttribColor( AttrDesc.GetDefaultColor() ), Color(255, 255, 255, 255) ) );
-						AddDataText( "      " );
-						InsertString( AttrDesc.GetDescription().Get() );
-						AddDataText( "\n" );
-					}
-				}
+	//				CEconAttributeDescription AttrDesc( GLocalizationProvider(), pAttrDef, pItemSet->m_iAttributes[i].m_flValue );
+	//				if ( !AttrDesc.GetDescription().IsEmpty() )
+	//				{
+	//					InsertColorChange( pScheme->GetColor( GetColorNameForAttribColor( AttrDesc.GetDefaultColor() ), Color(255, 255, 255, 255) ) );
+	//					AddDataText( "      " );
+	//					InsertString( AttrDesc.GetDescription().Get() );
+	//					AddDataText( "\n" );
+	//				}
+	//			}
 
-				AddDataText( "\n" );
-			}
-			// This set is visual and provides no additional bonuses when worn completely.
-			else
-			{
-				// Insert the set description
-				wchar_t *pLocText = g_pVGuiLocalize->Find( pItemSet->m_pszLocalizedName );
-				AddDataText( "#TF_Armory_Item_InSet_NoBonus", false, pLocText, NULL, m_bAllowItemSetLinks ? &pItemSet->m_iBundleItemDef : NULL );
-			}
-		}
-	}
+	//			AddDataText( "\n" );
+	//		}
+	//		// This set is visual and provides no additional bonuses when worn completely.
+	//		else
+	//		{
+	//			// Insert the set description
+	//			wchar_t *pLocText = g_pVGuiLocalize->Find( pItemSet->m_pszLocalizedName );
+	//			AddDataText( "#TF_Armory_Item_InSet_NoBonus", false, pLocText, NULL, m_bAllowItemSetLinks ? &pItemSet->m_iBundleItemDef : NULL );
+	//		}
+	//	}
+	//}
 }
 
 //-----------------------------------------------------------------------------
