@@ -102,7 +102,7 @@ CEconNotification_HasNewItems::~CEconNotification_HasNewItems()
 	if ( !m_bHasTriggered )
 	{
 		m_bHasTriggered = true;
-		TFInventoryManager()->ShowItemsPickedUp( true, true, true );
+//		TFInventoryManager()->ShowItemsPickedUp( true, true, true );
 	}
 }
 
