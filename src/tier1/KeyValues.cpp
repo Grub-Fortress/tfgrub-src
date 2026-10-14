@@ -2332,7 +2332,7 @@ bool KeyValues::LoadFromBuffer( char const *resourceName, CUtlBuffer &buf, IBase
 
 			continue;
 		}
-#ifndef TFGRUB_ENABLE_STAGING_SCHEMA
+#ifdef TFGRUB_ENABLE_STAGING_SCHEMA
 		else if ( !Q_stricmp( s, "#base_staging" ) && CommandLine()->FindParm( "-no_staging_schema" ) == 0 )
 #else
 		else if ( !Q_stricmp( s, "#base_staging" ) && CommandLine()->FindParm( "-staging_schema" ) != 0 )
