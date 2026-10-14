@@ -2332,6 +2332,26 @@ bool KeyValues::LoadFromBuffer( char const *resourceName, CUtlBuffer &buf, IBase
 
 			continue;
 		}
+#ifndef TFGRUB_ENABLE_STAGING_SCHEMA
+		else if ( !Q_stricmp( s, "#base_staging" ) && CommandLine()->FindParm( "-no_staging_schema" ) == 0 )
+#else
+		else if ( !Q_stricmp( s, "#base_staging" ) && CommandLine()->FindParm( "-staging_schema" ) != 0 )
+#endif // TFGRUB_ENABLE_STAGING_SCHEMA
+		{
+			s = ReadToken( buf, wasQuoted, wasConditional );
+			// Name of subfile to load is now in s
+
+			if ( !s || *s == 0 )
+			{
+				g_KeyValuesErrorStack.ReportError("#base_staging is NULL " );
+			}
+			else
+			{
+				ParseIncludedKeys( resourceName, s, pFileSystem, pPathID, baseKeys );
+			}
+
+			continue;
+		}
 
 		if ( !pCurrentKey )
 		{

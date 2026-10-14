@@ -12,7 +12,8 @@ $Configuration
 {
 	$Compiler
 	{
-		$PreprocessorDefinitions		"$BASE;TIER1_STATIC_LIB"
+		$PreprocessorDefinitions		"$BASE;TIER1_STATIC_LIB" 
+		$PreprocessorDefinitions		"$BASE;TFGRUB_ENABLE_STAGING_SCHEMA" [$TFGRUB_ENABLE_STAGING_SCHEMA]
 	}
 
 	$Librarian [$WINDOWS]

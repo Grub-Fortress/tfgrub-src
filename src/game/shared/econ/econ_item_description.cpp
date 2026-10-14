@@ -3240,12 +3240,12 @@ void CEconItemDescription::Generate_FlagsAttributes( const CLocalizationProvider
 					// Some items cannot ever be traded, so don't indicate to the users that they'll be tradeable after a few days.
 					if ( !FindAttribute( pItemDef, pAttrib_CannotTrade ) )
 					{
-						vecLines.AddToTail( localized_localplayer_line_t( "#Attrib_Store_TradableAfterDate", ATTRIB_COL_NEGATIVE ) );
+//						vecLines.AddToTail( localized_localplayer_line_t( "#Attrib_Store_TradableAfterDate", ATTRIB_COL_NEGATIVE ) );
 					}
 
 					if ( pItemDef->GetEconTool() && pItemDef->GetEconTool()->RequiresToolEscrowPeriod() )
 					{
-						vecLines.AddToTail( localized_localplayer_line_t( "#Attrib_Store_ToolEscrowUntilDate", ATTRIB_COL_NEGATIVE ) );
+//						vecLines.AddToTail( localized_localplayer_line_t( "#Attrib_Store_ToolEscrowUntilDate", ATTRIB_COL_NEGATIVE ) );
 					}
 				}
 
@@ -3253,11 +3253,11 @@ void CEconItemDescription::Generate_FlagsAttributes( const CLocalizationProvider
 				{
 					if ( pItemDef->IsBundle() )
 					{
-						vecLines.AddToTail( localized_localplayer_line_t( "#Attrib_CannotCraftWeapons", ATTRIB_COL_NEGATIVE ) );
+//						vecLines.AddToTail( localized_localplayer_line_t( "#Attrib_CannotCraftWeapons", ATTRIB_COL_NEGATIVE ) );
 					}
 					else
 					{
-						vecLines.AddToTail( localized_localplayer_line_t( "#Attrib_CannotCraft", ATTRIB_COL_NEGATIVE ) );
+//						vecLines.AddToTail( localized_localplayer_line_t( "#Attrib_CannotCraft", ATTRIB_COL_NEGATIVE ) );
 					}
 				}
 			}

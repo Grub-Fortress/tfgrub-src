@@ -1,1 +1,1 @@
-devtools\bin\vpc.exe /tf /define:SOURCESDK +game +shaders /mksln tfgrub.sln
+devtools\bin\vpc.exe /tf /define:SOURCESDK /define:TFGRUB_ENABLE_STAGING_SCHEMA +game +shaders /mksln tfgrub.sln
