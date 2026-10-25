@@ -964,6 +964,88 @@ void CTFPlayerInventory::UpdateCachedServerLoadoutItems()
 {
 }*/
 
+//-----------------------------------------------------------------------------
+// Purpose: Check if an item ID is valid
+//-----------------------------------------------------------------------------
+bool CTFPlayerInventory::IsLoadoutSlotItemValid( itemid_t uItemId, int iClass, int iSlot )
+{
+	if ( uItemId == LOADOUT_SLOT_USE_BASE_ITEM )
+		return true;
+
+	if ( uItemId < 100000 )
+	{
+		int count = TFInventoryManager()->GetModItemCount();
+		for ( int i = 0; i < count; i++ )
+		{
+			CEconItemView *pItem = TFInventoryManager()->GetModItem( i );
+			if ( pItem && pItem->GetItemDefIndex() == (item_definition_index_t)uItemId )
+			{
+				CTFItemDefinition *pItemData = pItem->GetStaticData();
+				if ( pItemData && pItemData->CanBeUsedByClass( iClass ) &&
+					 AreSlotsConsideredIdentical( pItemData->GetEquipType(), pItemData->GetLoadoutSlot( iClass ), iSlot ) )
+				{
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	else
+	{
+		CEconItemView *pItem = GetInventoryItemByItemID( uItemId );
+		if ( !pItem )
+			return false;
+
+		CTFItemDefinition *pItemData = pItem->GetStaticData();
+		if ( !pItemData )
+			return false;
+
+		if ( !pItemData->CanBeUsedByClass( iClass ) )
+			return false;
+
+		if ( !AreSlotsConsideredIdentical( pItemData->GetEquipType(), pItemData->GetLoadoutSlot( iClass ), iSlot ) )
+			return false;
+
+		return true;
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: Validate all item slots and reset invalid items to default
+//-----------------------------------------------------------------------------
+void CTFPlayerInventory::ValidateLocalLoadout()
+{
+	bool bModified = false;
+	int numPresets = static_cast<int>(GetItemSchema()->GetNumAllowedItemPresets());
+
+	for ( int iPreset = 0; iPreset < numPresets; ++iPreset )
+	{
+		for ( int iClass = TF_FIRST_NORMAL_CLASS; iClass < TF_LAST_NORMAL_CLASS; ++iClass )
+		{
+			for ( int iSlot = 0; iSlot < CLASS_LOADOUT_POSITION_COUNT; ++iSlot )
+			{
+				itemid_t uItemId = m_PresetItems[iPreset][iClass][iSlot];
+				if ( !IsLoadoutSlotItemValid( uItemId, iClass, iSlot ) )
+				{
+					m_PresetItems[iPreset][iClass][iSlot] = LOADOUT_SLOT_USE_BASE_ITEM;
+					bModified = true;
+
+					if ( iPreset == m_ActivePreset[iClass] )
+					{
+						m_LoadoutItems[iClass][iSlot] = LOADOUT_SLOT_USE_BASE_ITEM;
+					}
+				}
+			}
+		}
+	}
+
+	if ( bModified )
+	{
+		SaveLocalLoadout();
+		Msg( "Player loadout contained invalid items; reset invalid slots to default.\n" );
+	}
+}
+
 void CTFPlayerInventory::LoadLocalLoadout()
 {
 	if (GetOwner() != steamapicontext->SteamUser()->GetSteamID())
@@ -1050,6 +1132,8 @@ void CTFPlayerInventory::LoadLocalLoadout()
 	}
 
 	pLoadoutKV->deleteThis();
+
+	ValidateLocalLoadout();
 
 	GTFGCClientSystem()->LocalInventoryChanged();
 }

@@ -587,7 +587,9 @@ bool CTFSniperRifle::IsFullyCharged( void ) const
 //-----------------------------------------------------------------------------
 void CTFSniperRifle::ZoomOut( void )
 {
+#ifdef CLIENT_DLL
 	bool bWasZoomed = IsZoomed();
+#endif
 
 	BaseClass::ZoomOut();
 

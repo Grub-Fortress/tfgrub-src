@@ -78,6 +78,8 @@ public:
 	bool				EquipLocalPreset(equipped_class_t unClass, equipped_preset_t unPreset);
 	int					GetActiveLocalPreset(equipped_class_t unClass) { return m_ActivePreset[unClass]; }
 
+	bool				IsLoadoutSlotItemValid( itemid_t uItemId, int iClass, int iSlot );
+	void				ValidateLocalLoadout();
 #endif
 	void				EquipLocal(uint64 ulItemID, equipped_class_t unClass, equipped_slot_t unSlot);
 	void				UnequipLocal(uint64 ulItemID);
