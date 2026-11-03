@@ -30,6 +30,7 @@ const char *g_szArmoryFilterStrings[ARMFILT_TOTAL] =
 {
 	"#ArmoryFilter_Weapons",		// ARMFILT_WEAPONS.
 	"#ArmoryFilter_ModItems",		// ARMFILT_MODITEMS,
+	"#ArmoryFilter_RebalancedItems",// ARMFILT_REBALANCEDITEMS,
 	"#ArmoryFilter_Scout",			// ARMFILT_CLASS_SCOUT,
 	"#ArmoryFilter_Sniper",			// ARMFILT_CLASS_SNIPER,
 	"#ArmoryFilter_Soldier",		// ARMFILT_CLASS_SOLDIER,
@@ -597,6 +598,12 @@ bool CArmoryPanel::DefPassesFilter( const CTFItemDefinition *pDef, armory_filter
 	case ARMFILT_MODITEMS:
 	{
 		bInList = pDef->IsModItem();
+		break;
+	}
+
+	case ARMFILT_REBALANCEDITEMS:
+	{
+		bInList = pDef->IsRebalancedItem();
 		break;
 	}
 

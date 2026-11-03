@@ -76,53 +76,9 @@
 	}
 	"prefabs"
 	{
-		"weapon_kritzkrieg" // The Kritzkrieg
-		{
-			"extra_wearable"			"models/weapons/c_models/c_kritz_backpack/c_kritz_backpack.mdl"
-			"attributes"
-			{
-				"lunchbox adds minicrits" // Used for the kritzkrieg's new sound effect
-				{
-					"attribute_class"	"set_weapon_mode"
-					"value"				"1"
-				}
-			}
-			"visuals"
-			{
-				"player_bodygroups"
-				{
-					"medic_backpack"			"1"
-				}
-			}
-//			"visuals_red"
-//			{
-//				"attached_models"
-//				{
-//					"0"
-//					{
-//						"model"	"models/weapons/c_models/c_overhealer/c_overhealer.mdl"
-//					}
-//				}
-//				"custom_particlesystem"
-//				{
-//					"system"	"medicgun_beam_kritzkrieg_red"
-//				}
-//			}
-//			"visuals_blu"
-//			{
-//				"attached_models"
-//				{
-//					"0"
-//					{
-//						"model"	"models/weapons/c_models/c_overhealer/c_overhealer.mdl"
-//					}
-//				}
-//				"custom_particlesystem"
-//				{
-//					"system"	"medicgun_beam_kritzkrieg_red"
-//				}
-//			}
-		}
+		// =========================================== 
+		// REBALANCES 
+		// =========================================== 
 		"weapon_crusaders_crossbow" // The Crusader's Crossbow
 		{
 			"attributes"
@@ -338,7 +294,7 @@
 			}
 		}
 		"weapon_disciplinary_action" // The Disciplinary Action
-		{	
+		{
 			"attributes"
 			{
 				"melee range multiplier"
@@ -382,12 +338,65 @@
 				}
 			}
 		}
+		// =========================================== 
+		// VISUAL CHANGES
+		// =========================================== 
+		"weapon_kritzkrieg" // The Kritzkrieg
+		{
+			"extra_wearable"			"models/weapons/c_models/c_kritz_backpack/c_kritz_backpack.mdl"
+			"attributes"
+			{
+				"lunchbox adds minicrits" // Used for the kritzkrieg's new sound effect
+				{
+					"attribute_class"	"set_weapon_mode"
+					"value"				"1"
+				}
+			}
+			"visuals"
+			{
+				"player_bodygroups"
+				{
+					"medic_backpack"			"1"
+				}
+			}
+//			"visuals_red"
+//			{
+//				"attached_models"
+//				{
+//					"0"
+//					{
+//						"model"	"models/weapons/c_models/c_overhealer/c_overhealer.mdl"
+//					}
+//				}
+//				"custom_particlesystem"
+//				{
+//					"system"	"medicgun_beam_kritzkrieg_red"
+//				}
+//			}
+//			"visuals_blu"
+//			{
+//				"attached_models"
+//				{
+//					"0"
+//					{
+//						"model"	"models/weapons/c_models/c_overhealer/c_overhealer.mdl"
+//					}
+//				}
+//				"custom_particlesystem"
+//				{
+//					"system"	"medicgun_beam_kritzkrieg_red"
+//				}
+//			}
+		}
 	}
 	"items"
 	{
-		// Rebalances 
+		// =========================================== 
+		// REBALANCES 
+		// =========================================== 
 		"41" // Natascha	
 		{
+			"rebalanced_item"			"1"
 			"attributes"
 			{
 				"slow enemy on hit"
@@ -427,6 +436,7 @@
 		}
 		"57" // The Razorback
 		{
+			"rebalanced_item"			"1"
 			"attributes"
 			{
 				"patient overheal penalty"
@@ -442,6 +452,7 @@
 		}
 		"128" // Equalizer
 		{
+			"rebalanced_item"			"1"
 			"attributes"
 			{
 				"mod shovel damage boost"
@@ -465,17 +476,6 @@
 				}
 			}
 		}
-		"131" // The Chargin' Targe
-		{
-			"visuals_red"
-			{
-				"skin"	"0"
-			}
-			"visuals_blu"
-			{
-				"skin"	"1"
-			}
-		}
 		"133" // The Gunboats
 		{
 			"used_by_classes"
@@ -485,7 +485,8 @@
 			}
 		}
 		"153" // The Homewrecker
-		{	
+		{
+			"rebalanced_item"			"1"
 			"attributes"
 			{
 				"damage applies to sappers"
@@ -506,6 +507,7 @@
 		}
 		"171" // The Tribalman's Shiv
 		{
+			"rebalanced_item"			"1"
 			"attributes"
 			{
 				"bleeding duration"
@@ -536,6 +538,7 @@
 		}
 		"230" // Sydney Sleeper
 		{
+			"rebalanced_item"			"1"
 			"attributes"
 			{
 				"jarate duration"
@@ -556,6 +559,7 @@
 		}
 		"231" // Darwin's Danger Shield
 		{
+			"rebalanced_item"			"1"
 			"attributes"
 			{
 				"afterburn immunity"
@@ -585,6 +589,7 @@
 		}
 		"232" // The Bushwacka
 		{
+			"rebalanced_item"			"1"
 			"attributes"
 			{
 				"fire rate penalty"
@@ -616,6 +621,7 @@
 		}
 		"307" // Ullapool Caber
  		{
+			"rebalanced_item"			"1"
  			"attributes"
  			{
 				"damage bonus"
@@ -627,6 +633,7 @@
 		}
 		"310" // The Warrior's Spirit
 		{
+			"rebalanced_item"			"1"
 			"attributes"
 			{
 				"dmg taken increased"
@@ -661,6 +668,7 @@
 		}
 		"311" // The Buffalo Steak Sandvich
 		{
+			"rebalanced_item"			"1"
 			"attributes"
 			{
 				"energy buff dmg taken multiplier"
@@ -671,6 +679,7 @@
 		}
 		"317" // Candy Cane
 		{
+			"rebalanced_item"			"1"
 			"attributes"
 			{
 				"dmg taken from blast increased"
@@ -691,6 +700,7 @@
 		}
 		"331" // Fists of Steel
 		{
+			"rebalanced_item"			"1"
 			"attributes"
 			{
 				"provide on active hidden"
@@ -716,6 +726,7 @@
 		}
 		"355" // Fan O'War
 		{
+			"rebalanced_item"			"1"
 			"attributes"
 			{
 				"melee range multiplier"
@@ -727,6 +738,7 @@
 		}
 		"356" // Conniver's Kunai
 		{
+			"rebalanced_item"			"1"
 			"attributes"
 			{
 				"sanguisuge"
@@ -766,6 +778,7 @@
 		}
 		"411" // Quickfix
 		{
+			"rebalanced_item"			"1"
 			"attributes"
 			{
 				"ubercharge rate bonus"
@@ -781,6 +794,7 @@
 		}
 		"413" // The Solemn Vow
 		{
+			"rebalanced_item"			"1"
 			"attributes"
 			{
 				"damage penalty"
@@ -792,6 +806,7 @@
 		}
 		"426" // The Eviction Notice
 		{
+			"rebalanced_item"			"1"
 			"static_attrs"
 			{
 				"mod_maxhealth_drain_rate"				"delete"
@@ -814,6 +829,7 @@
 		}
 		"449" // The Winger
 		{
+			"rebalanced_item"			"1"
 			"used_by_classes"
 			{
 				"scout"					"secondary"
@@ -839,6 +855,7 @@
 		}
 		"460" // The Enforcer
 		{
+			"rebalanced_item"			"1"
 			"attributes"
 			{
 				"damage bonus while disguised"
@@ -854,6 +871,7 @@
 		}
 		"525" // The Diamondback
 		{
+			"rebalanced_item"			"1"
 			"attributes"
 			{
 				"crit_dmg_falloff"
@@ -865,6 +883,7 @@
 		}
 		"593" // The Third Degree
 		{
+			"rebalanced_item"			"1"
 			"attributes"
 			{
 				"fire rate penalty"
@@ -876,6 +895,7 @@
 		}
 		"594" // The Phlogistinator
 		{
+			"rebalanced_item"			"1"
 			"attributes"
 			{
 				"reduced_healing_from_medics"
@@ -887,6 +907,7 @@
 		}
 		"609" // The Scottish Handshake
 		{	
+			"rebalanced_item"			"1"
 			"item_iconname"	"scotland_shard"
 			"attributes"
 			{
@@ -925,6 +946,7 @@
 //		}
 		"740" // Scorch Shot
 		{
+			"rebalanced_item"			"1"
 			"attributes"
 			{
 				"damage penalty"
@@ -941,6 +963,7 @@
 		}
 		"751" // The Cleaner's Carbine
 		{
+			"rebalanced_item"			"1"
 			"attributes"
 			{
 				"weapon spread bonus"
@@ -952,6 +975,7 @@
 		}
 		"772" // Baby Face's Blaster
 		{
+			"rebalanced_item"			"1"
 			"item_class"	"tf_weapon_scattergun"
 			"attributes"
 			{
@@ -1009,6 +1033,7 @@
 		}
 		"773" // Pretty Boy's Pocket Pistol
 		{
+			"rebalanced_item"			"1"
 			"used_by_classes"
 			{
 				"scout"					"secondary"
@@ -1033,6 +1058,7 @@
 		}
 		"1098" // The Classic
 		{
+			"rebalanced_item"			"1"
 			"attributes"
 			{
 				"damage penalty on bodyshot"
@@ -1057,6 +1083,7 @@
 		}
 		"1103" // The Back Scatter
 		{
+			"rebalanced_item"			"1"
 			"attributes"
 			{
 				"weapon spread bonus"
@@ -1069,6 +1096,92 @@
 					"value"				"delete"
 				}
 			}
+		}
+		// =========================================== 
+		// VISUAL CHANGES
+		// =========================================== 
+		"131" // The Chargin' Targe
+		{
+			"rebalanced_item"			"1"
+			"visuals_red"
+			{
+				"skin"	"0"
+			}
+			"visuals_blu"
+			{
+				"skin"	"1"
+			}
+		}
+		// =========================================== 
+		// REBALANCES TAG FOR PREFABS
+		// =========================================== 
+		"37" // The Ubersaw
+		{
+			"rebalanced_item"			"1"
+		}
+		"38" // The Axtinguisher
+		{
+			"rebalanced_item"			"1"
+		}
+		"45" // The Force-A-Nature
+		{
+			"rebalanced_item"			"1"
+		}
+		"58" // Jarate
+		{
+			"rebalanced_item"			"1"
+		}
+		"61" // The Ambassador
+		{
+			"rebalanced_item"			"1"
+		}
+		"131" // The Chargin' Targe
+		{
+			"rebalanced_item"			"1"
+		}
+		"129" // The Buff Banner
+		{
+			"rebalanced_item"			"1"
+		}
+		"220" // The Shortstop
+		{
+			"rebalanced_item"			"1"
+		}
+		"222" // Mad Milk
+		{
+			"rebalanced_item"			"1"
+		}
+		"225" // Your Eternal Reward
+		{
+			"rebalanced_item"			"1"
+		}
+		"304" // The Amputator
+		{
+			"rebalanced_item"			"1"
+		}
+		"305" // The Crusader's Crossbow
+		{
+			"rebalanced_item"			"1"
+		}
+		"312" // The Brass Beast
+		{
+			"rebalanced_item"			"1"
+		}
+		"402" // The Bazaar Bargain
+		{
+			"rebalanced_item"			"1"
+		}
+		"425" // The Family Business
+		{
+			"rebalanced_item"			"1"
+		}
+		"447" // The Disciplinary Action
+		{
+			"rebalanced_item"			"1"
+		}
+		"448" // The Soda Popper
+		{
+			"rebalanced_item"			"1"
 		}
 	}
 }

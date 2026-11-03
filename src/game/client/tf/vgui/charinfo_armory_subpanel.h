@@ -25,6 +25,7 @@ enum armory_filters_t
 	// These are listed in the dropdown, for players to select
 	ARMFILT_WEAPONS,
 	ARMFILT_MODITEMS,
+	ARMFILT_REBALANCEDITEMS,
 	ARMFILT_CLASS_SCOUT,
 	ARMFILT_CLASS_SNIPER,
 	ARMFILT_CLASS_SOLDIER,

@@ -2307,6 +2307,9 @@ m_pOwningPackBundle( NULL ),
 m_bIsPackItem( false ),
 m_bBaseItem( false ),
 m_bModItem( true ),
+
+m_bRebalancedItem( true ),
+
 // TF Bot Give Items
 m_bUsableByBots( true ),
 
@@ -3190,6 +3193,8 @@ bool CEconItemDefinition::BInitFromKV( KeyValues *pKVItem, CUtlVector<CUtlString
 	{
 		m_bModItem = m_pKVItem->GetInt( "experimentalitem", 0 ) != 0;
 	}
+	m_bRebalancedItem = m_pKVItem->GetInt("rebalanced_item", 0) != 0;
+
 	// TF Bot Give Items
 	m_bUsableByBots = m_pKVItem->GetInt("usable_by_bots", 0) != 0;
 	m_pszItemLogClassname = m_pKVItem->GetString( "item_logname", NULL );

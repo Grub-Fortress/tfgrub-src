@@ -1285,6 +1285,8 @@ public:
 	bool		IsBaseItem( void ) const			{ return m_bBaseItem; }
 	bool		IsModItem( void ) const				{ return m_bModItem; }
 
+	bool		IsRebalancedItem( void ) const		{ return m_bRebalancedItem; }
+
 	// TF Bot Give Items
 	bool		CanBeUsedByBots( void ) const		{ return m_bUsableByBots; }
 
@@ -1609,6 +1611,8 @@ private:
 	bool			m_bShouldShowInArmory;
 	bool			m_bBaseItem;
 	bool			m_bModItem;
+
+	bool			m_bRebalancedItem;
 
 	// TF Bot Give Items
 	bool			m_bUsableByBots;
