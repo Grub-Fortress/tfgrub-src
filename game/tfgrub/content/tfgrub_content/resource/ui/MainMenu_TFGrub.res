@@ -202,7 +202,7 @@
 		"ControlName"	"CExLabel"
 		"fieldName"		"PlayLabel"
 		"font"			"HudFontSmallBold"
-		"labelText"		"Welcome back, "
+		"labelText"		"#TFGrub_MainMenu_WelcomeBack"
 		"textAlignment"	"west"
 		"xpos"			"50"
 		"ypos"			"160"
@@ -296,7 +296,7 @@
 		"tall"			"36"
 		"visible"		"1"
 
-		"navUp"			"LegacyCreateServer"
+		"navUp"			"CreateServerButton"
 		"navDown"		"CharacterSetupButton"
 		"navLeft"		"OptionsButton"
 		"navRight"		"MOTD_ShowButtonPanel"
@@ -349,72 +349,6 @@
 				"scaleImage"	"1"
 			}		
 		}
-	}
-	
-	"LegacyCreateServer"
-	{
-		"ControlName"	"EditablePanel"
-		"fieldname"		"LegacyCreateServer"
-		"xpos"			"274"
-		"ypos"			"243"
-		"zpos"			"12"
-		"wide"			"36"
-		"tall"			"36"
-		"visible"		"1"
-
-		"navUp"			"ServerBrowserButton"
-		"navDown"		"AdvOptionsButton"
-		"navLeft"		"CreateServerButton"
-		"navRight"		"Notifications_ShowButtonPanel"
-		"navToRelay"	"SubButton"
-		
-		"SubButton"
-		{
-			"ControlName"	"CExImageButton"
-			"fieldName"		"SubButton"
-			"xpos"			"0"
-			"ypos"			"0"
-			"wide"			"36"
-			"tall"			"36"
-			"autoResize"	"0"
-			"pinCorner"		"3"
-			"visible"		"1"
-			"enabled"		"1"
-			"tabPosition"	"0"
-			"textinsetx"	"25"
-			"use_proportional_insets" "1"
-			"font"			"HudFontSmallBold"
-			"textAlignment"	"west"
-			"dulltext"		"0"
-			"brighttext"	"0"
-			"default"		"1"
-			"sound_depressed"	"UI/buttonclick.wav"
-			"sound_released"	"UI/buttonclickrelease.wav"
-			
-			"border_default"	"MainMenuButtonDefault"
-			"border_armed"		"MainMenuButtonArmed_TFGrub"
-			"paintbackground"	"0"
-			
-			"defaultFgColor_override" "46 43 42 255"
-			"armedFgColor_override" "46 43 42 255"
-			"depressedFgColor_override" "46 43 42 255"
-			
-			"image_drawcolor"	"89 83 74 255"
-			"image_armedcolor"	"89 83 74 255"
-			"SubImage"
-			{
-				"ControlName"	"ImagePanel"
-				"fieldName"		"SubImage"
-				"xpos"			"9"
-				"ypos"			"9"
-				"zpos"			"1"
-				"wide"			"18"
-				"tall"			"18"
-				"visible"		"1"
-				"enabled"		"1"
-				"scaleImage"	"1"
-			}				
-		}		
 	}
 	
 	"ServerFinderButton"
@@ -1405,7 +1339,7 @@
 		"xpos"			"45"
 		"ypos"			"317"
 		"zpos"			"11"
-		"wide"			"350"
+		"wide"			"265"
 		"tall"			"36"
 		"visible"		"1"
 		"PaintBackgroundType"	"2"
@@ -1783,14 +1717,13 @@
 		"xpos"			"45"
 		"ypos"			"243"
 		"zpos"			"11"
-		"wide"			"350"
+		"wide"			"265"
 		"tall"			"36"
 		"visible"		"1"
 		"PaintBackgroundType"	"0"
 
 		"navUp"			"ServerBrowserButton"
 		"navDown"		"OptionsButton"
-		"navRight"		"LegacyCreateServer"
 		"navToRelay"	"SubButton"
 
 		"SubButton"
@@ -1799,7 +1732,7 @@
 			"fieldName"		"SubButton"
 			"xpos"			"0"
 			"ypos"			"0"
-			"wide"			"230"
+			"wide"			"265"
 			"tall"			"36"
 			"autoResize"	"0"
 			"pinCorner"		"3"

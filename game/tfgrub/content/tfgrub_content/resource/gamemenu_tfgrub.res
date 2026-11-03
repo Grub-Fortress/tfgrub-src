@@ -24,7 +24,7 @@
 	"CreateServerButton"
 	{
 		"label" "#GameUI_GameMenu_CreateServer"
-		"command" "modcreateserver"
+		"command" "OpenCreateMultiplayerGameDialog"
 		"subimage" "glyph_create"
 		"OnlyAtMenu" "1"
 	}
@@ -97,14 +97,14 @@
 		"subimage" "icon_whistle"
 		"tooltip" "#MMenu_RequestCoach"
 	}
-	"LegacyCreateServer"
-	{
-		"label" ""
-		"command" "OpenCreateMultiplayerGameDialog"
-		"subimage" "glyph_create"
-		"tooltip"	"Legacy Create Server Menu"
-		"OnlyAtMenu" "1"
-	}
+//	"LegacyCreateServer"
+//	{
+//		"label" ""
+//		"command" "OpenCreateMultiplayerGameDialog"
+//		"subimage" "glyph_create"
+//		"tooltip"	"Legacy Create Server Menu"
+//		"OnlyAtMenu" "1"
+//	}
 	"ServerFinderButton"
 	{
 		"label"	""
