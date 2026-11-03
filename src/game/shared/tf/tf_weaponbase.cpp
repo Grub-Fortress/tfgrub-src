@@ -5503,6 +5503,13 @@ void CTFWeaponBase::ApplyOnHitAttributes( CBaseEntity *pVictimBaseEntity, CTFPla
 				}
 			}
 		}
+		// Jarate on hit.
+		float iJarateOnHit = 0;
+		CALL_ATTRIB_HOOK_FLOAT( iJarateOnHit, jarate_on_hit );
+		if ( iJarateOnHit )
+		{
+			pVictim->m_Shared.AddCond( TF_COND_URINE, iJarateOnHit, pAttacker );
+		}
 
 		// Stun airborne enemies who are half a body length higher than attacker
 		bool bIsVictimAirborne = !( pVictim->GetFlags() & FL_ONGROUND ) && ( pVictim->GetWaterLevel() == WL_NotInWater );

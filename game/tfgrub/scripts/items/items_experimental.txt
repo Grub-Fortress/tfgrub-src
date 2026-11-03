@@ -662,7 +662,7 @@
 			{
 			}
 			"mouse_pressed_sound"	"ui/item_metal_weapon_pickup.wav"
-			"drop_sound"		"ui/item_metal_weapon_drop.wav"
+			"drop_sound"			"ui/item_metal_weapon_drop.wav"
 		}
 		"36000" // Enforcer Rework Concept
 		{
@@ -677,7 +677,6 @@
 			"image_inventory"				"backpack/workshop/weapons/c_models/c_snub_nose/c_snub_nose"
 			"image_inventory_size_w"		"128"
 			"image_inventory_size_h"		"82"
-			"inspect_panel_dist" 			"32"
 			"model_player"					"models/workshop/weapons/c_models/c_snub_nose/c_snub_nose.mdl"
 			"attributes"
 			{
@@ -712,6 +711,77 @@
 					"attribute_class"	"is_experimental_rebalance_DISPLAY"
 					"value"				"1"
 				}
+			}
+		}
+		"36001" // The Sydney Sleeper Rework Concept
+		{
+			"name"							"The Sydney Sleeper Rework Concept 1"
+			"prefab"						"weapon_sniperrifle_alt1"
+			"item_class"					"tf_weapon_sniperrifle"
+			"stagingitem"					"1"
+			"item_logname"					"sydney_sleeper_rw1"
+			"item_iconname"					"sydney_sleeper"
+			"show_in_armory"				"1"
+			"item_type_name"				"#TF_Weapon_SniperRifle"
+			"item_name"						"The Sydney Sleeper Rework Concept 1"
+			"item_slot"						"primary"
+			"item_quality"					"unique"
+			"propername"					"1"
+			"image_inventory"				"backpack/workshop/weapons/c_models/c_sydney_sleeper/c_sydney_sleeper"
+			"image_inventory_size_w"		"128"
+			"image_inventory_size_h"		"82"
+			"model_player"					"models/workshop/weapons/c_models/c_sydney_sleeper/c_sydney_sleeper.mdl"
+			"attach_to_hands"				"1"
+			"visuals"
+			{
+				"player_bodygroups"
+				{
+					"bullets"				"1"
+					"darts"					"1"
+				}
+				"sound_single_shot"			"Weapon_SydneySleeper.Single"
+				"sound_burst"				"Weapon_SydneySleeper.SingleCrit"
+				"attached_models_festive"
+				{
+					"0"
+					{
+						"model"				"models/workshop/weapons/c_models/c_sydney_sleeper/c_sydney_sleeper_festivizer.mdl"
+					}
+				}
+			}
+			"used_by_classes"
+			{
+				"sniper"					"1"
+			}
+			"static_attrs"
+			{
+				"min_viewmodel_offset"		"5 0 -8"				
+			}
+			"mouse_pressed_sound"			"ui/item_heavy_gun_pickup.wav"
+			"drop_sound"					"ui/item_heavy_gun_drop.wav"
+			"brass_eject_model"				""	
+			"attributes"
+			{
+				"sniper charge per sec"
+				{
+					"attribute_class"		"mult_sniper_charge_per_sec"
+					"value"					"0"
+				}
+				"fire rate bonus"
+				{
+					"attribute_class"		"mult_postfiredelay"
+					"value"					"0.75"
+				}
+				"jarate duration flat"
+				{
+					"attribute_class"		"jarate_duration_flat"
+					"value"					"4"
+				}
+//				"jarate_on_hit"
+//				{
+//					"attribute_class"		"jarate_on_hit"
+//					"value"					"4"
+//				}
 			}
 		}
 	}

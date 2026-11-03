@@ -1239,9 +1239,15 @@ bool CTFSniperRifle::IsJarateRifle( void ) const
 //-----------------------------------------------------------------------------
 float CTFSniperRifle::GetJarateTime( void ) const
 {
+	float flJarateTimeFlat = 0.0f;
+	CALL_ATTRIB_HOOK_FLOAT( flJarateTimeFlat, jarate_duration_flat );
 	if ( m_flChargedDamage > 0.f )
 	{
 		return GetJarateTimeInternal();
+	}
+	else if ( flJarateTimeFlat > 0.f )
+	{
+		return flJarateTimeFlat;
 	}
 	else
 		return 0.0f;

@@ -49,7 +49,17 @@
 			// in folders where they don't exist.  (Searching a VPK is much faster than making an operating
 			// system call.)
 			
-			game+mod			|gameinfo_path|content/*
+			// Mount TF:Grub Folders
+			game+mod			|gameinfo_path|content/tfgrub_content
+			game+mod			|gameinfo_path|content/tfgrub_content_shaders
+			game+mod			|gameinfo_path|content/tfgrub_content_hammer
+			game+mod			|gameinfo_path|content/tfgrub_content_uvf
+			// Mount TF:Grub VPKs
+			game+mod			|gameinfo_path|content/tfgrub_content.vpk
+			game+mod			|gameinfo_path|content/tfgrub_content_shaders.vpk
+			game+mod			|gameinfo_path|content/tfgrub_content_hammer.vpk
+			game+mod			|gameinfo_path|content/tfgrub_content_uvf.vpk
+			// Mount SDK/TF2 Assets
 			game_lv				|appid_440|tf/tf2_lv.vpk
 			game+mod			|appid_440|tf/tf2_textures.vpk
 			game+mod			|appid_440|tf/tf2_sound_vo_english.vpk

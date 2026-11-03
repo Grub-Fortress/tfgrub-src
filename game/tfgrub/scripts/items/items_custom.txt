@@ -268,6 +268,28 @@ not sure if it should be used as a weapon"
 			"hidden"	"0"
 			"effect_type"	"community"
 		}
+		"5021"
+		{
+			"name"	"jarate duration flat"
+			"attribute_class"	"jarate_duration_flat"
+			"description_string"	"#Attrib_JarateDurationFlat"
+			"description_format"	"value_is_additive"
+			"hidden"	"0"
+			"effect_type"	"positive"
+			"armory_desc"	"on_hit jarate"
+			"stored_as_integer"	"0"
+		}
+		"5022"
+		{
+			"name"	"jarate_on_hit"
+			"attribute_class"	"jarate_on_hit"
+			"description_string"	"#Attrib_JarateDurationFlat"
+			"description_format"	"value_is_additive"
+			"hidden"	"0"
+			"effect_type"	"positive"
+			"armory_desc"	"on_hit jarate"
+			"stored_as_integer"	"0"
+		}
 	}
 	"items"
 	{
