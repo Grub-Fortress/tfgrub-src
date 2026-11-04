@@ -1086,7 +1086,7 @@ int CHLClient::Init( CreateInterfaceFn appSystemFactory, CreateInterfaceFn physi
 	IGameSystem::Add( TFSharedContentManager() );
 	#endif
 
-	// HACK (I think): Loading the localization for tf2 and then later the overrides through cdll_client_int.cpp instead 
+	// HACK (I think): Loading the localization for TF2 and then later the overrides through cdll_client_int.cpp instead 
 	// of using AdditionalLocalization for TF2 to make sure TF:Grub can override TF2 localization strings
 	// - Grub
 	g_pVGuiLocalize->AddFile( "resource/tf_%language%.txt" );
