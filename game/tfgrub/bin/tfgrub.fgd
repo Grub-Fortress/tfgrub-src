@@ -1,4 +1,3 @@
-@include "base.fgd"
 @include "tf.fgd"
 //=====================================
 // Overrides
@@ -355,9 +354,4 @@
 	"for the visual representation of the ladder in the map, apply the toolsinvisibleladder material to the " +
 	"func_ladder brush."
 [
-]
-
-@SolidClass = parallax_obb
-[
-	targetname(target_source) : "Name" : : "The name that other entities refer to this entity by."
 ]

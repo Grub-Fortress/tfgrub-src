@@ -54,11 +54,13 @@
 			game+mod			|gameinfo_path|content/tfgrub_content_shaders
 			game+mod			|gameinfo_path|content/tfgrub_content_hammer
 			game+mod			|gameinfo_path|content/tfgrub_content_uvf
+			game+mod			|gameinfo_path|content/tfgrub_content_mapbase
 			// Mount TF:Grub VPKs
 			game+mod			|gameinfo_path|content/tfgrub_content.vpk
 			game+mod			|gameinfo_path|content/tfgrub_content_shaders.vpk
 			game+mod			|gameinfo_path|content/tfgrub_content_hammer.vpk
 			game+mod			|gameinfo_path|content/tfgrub_content_uvf.vpk
+			game+mod			|gameinfo_path|content/tfgrub_content_mapbase.vpk
 			// Mount SDK/TF2 Assets
 			game_lv				|appid_440|tf/tf2_lv.vpk
 			game+mod			|appid_440|tf/tf2_textures.vpk

@@ -1,8 +1,8 @@
 versioninfo
 {
 	"editorversion" "400"
-	"editorbuild" "8870"
-	"mapversion" "13"
+	"editorbuild" "8873"
+	"mapversion" "15"
 	"formatversion" "100"
 	"prefab" "0"
 }
@@ -89,12 +89,14 @@ bgimages_plus
 world
 {
 	"id" "1"
-	"mapversion" "13"
+	"mapversion" "15"
 	"classname" "worldspawn"
+	"chaptertitlenomessage" "1"
 	"detailmaterial" "detail/detailsprites"
 	"detailvbsp" "detail.vbsp"
 	"maxpropscreenwidth" "-1"
 	"skyname" "sky_day01_01"
+	"vscriptlanguage_client" "-2"
 	solid
 	{
 		"id" "2"
@@ -245,7 +247,7 @@ world
 				"v" "192 192 192"
 				"v" "-192 192 192"
 			}
-			"material" "CONCRETE/COMPUTERWALL003A"
+			"material" "DEV/DEV_MEASUREGENERIC_BROWN02"
 			"uaxis" "[1 0 0 0] 0.25"
 			"vaxis" "[0 -1 0 0] 0.25"
 			"rotation" "0"
@@ -381,7 +383,7 @@ world
 				"v" "192 192 0"
 				"v" "192 192 192"
 			}
-			"material" "CONCRETE/COMPUTERWALL003C"
+			"material" "DEV/DEV_MEASUREGENERIC_RED01"
 			"uaxis" "[0 1 0 0] 0.25"
 			"vaxis" "[0 0 -1 -0] 0.25"
 			"rotation" "0"
@@ -499,7 +501,7 @@ world
 				"v" "-192 -192 0"
 				"v" "-192 -192 192"
 			}
-			"material" "CONCRETE/COMPUTERWALL003C"
+			"material" "DEV/DEV_MEASUREGENERIC_BLUE01"
 			"uaxis" "[-0 -1 0 -0] 0.25"
 			"vaxis" "[0 0 -1 0] 0.25"
 			"rotation" "0"
@@ -617,7 +619,7 @@ world
 				"v" "192 -192 0"
 				"v" "192 -192 192"
 			}
-			"material" "CONCRETE/COMPUTERWALL003C"
+			"material" "DEV/DEV_MEASUREGENERIC_PURPLE02"
 			"uaxis" "[1 0 0 -0] 0.25"
 			"vaxis" "[0 0 -1 0] 0.25"
 			"rotation" "0"
@@ -735,7 +737,7 @@ world
 				"v" "-192 192 0"
 				"v" "-192 192 192"
 			}
-			"material" "CONCRETE/COMPUTERWALL003C"
+			"material" "DEV/DEV_MEASUREGENERIC_GREEN01"
 			"uaxis" "[-1 -0 0 0] 0.25"
 			"vaxis" "[0 0 -1 0] 0.25"
 			"rotation" "0"
@@ -1576,7 +1578,7 @@ entity
 				"v" "192 -192 192"
 				"v" "-192 -192 192"
 			}
-			"material" "TOOLS/TOOLSTRIGGER"
+			"material" "TOOLS/TOOLSPARALLAXOBB"
 			"uaxis" "[1 0 0 0] 0.25"
 			"vaxis" "[0 -1 0 0] 0.25"
 			"rotation" "0"
@@ -1594,7 +1596,7 @@ entity
 				"v" "192 192 0"
 				"v" "-192 192 0"
 			}
-			"material" "TOOLS/TOOLSTRIGGER"
+			"material" "TOOLS/TOOLSPARALLAXOBB"
 			"uaxis" "[1 0 0 0] 0.25"
 			"vaxis" "[0 -1 0 0] 0.25"
 			"rotation" "0"
@@ -1612,7 +1614,7 @@ entity
 				"v" "-192 -192 0"
 				"v" "-192 192 0"
 			}
-			"material" "TOOLS/TOOLSTRIGGER"
+			"material" "TOOLS/TOOLSPARALLAXOBB"
 			"uaxis" "[0 1 0 0] 0.25"
 			"vaxis" "[0 0 -1 0] 0.25"
 			"rotation" "0"
@@ -1630,7 +1632,7 @@ entity
 				"v" "192 -192 192"
 				"v" "192 192 192"
 			}
-			"material" "TOOLS/TOOLSTRIGGER"
+			"material" "TOOLS/TOOLSPARALLAXOBB"
 			"uaxis" "[0 1 0 0] 0.25"
 			"vaxis" "[0 0 -1 0] 0.25"
 			"rotation" "0"
@@ -1648,7 +1650,7 @@ entity
 				"v" "-192 192 0"
 				"v" "192 192 0"
 			}
-			"material" "TOOLS/TOOLSTRIGGER"
+			"material" "TOOLS/TOOLSPARALLAXOBB"
 			"uaxis" "[1 0 0 0] 0.25"
 			"vaxis" "[0 0 -1 0] 0.25"
 			"rotation" "0"
@@ -1666,7 +1668,7 @@ entity
 				"v" "-192 -192 192"
 				"v" "192 -192 192"
 			}
-			"material" "TOOLS/TOOLSTRIGGER"
+			"material" "TOOLS/TOOLSPARALLAXOBB"
 			"uaxis" "[1 0 0 0] 0.25"
 			"vaxis" "[0 0 -1 0] 0.25"
 			"rotation" "0"
@@ -1947,7 +1949,7 @@ entity
 				"v" "768 -192 192"
 				"v" "384 -192 192"
 			}
-			"material" "TOOLS/TOOLSTRIGGER"
+			"material" "TOOLS/TOOLSPARALLAXOBB"
 			"uaxis" "[1 0 0 0] 0.25"
 			"vaxis" "[0 -1 0 -0] 0.25"
 			"rotation" "0"
@@ -1965,7 +1967,7 @@ entity
 				"v" "768 960 0"
 				"v" "384 960 0"
 			}
-			"material" "TOOLS/TOOLSTRIGGER"
+			"material" "TOOLS/TOOLSPARALLAXOBB"
 			"uaxis" "[1 0 0 0] 0.25"
 			"vaxis" "[0 -1 0 -0] 0.25"
 			"rotation" "0"
@@ -1983,7 +1985,7 @@ entity
 				"v" "384 -192 0"
 				"v" "384 960 0"
 			}
-			"material" "TOOLS/TOOLSTRIGGER"
+			"material" "TOOLS/TOOLSPARALLAXOBB"
 			"uaxis" "[0 1 0 0] 0.25"
 			"vaxis" "[0 0 -1 0] 0.25"
 			"rotation" "0"
@@ -2001,7 +2003,7 @@ entity
 				"v" "768 -192 192"
 				"v" "768 960 192"
 			}
-			"material" "TOOLS/TOOLSTRIGGER"
+			"material" "TOOLS/TOOLSPARALLAXOBB"
 			"uaxis" "[0 1 0 0] 0.25"
 			"vaxis" "[0 0 -1 0] 0.25"
 			"rotation" "0"
@@ -2019,7 +2021,7 @@ entity
 				"v" "384 960 0"
 				"v" "768 960 0"
 			}
-			"material" "TOOLS/TOOLSTRIGGER"
+			"material" "TOOLS/TOOLSPARALLAXOBB"
 			"uaxis" "[1 0 0 0] 0.25"
 			"vaxis" "[0 0 -1 0] 0.25"
 			"rotation" "0"
@@ -2037,7 +2039,7 @@ entity
 				"v" "384 -192 192"
 				"v" "768 -192 192"
 			}
-			"material" "TOOLS/TOOLSTRIGGER"
+			"material" "TOOLS/TOOLSPARALLAXOBB"
 			"uaxis" "[1 0 0 0] 0.25"
 			"vaxis" "[0 0 -1 0] 0.25"
 			"rotation" "0"
