@@ -207,6 +207,12 @@ $Project "Client (TFGrub)"
 			}
 		}
 
+		$Folder	"ServerFinder (Source SDK 2013 BDS Base)"
+		{
+			$File	"bdsbase\ServerFinderDialog.cpp"
+			$File	"bdsbase\ServerFinderDialog.h"
+		}
+
 		$Folder	"TF"
 		{
 			$File	"$SRCDIR\game\shared\tf\tf_weapon_passtime_gun.cpp"

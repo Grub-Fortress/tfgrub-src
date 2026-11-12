@@ -782,6 +782,11 @@
 //					"attribute_class"		"jarate_on_hit"
 //					"value"					"4"
 //				}
+				"is experimental rebalance display"
+				{
+					"attribute_class"	"is_experimental_rebalance_DISPLAY"
+					"value"				"1"
+				}
 			}
 		}
 	}

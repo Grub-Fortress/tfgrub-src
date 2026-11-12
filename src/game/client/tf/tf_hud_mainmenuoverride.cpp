@@ -806,21 +806,21 @@ void CHudMainMenuOverride::FireGameEvent(IGameEvent* event)
 	else if (Q_strcmp(type, "item_schema_initialized") == 0)
 	{
 		// Tell the schema to load its MOTD block from our clientside cache file
-		CUtlVector< CUtlString > vecErrors;
-		KeyValues* pEntriesKV = new KeyValues("motd_entries");
-		if (pEntriesKV->LoadFromFile(g_pFullFileSystem, GC_MOTD_CACHE_FILE))
-		{
-			// Extract our last MOTD request time
-			const char* pszTime = pEntriesKV->GetString("last_request_time", NULL);
-			m_nLastMOTDRequestAt = (pszTime && pszTime[0]) ? CRTime::RTime32FromString(pszTime) : 0;
+		//CUtlVector< CUtlString > vecErrors;
+		//KeyValues* pEntriesKV = new KeyValues("motd_entries");
+		//if (pEntriesKV->LoadFromFile(g_pFullFileSystem, GC_MOTD_CACHE_FILE))
+		//{
+		//	// Extract our last MOTD request time
+		//	const char* pszTime = pEntriesKV->GetString("last_request_time", NULL);
+		//	m_nLastMOTDRequestAt = (pszTime && pszTime[0]) ? CRTime::RTime32FromString(pszTime) : 0;
 
-			const char* pszLang = pEntriesKV->GetString("last_request_language", NULL);
-			m_nLastMOTDRequestLanguage = (pszLang && pszLang[0]) ? PchLanguageToELanguage(pszLang) : k_Lang_English;
+		//	const char* pszLang = pEntriesKV->GetString("last_request_language", NULL);
+		//	m_nLastMOTDRequestLanguage = (pszLang && pszLang[0]) ? PchLanguageToELanguage(pszLang) : k_Lang_English;
 
-			// Parse the entries
-			GetMOTDManager().BInitMOTDEntries(pEntriesKV, &vecErrors);
-			GetMOTDManager().PurgeUnusedMOTDEntries(pEntriesKV);
-		}
+		//	// Parse the entries
+		//	GetMOTDManager().BInitMOTDEntries(pEntriesKV, &vecErrors);
+		//	GetMOTDManager().PurgeUnusedMOTDEntries(pEntriesKV);
+		//}
 	}
 	else if (Q_strcmp(type, "store_pricesheet_updated") == 0)
 	{
@@ -2861,10 +2861,10 @@ public:
 		KeyValues* pEntriesKV = new KeyValues("motd_entries");
 
 		// Try and load the cache file. If we fail, we'll just create a new one.
-		if (!pMMPanel->ReloadedAllMOTDs())
-		{
-			pEntriesKV->LoadFromFile(g_pFullFileSystem, GC_MOTD_CACHE_FILE);
-		}
+		//if (!pMMPanel->ReloadedAllMOTDs())
+		//{
+		//	pEntriesKV->LoadFromFile(g_pFullFileSystem, GC_MOTD_CACHE_FILE);
+		//}
 
 		bool bNewMOTDs = false;
 
@@ -2933,7 +2933,7 @@ public:
 		pMMPanel->GetMOTDManager().PurgeUnusedMOTDEntries(pEntriesKV);
 
 		// Save out our cache
-		pEntriesKV->SaveToFile(g_pFullFileSystem, GC_MOTD_CACHE_FILE);
+		//pEntriesKV->SaveToFile(g_pFullFileSystem, GC_MOTD_CACHE_FILE);
 
 		// And tell the main menu to refresh the MOTD.
 		//pMMPanel->SetMOTDVisible( bNewMOTDs ); HACK!  Temporarily turn this off!
