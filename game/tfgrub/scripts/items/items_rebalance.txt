@@ -327,11 +327,15 @@
 				{
 					"value"				"delete"
 				}
+				"damage force increase text"
+				{
+					"value"				"delete"
+				}
 				"airblast vulnerability multiplier hidden"
 				{
 					"value" 			"delete"
 				}
-				"reload time increased hidden"
+				"reload time increased"
 				{
 					"attribute_class"	"mult_reload_time_hidden"
 					"value"				"1.25"
@@ -951,6 +955,10 @@
 			{
 				"damage penalty"
 				{
+					"value"				"delete"
+				}
+				"damage penalty"
+				{
 					"attribute_class"	"mult_dmg"
 					"value"				"0.5"
 				}
@@ -1140,6 +1148,10 @@
 			"rebalanced_item"			"1"
 		}
 		"129" // The Buff Banner
+		{
+			"rebalanced_item"			"1"
+		}
+		"172" // The Scotsman's Skullcutter
 		{
 			"rebalanced_item"			"1"
 		}
