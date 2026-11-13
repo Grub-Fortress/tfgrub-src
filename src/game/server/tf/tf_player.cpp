@@ -2870,6 +2870,8 @@ void CTFPlayer::PrecacheMvM()
 	PrecacheModel( "models/items/currencypack_large.mdl" );
 
 	PrecacheModel( "models/bots/tw2/boss_bot/twcarrier_addon.mdl" );
+    
+	PrecacheModel( "models/player/gibs/gibs_bolt.mdl" );
 
 	PrecacheParticleSystem( "bot_impact_light" );
 	PrecacheParticleSystem( "bot_impact_heavy" );
@@ -9225,7 +9227,15 @@ int CTFPlayer::OnTakeDamage( const CTakeDamageInfo &inputInfo )
 				pRandomInternalOrgan->KeyValue( "origin", buf );
 				Q_snprintf( buf, sizeof( buf ), "%.10f %.10f %.10f", GetAbsAngles().x, GetAbsAngles().y, GetAbsAngles().z );
 				pRandomInternalOrgan->KeyValue( "angles", buf );
-				pRandomInternalOrgan->KeyValue( "model", "models/player/gibs/random_organ.mdl" );
+				if ( TFGameRules()->IsMannVsMachineMode() && GetTeamNumber() == TF_TEAM_PVE_INVADERS && BloodColor() == DONT_BLEED && TFObjectiveResource()->GetMvMEventPopfileType() != MVM_EVENT_POPFILE_HALLOWEEN )
+				{
+					//robots don't have spleens....
+					pRandomInternalOrgan->KeyValue( "model", "models/player/gibs/gibs_bolt.mdl" );
+				}
+				else
+				{
+					pRandomInternalOrgan->KeyValue( "model", "models/player/gibs/random_organ.mdl" );
+				}
 				pRandomInternalOrgan->KeyValue( "fademindist", "-1" );
 				pRandomInternalOrgan->KeyValue( "fademaxdist", "0" );
 				pRandomInternalOrgan->KeyValue( "fadescale", "1" );
@@ -10543,7 +10553,7 @@ void CTFPlayer::ApplyPushFromDamage( const CTakeDamageInfo &info, Vector vecDir 
 			}
 		}
 
-		if ( TFGameRules()->GameModeUsesUpgrades() )
+		if ( TFGameRules()->IsMannVsMachineMode() )
 		{
 			if ( GetTeamNumber() == TF_TEAM_PVE_INVADERS )
 			{
@@ -10840,7 +10850,7 @@ int CTFPlayer::OnTakeDamage_Alive( const CTakeDamageInfo &info )
 			{
 				int iExplosiveShot = 0;
 				CALL_ATTRIB_HOOK_INT_ON_OTHER( pTFAttacker, iExplosiveShot, explosive_sniper_shot );
-				if ( iExplosiveShot )
+				if ( iExplosiveShot && !m_Shared.IsInvulnerable() )
 				{
 					pSniper->ExplosiveHeadShot( pTFAttacker, this );
 				}
@@ -11598,14 +11608,11 @@ void CTFPlayer::CheckSpellHalloweenDeathGhosts( const CTakeDamageInfo &info, CTF
 		CALL_ATTRIB_HOOK_INT_ON_OTHER( pWeapon, iHalloweenDeathGhosts, halloween_death_ghosts );
 		if ( iHalloweenDeathGhosts > 0 )
 		{
-			if ( pTFVictim->GetTeam()->GetTeamNumber() == TF_TEAM_BLUE )
-			{
-				DispatchParticleEffect( "halloween_player_death_blue", pTFVictim->GetAbsOrigin() + Vector( 0, 0, 32 ), vec3_angle );
-			}
-			else if ( pTFVictim->GetTeam()->GetTeamNumber() == TF_TEAM_RED )
-			{
-				DispatchParticleEffect( "halloween_player_death", pTFVictim->GetAbsOrigin() + Vector( 0, 0, 32 ), vec3_angle );
-			}
+			const char* pszParticle = (pTFVictim->GetTeam()->GetTeamNumber() == TF_TEAM_BLUE) ? 
+				"halloween_player_death_blue" : "halloween_player_death";
+			
+			CPVSFilter filter( pTFVictim->GetAbsOrigin() );
+			TE_TFParticleEffect( filter, 0.0, pszParticle, pTFVictim->GetAbsOrigin() + Vector( 0, 0, 32 ), vec3_angle );
 		}
 	}
 }
@@ -15287,7 +15294,16 @@ void CTFPlayer::PainSound( const CTakeDamageInfo &info )
 			TFPlayerClassData_t *pData = GetPlayerClass()->GetData();
 			if ( pData )
 			{
-				EmitSound( pData->GetDeathSound( DEATH_SOUND_GENERIC ) );
+				int nDeathSound = DEATH_SOUND_GENERIC;
+				if ( TFGameRules() && TFGameRules()->IsMannVsMachineMode() && GetTeamNumber() == TF_TEAM_PVE_INVADERS )
+				{
+					nDeathSound = DEATH_SOUND_GENERIC_MVM;
+					if ( IsMiniBoss() )
+					{
+						nDeathSound = DEATH_SOUND_GENERIC_GIANT_MVM;
+					}
+				}
+				EmitSound( pData->GetDeathSound( nDeathSound ) );
 			}
 		}
 		return;
