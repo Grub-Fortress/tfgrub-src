@@ -138,7 +138,7 @@ DESCRIPTION INFO_OPTIONS
 	}
 	"ficool2"
 	{
-		"Ficool2 - 3rd person chat bubble, chat selection fix, Fix inefficient lookup by name"
+		"Ficool2 - 3rd person chat bubble, chat selection fix"
 		"github.com/ficool2"
 		{ BOOL }
 		{ "1" }

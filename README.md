@@ -60,6 +60,18 @@ The Main Source Code Repository for TF:Grub
 	- **Hactica** - Ultimate Weapon Animation Fixes
 	https://gamebanana.com/wips/86367
 	
+	- **Chickenman** - Sniper Hand Fix
+	https://gamebanana.com/wips/439875
+	
+	- **Ficool2** - 3rd person chat bubble, chat selection fix
+	https://github.com/ficool2
+	
+	- **Copperpixel** - TF2C Custom SkyBox Renderer
+	https://github.com/mapbase-source/source-sdk-2013/pull/534
+	
+	- **Horiuchi** - Visual timer for vote duration
+	https://github.com/horiuchii
+	
 	- **MasterOfRespawn** - Add payload race behavior to tf_bots
 	https://github.com/ValveSoftware/source-sdk-2013/pull/1738
 	
@@ -77,9 +89,6 @@ The Main Source Code Repository for TF:Grub
 	
 	- **Solo Fortress 2, Kepler** – Item schema delete attribute support	
 	https://moddb.com/mods/solo-fortress-2
-	
-	- **Hactica** – Ultimate Weapon Animation Fixes	
-	https://gamebanana.com/wips/86367
 	
 	- **NvC-DmN-CH** – HL2 Mirrored code	
 	https://github.com/NvC-DmN-CH/Half-Life-2-Mirrored
