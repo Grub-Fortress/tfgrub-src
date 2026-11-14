@@ -738,7 +738,11 @@ void CArmoryPanel::UpdateSelectedItem( void )
 		m_pDataTextRichText->GetPos( iX, iY );
 		int iDataPanelX, iDataPanelY;
 		m_pDataPanel->GetPos( iDataPanelX, iDataPanelY );
-		int iRichTextYPosInDataPanel = iNewY - iDataPanelY;
+
+		// Add an offset as a hacky fix to the armory RichText clipping into the attributes
+		const int iYOffset = 40;
+
+		int iRichTextYPosInDataPanel = ( iNewY - iDataPanelY ) + iYOffset;
 		m_pDataTextRichText->SetBounds( iX, iRichTextYPosInDataPanel, m_pDataTextRichText->GetWide(), m_pDataPanel->GetTall() - iRichTextYPosInDataPanel );
 	}
 	if ( m_pSelectedItemImageModelPanel )
