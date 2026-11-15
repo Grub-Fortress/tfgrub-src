@@ -8207,16 +8207,6 @@
 
 // TF Grub
 
-"Player.HitSoundBubbleDing"
-{
-	"channel"		"CHAN_STATIC"
-	"volume"		"1"
-	"soundlevel"  	"SNDLVL_NONE"	
-	"pitch"			"PITCH_NORM"
-
-	"wave"	")ui/hitsound_bubble.wav"
-}
-
 "WeaponKritzkrieg.Healing"
 {
 	"channel"	"CHAN_WEAPON"

@@ -573,44 +573,12 @@ DESCRIPTION INFO_OPTIONS
 		{ "1" }
 	}
 	
-	"cl_cloud_settings"
-	{
-		"#Valve_UseSteamCloud"
-		"#Tooltip_UseSteamCloud"
-		{ BOOL }
-		{ "1" }
-	}
-	
 	"cl_steamscreenshots"
 	{
 		"#Valve_SteamScreenshots"
 		"#Tooltip_SteamScreenshots"
 		{ BOOL }
 		{ "1" }
-	}
-	
-	"cl_notifications_show_ingame"
-	{
-		"#TF_ShowNotificationsInGame"
-		"#Tooltip_ShowNotificationsInGame"
-		{ BOOL }
-		{ "1" }
-	}
-
-	"tf_discord_rpc"
-	{
-		"#TFGrub_DiscordRPC"
-		"#TFGrub_DiscordRPC"
-		{ BOOL }
-		{ "1" }
-	}
-	
-	"tf_discord_rpc_updaterate"
-	{
-		"#TFGrub_DiscordRPC_UpdateRate"
-		"#Tooltip_TFGrub_DiscordRPC_UpdateRate"
-		{ NUMBER 5 15}
-		{ "5" }
 	}
 	
 	"category1"
