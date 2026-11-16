@@ -18,4 +18,4 @@ Maps unique to TF:Grub:
 - KOTH Landfall
 - KOTH Lumberyard
 - KOTH Well
-- PL Grubero (WIP Name)
+- DOM Grounds
