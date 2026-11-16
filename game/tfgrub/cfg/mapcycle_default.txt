@@ -63,4 +63,4 @@ ctf_warehouse
 koth_well
 koth_landfall
 koth_lumberyard
-pl_grubero
+dom_grounds
