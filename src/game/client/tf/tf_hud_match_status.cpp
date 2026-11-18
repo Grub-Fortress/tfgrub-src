@@ -269,7 +269,7 @@ CTFHudMatchStatus::CTFHudMatchStatus(const char *pElementName)
 	: CHudElement(pElementName)
 	, BaseClass(NULL, "HudMatchStatus")
 	, m_pTimePanel( NULL )
-	, m_bUseMatchHUD( ShouldUseMatchHUD() )
+	, m_bIsPlayingDomination( TFGameRules() && TFGameRules()->IsPlayingDomination() )
 	, m_eMatchGroupSettings( k_eTFMatchGroup_Invalid )
 {
 	Panel *pParent = g_pClientMode->GetViewport();
@@ -353,19 +353,25 @@ void CTFHudMatchStatus::ApplySchemeSettings(IScheme *pScheme)
 	BaseClass::ApplySchemeSettings(pScheme);
 
 	KeyValues *pConditions = NULL;
-	if ( ShouldUseMatchHUD() )
+	//if ( ShouldUseMatchHUD() )
+	//{
+	//	pConditions = new KeyValues( "conditions" );
+	//	AddSubKeyNamed( pConditions, "if_match" );
+
+	//	const IMatchGroupDescription* pMatchDesc = GetMatchGroupDescription( TFGameRules() ? TFGameRules()->GetCurrentMatchGroup() : GTFGCClientSystem()->GetLiveMatchGroup() );
+	//	if ( pMatchDesc )
+	//	{
+	//		if ( pMatchDesc->GetMatchSize() > 12 )
+	//		{
+	//			AddSubKeyNamed( pConditions, "if_large" );
+	//		}
+	//	}
+	//}
+
+	if ( TFGameRules() && TFGameRules()->IsPlayingDomination() )
 	{
 		pConditions = new KeyValues( "conditions" );
-		AddSubKeyNamed( pConditions, "if_match" );
-
-		const IMatchGroupDescription* pMatchDesc = GetMatchGroupDescription( TFGameRules() ? TFGameRules()->GetCurrentMatchGroup() : GTFGCClientSystem()->GetLiveMatchGroup() );
-		if ( pMatchDesc )
-		{
-			if ( pMatchDesc->GetMatchSize() > 12 )
-			{
-				AddSubKeyNamed( pConditions, "if_large" );
-			}
-		}
+		AddSubKeyNamed( pConditions, "if_dom" );
 	}
 
 	// load control settings...
@@ -437,11 +443,11 @@ void CTFHudMatchStatus::OnThink()
 		return;
 
 	bool bReload = false;
-	bool bUseMatchHUD = ShouldUseMatchHUD();
+	bool bIsPlayingDomination = TFGameRules() && TFGameRules()->IsPlayingDomination();
 
-	if ( bUseMatchHUD != m_bUseMatchHUD )
+	if ( bIsPlayingDomination != m_bIsPlayingDomination )
 	{
-		m_bUseMatchHUD = bUseMatchHUD;
+		m_bIsPlayingDomination = bIsPlayingDomination;
 		bReload = true;
 	}
 

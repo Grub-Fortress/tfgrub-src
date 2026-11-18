@@ -312,7 +312,7 @@
 [	
 ]
 
-@PointClass base(Targetname) = tf_logic_dom : "Domination Entity. This is used to detect a Domination map."
+@PointClass base(Targetname) = tf_logic_dom : "Domination Entity. This is used handled points in a Domination map."
 [
 	input ScoreRedPoints(void) : "Score points for red."
 	input ScoreBluePoints(void) : "Score points for blue."

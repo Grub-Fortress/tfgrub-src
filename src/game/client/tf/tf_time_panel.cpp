@@ -630,13 +630,19 @@ void CTFHudTimeStatus::ApplySchemeSettings( IScheme *pScheme )
 {
 	KeyValues *pConditions = NULL;
 
-	if ( TFGameRules() )
+	//if ( TFGameRules() )
+	//{
+	//	if ( ShouldUseMatchHUD() )
+	//	{
+	//		pConditions = new KeyValues( "conditions" );
+	//		AddSubKeyNamed( pConditions, "if_match" );
+	//	}
+	//}
+
+	if ( TFGameRules() && TFGameRules()->IsPlayingDomination() )
 	{
-		if ( ShouldUseMatchHUD() )
-		{
-			pConditions = new KeyValues( "conditions" );
-			AddSubKeyNamed( pConditions, "if_match" );
-		}
+		pConditions = new KeyValues( "conditions" );
+		AddSubKeyNamed( pConditions, "if_dom" );
 	}
 
 	// load control settings...

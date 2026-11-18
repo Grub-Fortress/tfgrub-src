@@ -132,7 +132,7 @@ private:
 
 	vgui::HFont					m_hPlayerListFont;
 
-	bool m_bUseMatchHUD;
+	bool m_bIsPlayingDomination;
 };
 
 #endif	// TF_HUD_MATCH_STATUS_H

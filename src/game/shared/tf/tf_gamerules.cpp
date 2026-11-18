@@ -1479,6 +1479,7 @@ BEGIN_NETWORK_TABLE_NOBASE( CTFGameRules, DT_TFGameRules )
 	RecvPropBool( RECVINFO( m_bPlayingHybrid_CTF_CP ) ),
 	RecvPropBool( RECVINFO( m_bPlayingSpecialDeliveryMode ) ),
 	RecvPropBool( RECVINFO( m_bPlayingRobotDestructionMode ) ),
+	RecvPropBool( RECVINFO( m_bPlayingDomination ) ),
 	RecvPropEHandle( RECVINFO( m_hRedKothTimer ) ),
 	RecvPropEHandle( RECVINFO( m_hBlueKothTimer ) ),
 	RecvPropInt( RECVINFO( m_nMapHolidayType ) ),
@@ -1550,6 +1551,7 @@ BEGIN_NETWORK_TABLE_NOBASE( CTFGameRules, DT_TFGameRules )
 	SendPropBool( SENDINFO( m_bPlayingHybrid_CTF_CP ) ),
 	SendPropBool( SENDINFO( m_bPlayingSpecialDeliveryMode ) ),
 	SendPropBool( SENDINFO( m_bPlayingRobotDestructionMode ) ),
+	SendPropBool( SENDINFO( m_bPlayingDomination ) ),
 	SendPropEHandle( SENDINFO( m_hRedKothTimer ) ),
 	SendPropEHandle( SENDINFO( m_hBlueKothTimer ) ),
 	SendPropInt( SENDINFO( m_nMapHolidayType ), 3, SPROP_UNSIGNED ),
@@ -3440,6 +3442,7 @@ CTFGameRules::CTFGameRules()
 	m_bPlayingHybrid_CTF_CP.Set( false );
 	m_bPlayingSpecialDeliveryMode.Set( false );
 	m_bPlayingRobotDestructionMode.Set( false );
+	m_bPlayingDomination.Set( false );
 	m_bPowerupMode.Set( false );
 
 	m_bHelltowerPlayersInHell.Set( false );
@@ -4305,6 +4308,7 @@ void CTFGameRules::Activate()
 	m_bPlayingHybrid_CTF_CP.Set( false );
 	m_bPlayingSpecialDeliveryMode.Set( false );
 	m_bPlayingRobotDestructionMode.Set( false );
+	m_bPlayingDomination.Set( false );
 	m_bPowerupMode.Set( false );
 
 	m_redPayloadToPush = NULL;
@@ -4389,6 +4393,7 @@ void CTFGameRules::Activate()
 		}
 		else // Domination
 		{
+			m_bPlayingDomination.Set( true );
 			tf_gamemode_cp.SetValue( 1 ); // uses Control Points for bot compat while there's no proper gametype for domination yet
 			m_nGameType.Set( TF_GAMETYPE_CP ); 
 		}
