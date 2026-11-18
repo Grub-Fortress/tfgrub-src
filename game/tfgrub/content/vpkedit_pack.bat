@@ -26,8 +26,3 @@ vpkeditcli.exe tfgrub_content_uvf --chunksize 50
 :: Pack Mapbase folder
 ::----------------------------------------------------------
 vpkeditcli.exe tfgrub_content_mapbase --chunksize 50
-
-::----------------------------------------------------------
-:: Pack Hammer Content Folder (Not included in main builds)
-::----------------------------------------------------------
-:: vpkeditcli.exe C:\Users\chojn\source\repos\Better-Fortress-2\game\tfgrub\content\tfgrub_content_hammer --chunksize 50
