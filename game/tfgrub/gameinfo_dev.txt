@@ -51,10 +51,12 @@
 			
 			// Mount TF:Grub Folders
 			game+mod			|gameinfo_path|content/tfgrub_content
+			game+mod			|gameinfo_path|content/tfgrub_content_sounds
 			game+mod			|gameinfo_path|content/tfgrub_content_shaders
 			game+mod			|gameinfo_path|content/tfgrub_content_hammer
 			game+mod			|gameinfo_path|content/tfgrub_content_uvf
 			game+mod			|gameinfo_path|content/tfgrub_content_mapbase
+			game+mod			|gameinfo_path|content/tfgrub_content_mapbase_sounds
 			// Mount TF:Grub VPKs
 			game+mod			|gameinfo_path|content/tfgrub_content.vpk
 			game+mod			|gameinfo_path|content/tfgrub_content_shaders.vpk
