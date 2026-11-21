@@ -335,6 +335,10 @@
 				{
 					"value" 			"delete"
 				}
+				"reload time increased hidden"
+				{
+					"value"				"delete"
+				}
 				"reload time increased"
 				{
 					"attribute_class"	"mult_reload_time"
