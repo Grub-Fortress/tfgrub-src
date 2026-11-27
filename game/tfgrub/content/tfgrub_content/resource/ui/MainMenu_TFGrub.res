@@ -1190,7 +1190,7 @@
 	{
 		"ControlName"	"EditablePanel"
 		"fieldname"		"CreditsButton"
-		"xpos"			"115"
+		"xpos"			"117"
 		"ypos"			"360"
 		"zpos"			"11"
 		"wide"			"36"
@@ -1256,7 +1256,7 @@
 	{
 		"ControlName"	"EditablePanel"
 		"fieldname"		"AchievementsButton"
-		"xpos"			"80"
+		"xpos"			"81"
 		"ypos"			"360"
 		"zpos"			"11"
 		"wide"			"36"
