@@ -198,7 +198,7 @@ DESCRIPTION SERVER_OPTIONS
 			"#TFGRUB_CSMenu_Off"		"0"
 			"#TFGRUB_CSMenu_On"			"1"
 		}
-		{ "1" }
+		{ "0" }
 	}
 	"tf_weapon_criticals_melee"
 	{
